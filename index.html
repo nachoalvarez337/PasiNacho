@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuentas de a dos</title>
+<style>
+:root{--bg:#f6f3ee;--cd:#fff;--tx:#26241f;--mu:#7a746b;--ln:#e6e0d6;--ac:#2d7a68;--as:#dcefe9;--a:#d9693f;--b:#3f6fd9;--rd:#c0392b;--wn:#fdf0d5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17161a;--cd:#232227;--tx:#f0ede7;--mu:#a09a90;--ln:#37353c;--ac:#4fb59b;--as:#1f3a33;--a:#ee8a63;--b:#7a9cf0;--rd:#ef6b5b;--wn:#3b3320;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17161a;--cd:#232227;--tx:#f0ede7;--mu:#a09a90;--ln:#37353c;--ac:#4fb59b;--as:#1f3a33;--a:#ee8a63;--b:#7a9cf0;--rd:#ef6b5b;--wn:#3b3320;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:88px}
+#app{max-width:560px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 0 8px}
+h1{font-size:20px;margin:0}h2{margin:0 0 12px;font-size:20px}h3{margin:20px 0 4px;font-size:15px;color:var(--mu)}
+.mu{color:var(--mu)}.c{text-align:center}.ok{color:var(--ac)}
+.me{background:var(--cd);border:1px solid var(--ln);border-radius:20px;padding:6px 12px;color:var(--tx);font:inherit;font-size:14px;cursor:pointer}
+.warn{background:var(--wn);border-radius:12px;padding:10px 14px}
+.card{background:var(--cd);border:1px solid var(--ln);border-radius:18px;padding:16px;margin:8px 0}
+.big{font-size:34px;font-weight:700;margin:4px 0 14px}
+.row{display:flex;gap:10px;margin-top:8px}.row>.btn{flex:1}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:12px 14px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sec{background:var(--as);color:var(--ac)}.btn.dng{background:var(--rd);color:#fff}.btn.w{width:100%}.btn:disabled{opacity:.5}
+.lnk{background:none;border:0;color:var(--mu);font:inherit;width:100%;padding:12px;cursor:pointer}
+.it{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:12px;margin:8px 0;color:inherit;font:inherit;cursor:pointer}
+.tx{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}.tx small,.am small{color:var(--mu);font-size:13px}
+.am{font-weight:700;text-align:right;display:flex;flex-direction:column;white-space:nowrap}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}.dot.a{background:var(--a)}.dot.b{background:var(--b)}
+.t{cursor:default}.t .tx{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--ln);background:none;color:#fff;font-size:16px;flex:none;cursor:pointer}
+.done{opacity:.6}.done .tx b{text-decoration:line-through}.done .chk{background:var(--ac);border-color:var(--ac)}
+.pr{font-weight:600}.pr.alta{color:var(--rd)}.pr.media{color:var(--a)}.pr.baja{color:var(--ac)}.late{color:var(--rd);font-weight:600}
+#calc{align-items:center;z-index:25}
+.cal{width:100%;max-width:340px;background:#1c1c1e;color:#fff;border-radius:26px;padding:14px 16px 18px;margin:0 12px}
+.cal-top{display:flex;justify-content:space-between;align-items:center;color:#9a9a9f;font-size:14px}
+.cal-top button{background:none;border:0;color:#ff9f0a;font:inherit;font-weight:600;cursor:pointer;padding:6px}
+#ce{text-align:right;color:#9a9a9f;min-height:22px;margin-top:10px;overflow:hidden;white-space:nowrap}
+#cv{text-align:right;font-size:52px;font-weight:300;line-height:1.1;margin:2px 0 12px;overflow:hidden;white-space:nowrap}#cv.sm{font-size:34px}
+.ck{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ck button{aspect-ratio:1;border:0;border-radius:50%;background:#333336;color:#fff;font:inherit;font-size:24px;cursor:pointer}
+.ck .f{background:#636366}.ck .o{background:#ff9f0a;font-size:30px}.ck button:active{filter:brightness(1.3)}
+label,.lb{display:block;margin:12px 0 4px;font-size:14px;color:var(--mu)}
+input:not([type=radio]),select{width:100%;font:inherit;font-size:16px;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx)}
+.seg{display:flex;gap:8px}.seg label{flex:1;margin:0}.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg span{display:block;text-align:center;padding:11px 6px;border:1px solid var(--ln);border-radius:10px;color:var(--tx);cursor:pointer}
+.seg input:checked+span{background:var(--ac);color:#fff;border-color:var(--ac)}.seg input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+.bar{height:10px;background:var(--as);border-radius:6px;overflow:hidden;margin:4px 0 10px}.bar i{display:block;height:100%;background:var(--ac)}
+.mes{display:flex;align-items:center;justify-content:space-between;margin:8px 0}.mes button{background:var(--cd);border:1px solid var(--ln);border-radius:10px;width:42px;height:42px;font-size:18px;color:var(--tx);cursor:pointer}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:12px 0}
+.ph{position:relative}.ph img{width:100%;height:110px;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block}
+.ph button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:26px;height:26px;background:#000a;color:#fff;cursor:pointer}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;background:none;border:0;padding:10px 4px;font:inherit;font-size:13px;color:var(--mu);cursor:pointer}nav button.on{color:var(--ac);font-weight:700}
+.ov{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-end;justify-content:center;z-index:20}.ov[hidden]{display:none}
+.sh{background:var(--cd);width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+#zoom{align-items:center;z-index:30}#zoom img{max-width:100%;max-height:100%}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#222;color:#fff;padding:10px 16px;border-radius:20px;z-index:40;max-width:90%;text-align:center}#toast[hidden]{display:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="ov" id="modal" hidden><div class="sh" id="sheet"></div></div>
+<div class="ov" id="zoom" hidden></div>
+<div class="ov" id="calc" hidden></div>
+<div id="toast" hidden></div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { getFirestore, doc, collection, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+// Datos de tu proyecto de Firebase (se completan una sola vez)
+const firebaseConfig = {
+  apiKey: "AIzaSyCmo3QcPUlXjDQCQlvjKI5bPOKA3touzds",
+  authDomain: "pasinacho-c4b8c.firebaseapp.com",
+  projectId: "pasinacho-c4b8c",
+  storageBucket: "pasinacho-c4b8c.firebasestorage.app",
+  messagingSenderId: "1095590935328",
+  appId: "1:1095590935328:web:64d67d5ad727c57749b545"
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CATS = {comida:'🍽️ Comida', salidas:'🎬 Salidas', compras:'🛍️ Compras', transporte:'🚌 Transporte', hogar:'🏠 Hogar', otros:'📦 Otros'};
+const PRI = {alta:'Alta', media:'Media', baja:'Baja'};
+const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const fmt = n => new Intl.NumberFormat('es-CL', {style:'currency', currency:'CLP', maximumFractionDigits:0}).format(Math.round(n || 0));
+const p2 = n => String(n).padStart(2, '0');
+const hoy = () => { const d = new Date(); return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()); };
+const fdate = s => { if (!s) return ''; const [y, m, d] = s.split('-'); return +d + ' ' + MES[m - 1].slice(0, 3) + (y !== hoy().slice(0, 4) ? ' ' + y : ''); };
+const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; } return y + '-' + p2(m); };
+const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
+
+let auth = null;
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], tab:'cuentas', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false}, err:'', shown:false, lock:false, okFn:null};
+try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
+const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
+const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
+
+function toast(t) { const el = $('#toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { el.hidden = true; }, 3200); }
+function fail(e) { console.error(e); toast(e && e.code === 'permission-denied' ? 'No tienes permiso para guardar. Revisa las reglas de Firebase.' : 'No se pudo guardar. Inténtalo otra vez.'); }
+function openModal(h) { $('#sheet').innerHTML = h; $('#modal').hidden = false; }
+function closeModal() { $('#modal').hidden = true; $('#sheet').innerHTML = ''; st.lock = false; }
+function confirmar(txt, fn) { st.okFn = fn; openModal('<h2>' + esc(txt) + '</h2><div class="row"><button class="btn sec" data-a="x">Cancelar</button><button class="btn dng" data-a="ok">Sí, eliminar</button></div>'); }
+const seg = (n, v, ambos) => '<div class="seg">' + (ambos ? ['a', 'b', 'ambos'] : ['a', 'b']).map(k => '<label><input type="radio" name="' + n + '" value="' + k + '"' + (k === v ? ' checked' : '') + '><span>' + esc(nm(k)) + '</span></label>').join('') + '</div>';
+
+const deudaDe = g => g.tipo === 'pago' ? (+g.monto || 0) : (g.v === 2 ? (+g.monto || 0) : (+g.monto || 0) / 2);
+
+function saldo() {
+  let s = 0;
+  for (const g of st.gastos) {
+    const m = +g.monto || 0;
+    if (g.tipo === 'pago') s += g.pagador === 'a' ? m : -m;
+    else s += g.pagador === 'a' ? deudaDe(g) : -deudaDe(g);
+  }
+  return s; // positivo: la persona 2 le debe a la persona 1
+}
+
+/* ---------- Vistas ---------- */
+function vCuentas() {
+  const s = saldo(), z = Math.abs(s) < 0.5, deb = s > 0 ? 'b' : 'a', acr = s > 0 ? 'a' : 'b';
+  let h = '<section class="card"><div class="mu">' + (z ? 'Estado de cuentas' : esc(nm(deb)) + ' le debe a ' + esc(nm(acr))) + '</div><div class="big' + (z ? ' ok' : '') + '">' + (z ? 'Están a mano 🎉' : fmt(Math.abs(s))) + '</div><div class="row"><button class="btn" data-a="ng">＋ Nuevo gasto</button><button class="btn sec" data-a="np">Registrar pago</button></div></section><h3>Movimientos</h3>';
+  const L = [...st.gastos].sort((x, y) => (y.fecha || '').localeCompare(x.fecha || '') || (y.creado || 0) - (x.creado || 0));
+  h += L.map(g => {
+    const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a';
+    const sub = pago ? 'Pago de ' + nm(g.pagador) + ' a ' + nm(otro) : (CATS[g.cat] || '') + ' · Pagó ' + nm(g.pagador);
+    return '<button class="it" data-a="dg:' + g.id + '"><span class="dot ' + esc(g.pagador) + '"></span><span class="tx"><b>' + esc(g.desc) + '</b><small>' + fdate(g.fecha) + ' · ' + esc(sub) + '</small></span><span class="am">' + fmt(deudaDe(g)) + (g.nFotos ? '<small>📎 ' + g.nFotos + '</small>' : '') + '</span></button>';
+  }).join('') || '<p class="mu c">Aún no hay gastos. ¡Anoten el primero!</p>';
+  return h;
+}
+
+function vResumen() {
+  const L = st.gastos.filter(g => g.tipo !== 'pago' && (g.fecha || '').startsWith(st.mes));
+  const tot = L.reduce((s, g) => s + deudaDe(g), 0), byC = {}, byP = {a:0, b:0};
+  L.forEach(g => { const d = deudaDe(g); byC[g.cat] = (byC[g.cat] || 0) + d; if (byP[g.pagador] != null) byP[g.pagador] += d; });
+  const rows = Object.entries(byC).sort((x, y) => y[1] - x[1]);
+  let h = '<div class="mes"><button data-a="mes:-1" aria-label="Mes anterior">‹</button><b>' + mesTxt(st.mes) + '</b><button data-a="mes:1" aria-label="Mes siguiente">›</button></div>';
+  h += '<section class="card"><div class="mu">Deudas registradas en el mes</div><div class="big">' + fmt(tot) + '</div><div class="mu">' + L.length + ' gasto(s)</div></section>';
+  if (!L.length) return h + '<p class="mu c">No hay gastos en este mes.</p>';
+  h += '<section class="card"><b>Deuda por categoría</b>' + rows.map(([k, v]) => '<div style="display:flex;justify-content:space-between;margin-top:10px"><span>' + esc(CATS[k] || k) + '</span><b>' + fmt(v) + '</b></div><div class="bar"><i style="width:' + Math.round(v / tot * 100) + '%"></i></div>').join('') + '</section>';
+  h += '<section class="card"><b>Deuda según quién pagó</b>' + ['a', 'b'].map(k => '<div style="display:flex;justify-content:space-between;margin-top:10px"><span><span class="dot ' + k + '" style="display:inline-block"></span> ' + esc(nm(k)) + '</span><b>' + fmt(byP[k]) + '</b></div>').join('') + '</section>';
+  return h;
+}
+
+function tItem(t) {
+  const late = !t.hecha && t.fecha && t.fecha < hoy();
+  return '<div class="it t' + (t.hecha ? ' done' : '') + '"><button class="chk" data-a="tg:' + t.id + '" aria-label="' + (t.hecha ? 'Marcar como pendiente' : 'Marcar como terminada') + '">' + (t.hecha ? '✓' : '') + '</button><button class="tx" data-a="et:' + t.id + '"><b>' + esc(t.titulo) + '</b><small><span class="pr ' + esc(t.prioridad) + '">' + esc(PRI[t.prioridad] || '') + '</span> · ' + esc(nm(t.quien)) + (t.fecha ? ' · <span class="' + (late ? 'late' : '') + '">' + (late ? 'Vencida: ' : '') + fdate(t.fecha) + '</span>' : '') + '</small></button></div>';
+}
+function vTareas() {
+  const R = {alta:0, media:1, baja:2};
+  const pend = st.tareas.filter(t => !t.hecha).sort((x, y) => (R[x.prioridad] - R[y.prioridad]) || (x.fecha || '9999').localeCompare(y.fecha || '9999') || (x.creado || 0) - (y.creado || 0));
+  const fin = st.tareas.filter(t => t.hecha).sort((x, y) => (y.hechaEn || 0) - (x.hechaEn || 0));
+  return '<section class="card"><button class="btn w" data-a="nt">＋ Nueva actividad</button></section><h3>Por hacer (' + pend.length + ')</h3>' + (pend.map(tItem).join('') || '<p class="mu c">No hay actividades pendientes 🎉</p>') + (fin.length ? '<h3>Terminadas (' + fin.length + ')</h3>' + fin.map(tItem).join('') : '');
+}
+
+function vLogin() {
+  return '<header><h1>💞 Cuentas de a dos</h1></header>' + (st.err ? '<p class="warn">' + esc(st.err) + '</p>' : '') +
+    (!st.authReady ? '<p class="mu c">Cargando…</p>' : '<section class="card"><h2>Iniciar sesión</h2><form data-f="login"><label>Correo<input name="email" type="email" required autocomplete="username"></label><label>Contraseña<input name="pass" type="password" required autocomplete="current-password"></label><div class="row"><button class="btn">Entrar</button></div></form></section>');
+}
+
+function render() {
+  if (!st.user) { $('#app').innerHTML = vLogin(); return; }
+  const ok = st.rd.n && st.rd.g && st.rd.t;
+  let h = '<header><h1>💞 Cuentas de a dos</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
+  if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
+  else if (!ok) h += '<p class="mu c">Cargando…</p>';
+  else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : vTareas();
+  h += '<nav>' + [['cuentas', '💸', 'Cuentas'], ['resumen', '📊', 'Resumen'], ['tareas', '✅', 'Pendientes']].map(([k, i, t]) => '<button class="' + (st.tab === k ? 'on' : '') + '" data-a="tab:' + k + '">' + i + '<br>' + t + '</button>').join('') + '</nav>';
+  $('#app').innerHTML = h;
+  if (ok && !st.shown) {
+    if (!st.names) { st.shown = true; st.lock = true; ajustes(true); }
+    else if (!st.me) { st.shown = true; st.lock = true; openModal('<h2>¿Quién eres?</h2><div class="row">' + ['a', 'b'].map(k => '<button class="btn" data-a="soy:' + k + '">' + esc(nm(k)) + '</button>').join('') + '</div>'); }
+  }
+}
+
+/* ---------- Formularios ---------- */
+function ajustes(first) {
+  openModal('<h2>' + (first ? '¡Bienvenidos! 👋' : 'Ajustes') + '</h2>' + (first ? '<p class="mu">Escriban sus nombres para empezar. Solo se pide una vez.</p>' : '') +
+    '<form data-f="nombres"><label>' + (first ? 'Tu nombre' : 'Nombre 1') + '<input name="a" required maxlength="20" value="' + esc(st.names ? st.names.a : '') + '"></label>' +
+    '<label>' + (first ? 'Nombre de tu pareja' : 'Nombre 2') + '<input name="b" required maxlength="20" value="' + esc(st.names ? st.names.b : '') + '"></label>' +
+    (first ? '<input type="hidden" name="soy" value="a">' : '<div class="lb">¿Quién eres en este celular?</div>' + seg('soy', st.me || 'a')) +
+    '<div class="row">' + (first ? '' : '<button type="button" class="btn sec" data-a="x">Cancelar</button>') + '<button class="btn">Guardar</button></div></form>' + (first ? '' : '<button class="lnk" data-a="out">Cerrar sesión</button>'));
+}
+function formGasto(id) {
+  const g = id ? st.gastos.find(x => x.id === id) : null; if (id && !g) return;
+  openModal('<h2>' + (g ? 'Editar gasto' : 'Nuevo gasto') + '</h2><form data-f="gasto" data-id="' + esc(id || '') + '">' +
+    '<label>¿Qué compraron?<input name="desc" required maxlength="80" placeholder="Ej: Pizza" value="' + esc(g ? g.desc : '') + '"></label>' +
+    '<button type="button" class="btn sec w" data-a="cal" style="margin-top:12px">🧮 Calculadora</button>' +
+    '<label>Valor Deuda ($)<input name="monto" type="number" inputmode="numeric" min="1" step="1" required value="' + (g ? Math.round(deudaDe(g)) : '') + '"></label>' +
+    '<label>Fecha<input name="fecha" type="date" required value="' + esc(g ? g.fecha : hoy()) + '"></label>' +
+    '<label>Categoría<select name="cat">' + Object.entries(CATS).map(([k, v]) => '<option value="' + k + '"' + (g && g.cat === k ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>' +
+    '<div class="lb">¿Quién debe?</div>' + seg('deudor', g ? (g.pagador === 'a' ? 'b' : 'a') : (st.me === 'a' ? 'b' : 'a')) +
+    '<label>Fotos de la boleta' + (g && g.nFotos ? ' (ya tiene ' + g.nFotos + ')' : '') + '<input name="fotos" type="file" accept="image/*" multiple></label>' +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+}
+function formPago(id) {
+  const g = id ? st.gastos.find(x => x.id === id) : null; if (id && !g) return;
+  const s = saldo(), deb = s > 0 ? 'b' : 'a', def = g ? g.monto : (Math.abs(s) >= 1 ? Math.round(Math.abs(s)) : '');
+  openModal('<h2>' + (g ? 'Editar pago' : 'Registrar pago') + '</h2><p class="mu">Anota cuando uno le devuelve plata al otro.</p><form data-f="pago" data-id="' + esc(id || '') + '">' +
+    '<div class="lb">¿Quién paga?</div>' + seg('pagador', g ? g.pagador : deb) +
+    '<label>Monto ($)<input name="monto" type="number" inputmode="numeric" min="1" step="1" required value="' + def + '"></label>' +
+    '<label>Fecha<input name="fecha" type="date" required value="' + esc(g ? g.fecha : hoy()) + '"></label>' +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+}
+function formTarea(id) {
+  const t = id ? st.tareas.find(x => x.id === id) : null; if (id && !t) return;
+  openModal('<h2>' + (t ? 'Editar actividad' : 'Nueva actividad') + '</h2><form data-f="tarea" data-id="' + esc(id || '') + '">' +
+    '<label>Actividad<input name="titulo" required maxlength="100" placeholder="Ej: Sacar entradas al cine" value="' + esc(t ? t.titulo : '') + '"></label>' +
+    '<label>Fecha límite (opcional)<input name="fecha" type="date" value="' + esc(t ? t.fecha : '') + '"></label>' +
+    '<label>Prioridad<select name="prioridad">' + Object.entries(PRI).map(([k, v]) => '<option value="' + k + '"' + ((t ? t.prioridad : 'media') === k ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>' +
+    '<div class="lb">¿Quién se encarga?</div>' + seg('quien', t ? t.quien : 'ambos', true) +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div>' +
+    (t ? '<button type="button" class="btn dng w" data-a="bt:' + esc(id) + '" style="margin-top:10px">Eliminar actividad</button>' : '') + '</form>');
+}
+function detalle(id) {
+  const g = st.gastos.find(x => x.id === id); if (!g) return;
+  const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a';
+  openModal('<h2>' + esc(g.desc) + '</h2><div class="big" style="margin:0 0 6px">' + fmt(deudaDe(g)) + '</div><p class="mu" style="margin:0 0 8px">' + fdate(g.fecha) + (pago ? '' : ' · ' + esc(CATS[g.cat] || '')) + '</p>' +
+    (pago ? '<p>' + esc(nm(g.pagador)) + ' le pagó a ' + esc(nm(otro)) + '.</p>' : '<p>Pagó ' + esc(nm(g.pagador)) + '. ' + esc(nm(otro)) + ' le debe ' + fmt(deudaDe(g)) + '.</p>') +
+    (g.nFotos ? '<div id="fotos" class="mu">Cargando fotos…</div>' : '') +
+    '<div class="row"><button class="btn sec" data-a="eg:' + id + '">Editar</button><button class="btn dng" data-a="bg:' + id + '">Eliminar</button></div><button class="lnk" data-a="x">Cerrar</button>');
+  if (g.nFotos) cargarFotos(id);
+}
+async function cargarFotos(id) {
+  try {
+    const s = await st.db.collection('fotos').where('gastoId', '==', id).get();
+    const el = $('#fotos'); if (!el) return;
+    el.className = 'fotos';
+    el.innerHTML = s.docs.map(d => { const u = d.data().data; return /^data:image\//.test(u) ? '<div class="ph"><img src="' + esc(u) + '" alt="Foto de la boleta" data-a="vf"><button data-a="bf:' + d.id + '" data-g="' + esc(id) + '" aria-label="Eliminar foto">✕</button></div>' : ''; }).join('') || '<span class="mu">Sin fotos</span>';
+  } catch (e) { const el = $('#fotos'); if (el) el.textContent = 'No se pudieron cargar las fotos.'; }
+}
+
+/* ---------- Fotos ---------- */
+async function comprimir(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    let max = 1100, q = 0.72, out = '';
+    for (let i = 0; i < 8; i++) {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+      out = c.toDataURL('image/jpeg', q);
+      if (out.length < 170000) return out;
+      q = Math.max(0.4, q - 0.08); max *= 0.85;
+    }
+    return out.length < 230000 ? out : null;
+  } catch (e) { return null; } finally { URL.revokeObjectURL(url); }
+}
+
+/* ---------- Guardado ---------- */
+const subs = {
+  async login(f) {
+    const fd = new FormData(f);
+    try { await signInWithEmailAndPassword(auth, fd.get('email').trim(), fd.get('pass')); }
+    catch (e) {
+      const c = (e && e.code) || '';
+      toast(c === 'auth/network-request-failed' ? 'Sin conexión. Revisa tu internet.' : c === 'auth/too-many-requests' ? 'Demasiados intentos. Espera unos minutos.' : /invalid-credential|wrong-password|user-not-found|invalid-email/.test(c) ? 'Correo o contraseña incorrectos.' : 'No se pudo entrar (' + c + ').');
+    }
+  },
+  async nombres(f) {
+    const fd = new FormData(f), a = fd.get('a').trim(), b = fd.get('b').trim();
+    if (!a || !b || a.toLowerCase() === b.toLowerCase()) return toast('Escriban dos nombres distintos');
+    await st.db.doc('config/nombres').set({a, b});
+    setMe(fd.get('soy') === 'b' ? 'b' : 'a'); closeModal(); render();
+  },
+  async gasto(f, id) {
+    const fd = new FormData(f), monto = Math.round(+fd.get('monto')), desc = fd.get('desc').trim();
+    if (!(monto > 0)) return toast('Escribe un monto válido');
+    if (!desc) return toast('Escribe qué compraron');
+    const d = {tipo:'gasto', v:2, desc, monto, fecha:fd.get('fecha'), cat:fd.get('cat'), pagador:fd.get('deudor') === 'a' ? 'b' : 'a'};
+    const old = id ? st.gastos.find(x => x.id === id) : null;
+    const ref = id ? st.db.doc('gastos/' + id) : st.db.collection('gastos').doc();
+    let n = old ? (old.nFotos || 0) : 0, mal = 0;
+    for (const fl of f.elements.fotos.files) {
+      const u = await comprimir(fl);
+      if (!u) { mal++; continue; }
+      await st.db.collection('fotos').doc().set({gastoId:ref.id, data:u, creado:Date.now()}); n++;
+    }
+    d.nFotos = n;
+    if (id) await ref.update(d); else { d.creado = Date.now(); await ref.set(d); }
+    closeModal(); toast(mal ? mal + ' foto(s) no se pudieron guardar' : 'Guardado ✅');
+  },
+  async pago(f, id) {
+    const fd = new FormData(f), monto = Math.round(+fd.get('monto'));
+    if (!(monto > 0)) return toast('Escribe un monto válido');
+    const d = {tipo:'pago', desc:'Pago de deuda', cat:'', monto, fecha:fd.get('fecha'), pagador:fd.get('pagador') === 'b' ? 'b' : 'a'};
+    if (id) await st.db.doc('gastos/' + id).update(d); else { d.creado = Date.now(); await st.db.collection('gastos').doc().set(d); }
+    closeModal(); toast('Pago guardado ✅');
+  },
+  async tarea(f, id) {
+    const fd = new FormData(f), titulo = fd.get('titulo').trim();
+    if (!titulo) return toast('Escribe la actividad');
+    const q = fd.get('quien'), d = {titulo, fecha:fd.get('fecha') || '', prioridad:fd.get('prioridad'), quien:(q === 'a' || q === 'b') ? q : 'ambos'};
+    if (id) await st.db.doc('tareas/' + id).update(d); else { d.hecha = false; d.hechaEn = 0; d.creado = Date.now(); await st.db.collection('tareas').doc().set(d); }
+    closeModal(); toast('Guardado ✅');
+  }
+};
+
+/* ---------- Acciones ---------- */
+const acts = {
+  x: () => closeModal(),
+  cal: () => abrirCalc(),
+  cc: () => { $('#calc').hidden = true; },
+  ck: p => calcKey(p),
+  out: async () => { closeModal(); try { await signOut(auth); } catch (e) { fail(e); } },
+  bt: p => confirmar('¿Eliminar esta actividad?', async () => { await st.db.doc('tareas/' + p).delete(); toast('Actividad eliminada'); }),
+  tab: p => { st.tab = p; render(); },
+  mes: p => { st.mes = shiftMes(st.mes, +p); render(); },
+  aj: () => ajustes(false),
+  soy: p => { setMe(p); closeModal(); render(); },
+  ng: () => formGasto(), np: () => formPago(), nt: () => formTarea(),
+  dg: p => detalle(p),
+  eg: p => { const g = st.gastos.find(x => x.id === p); if (g) g.tipo === 'pago' ? formPago(p) : formGasto(p); },
+  et: p => formTarea(p),
+  vf: (p, t) => { const z = $('#zoom'); z.innerHTML = '<img src="' + esc(t.src) + '" alt="Boleta ampliada">'; z.hidden = false; },
+  bg: p => confirmar('¿Eliminar este movimiento y sus fotos?', async () => {
+    const s = await st.db.collection('fotos').where('gastoId', '==', p).get();
+    for (const d of s.docs) await st.db.doc('fotos/' + d.id).delete();
+    await st.db.doc('gastos/' + p).delete(); toast('Eliminado');
+  }),
+  bf: (p, t) => { const gid = t.dataset.g; confirmar('¿Eliminar esta foto?', async () => {
+    const g = st.gastos.find(x => x.id === gid);
+    await st.db.doc('fotos/' + p).delete();
+    await st.db.doc('gastos/' + gid).update({nFotos:Math.max(0, ((g && g.nFotos) || 1) - 1)}); toast('Foto eliminada');
+  }); },
+  ok: async () => { closeModal(); try { await st.okFn(); } catch (e) { fail(e); } },
+  tg: async p => { const t = st.tareas.find(x => x.id === p); if (!t) return; try { await st.db.doc('tareas/' + p).update({hecha:!t.hecha, hechaEn:t.hecha ? 0 : Date.now()}); } catch (e) { fail(e); } }
+};
+document.addEventListener('click', e => {
+  if (e.target.closest('#zoom')) { $('#zoom').hidden = true; return; }
+  if (e.target.id === 'calc') { $('#calc').hidden = true; return; }
+  if (e.target.id === 'modal') { if (!st.lock) closeModal(); return; }
+  const t = e.target.closest('[data-a]'); if (!t) return;
+  const s = t.dataset.a, i = s.indexOf(':'), a = i < 0 ? s : s.slice(0, i), p = i < 0 ? '' : s.slice(i + 1);
+  if (acts[a]) acts[a](p, t);
+});
+document.addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, k = f.dataset.f; if (!k || !subs[k]) return;
+  const b = f.querySelector('button:not([type=button])'); if (b) b.disabled = true;
+  try { await subs[k](f, f.dataset.id); } catch (x) { fail(x); } finally { if (b) b.disabled = false; }
+});
+
+/* ---------- Calculadora (solo para estimar: nada de esto se guarda) ---------- */
+const kInit = () => ({a:null, op:null, cur:'0', fresh:true, entered:false, expr:''});
+const K = kInit();
+const kSym = {'+':'+', '-':'−', '*':'×', '/':'÷'};
+const kStr = n => String(Math.round(n * 1e8) / 1e8);
+const kApply = (a, op, b) => op === '+' ? a + b : op === '-' ? a - b : op === '*' ? a * b : (b === 0 ? NaN : a / b);
+function kShow(s) {
+  if (!isFinite(+s) || /e/i.test(s)) return s;
+  const neg = s[0] === '-', parts = s.replace('-', '').split('.');
+  return (neg ? '-' : '') + parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (parts[1] !== undefined ? ',' + parts[1] : '');
+}
+function calcPaint() {
+  $('#ce').textContent = K.expr;
+  const v = $('#cv'); v.textContent = kShow(K.cur); v.className = v.textContent.length > 9 ? 'sm' : '';
+}
+function abrirCalc() {
+  Object.assign(K, kInit());
+  const keys = [['DEL', '⌫', 'f', 'Borrar un dígito'], ['AC', 'AC', 'f', 'Borrar todo'], ['PCT', '%', 'f', 'Porcentaje'], ['/', '÷', 'o', 'Dividir'],
+    ['7', '7', '', '7'], ['8', '8', '', '8'], ['9', '9', '', '9'], ['*', '×', 'o', 'Multiplicar'],
+    ['4', '4', '', '4'], ['5', '5', '', '5'], ['6', '6', '', '6'], ['-', '−', 'o', 'Restar'],
+    ['1', '1', '', '1'], ['2', '2', '', '2'], ['3', '3', '', '3'], ['+', '+', 'o', 'Sumar'],
+    ['NEG', '+/−', '', 'Cambiar signo'], ['0', '0', '', '0'], ['.', ',', '', 'Coma decimal'], ['=', '=', 'o', 'Igual']];
+  $('#calc').innerHTML = '<div class="cal" role="dialog" aria-label="Calculadora"><div class="cal-top"><span>Calculadora</span><button data-a="cc">Cerrar</button></div><div id="ce"></div><div id="cv"></div><div class="ck">' +
+    keys.map(k => '<button class="' + k[2] + '" data-a="ck:' + k[0] + '" aria-label="' + k[3] + '">' + k[1] + '</button>').join('') + '</div></div>';
+  $('#calc').hidden = false; calcPaint();
+}
+function calcKey(k) {
+  if (K.cur === 'Error') Object.assign(K, kInit());
+  if (/^[0-9]$/.test(k)) {
+    if (K.fresh) { K.cur = k; K.fresh = false; }
+    else if (K.cur.replace(/[-.]/g, '').length < 12) K.cur = K.cur === '0' ? k : (K.cur === '-0' ? '-' + k : K.cur + k);
+    K.entered = true;
+  } else if (k === '.') {
+    if (K.fresh) { K.cur = '0.'; K.fresh = false; } else if (!K.cur.includes('.')) K.cur += '.';
+    K.entered = true;
+  } else if (k === 'DEL') {
+    if (!K.fresh) { K.cur = K.cur.slice(0, -1); if (K.cur === '' || K.cur === '-') K.cur = '0'; }
+  } else if (k === 'AC') {
+    Object.assign(K, kInit());
+  } else if (k === 'NEG') {
+    if (+K.cur !== 0 || K.cur.includes('.')) K.cur = K.cur[0] === '-' ? K.cur.slice(1) : '-' + K.cur;
+  } else if (k === 'PCT') {
+    K.cur = kStr(+K.cur / 100); K.fresh = true; K.entered = true;
+  } else if (k === '=') {
+    if (K.a !== null && K.op) {
+      const b = +K.cur, r = kApply(K.a, K.op, b);
+      K.expr = kShow(kStr(K.a)) + kSym[K.op] + kShow(kStr(b));
+      Object.assign(K, {a:null, op:null, fresh:true, entered:true, cur:isFinite(r) ? kStr(r) : 'Error'});
+    }
+  } else if (kSym[k]) {
+    if (K.a !== null && K.op && K.entered) {
+      const r = kApply(K.a, K.op, +K.cur);
+      if (!isFinite(r)) { Object.assign(K, kInit(), {cur:'Error'}); calcPaint(); return; }
+      K.a = +kStr(r); K.cur = kStr(r);
+    } else if (K.a === null) K.a = +K.cur;
+    K.op = k; K.fresh = true; K.entered = false; K.expr = kShow(kStr(K.a)) + kSym[k];
+  }
+  calcPaint();
+}
+
+/* ---------- Conexión a los datos compartidos (Firebase) ---------- */
+function mkRef(r) { return {id:r.id, set:d => setDoc(r, d), update:d => updateDoc(r, d), delete:() => deleteDoc(r)}; }
+function mkDb(fs) {
+  const snapDocs = s => ({docs:s.docs.map(d => ({id:d.id, data:() => d.data()}))});
+  return {
+    doc: path => { const r = doc(fs, ...path.split('/')); return Object.assign(mkRef(r), {onSnapshot:(ok, bad) => onSnapshot(r, s => ok({exists:s.exists(), data:() => s.data()}), bad)}); },
+    collection: name => ({
+      doc: id => mkRef(id ? doc(fs, name, id) : doc(collection(fs, name))),
+      onSnapshot: (ok, bad) => onSnapshot(collection(fs, name), s => ok(snapDocs(s)), bad),
+      where: (f, op, v) => ({get: async () => snapDocs(await getDocs(query(collection(fs, name), where(f, op, v))))})
+    })
+  };
+}
+function start(fs) {
+  st.db = mkDb(fs);
+  const bad = e => { st.err = e && e.code === 'permission-denied' ? 'Tu correo no tiene permiso en las reglas de Firebase. Revisa las reglas.' : 'Se perdió la conexión con los datos. Recarga la página.'; render(); };
+  st.unsubs = [
+    st.db.doc('config/nombres').onSnapshot(s => { st.names = s.exists ? s.data() : null; st.rd.n = true; render(); }, bad),
+    st.db.collection('gastos').onSnapshot(s => { st.gastos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.g = true; render(); }, bad),
+    st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad)
+  ];
+}
+function stop() {
+  st.unsubs.forEach(u => u());
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], rd:{n:false, g:false, t:false}, shown:false, err:'', db:null});
+}
+(function init() {
+  render();
+  try {
+    const app = initializeApp(firebaseConfig); auth = getAuth(app);
+    const fs = getFirestore(app);
+    onAuthStateChanged(auth, user => {
+      st.authReady = true;
+      if (user) { if (!st.user || st.user.uid !== user.uid) { stop(); st.user = user; start(fs); } }
+      else { stop(); st.user = null; closeModal(); }
+      render();
+    });
+  } catch (e) { console.error(e); st.authReady = true; st.err = 'No se pudo conectar. Revisa los datos de Firebase.'; render(); }
+})();
+</script>
+</body>
+</html>
