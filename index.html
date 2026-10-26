@@ -50,6 +50,14 @@ input:not([type=radio]),select{width:100%;font:inherit;font-size:16px;padding:11
 .fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:12px 0}
 .ph{position:relative}.ph img{width:100%;height:110px;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block}
 .ph button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:26px;height:26px;background:#000a;color:#fff;cursor:pointer}
+.notas{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:12px 0}
+.nota{border:0;border-radius:4px 4px 14px 4px;padding:14px 12px 10px;min-height:130px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;font:inherit;color:#2b2a28;cursor:pointer;box-shadow:0 3px 8px #0003;transform:rotate(-1.2deg)}
+.nota:nth-child(even){transform:rotate(1deg)}
+.nota p{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font-size:15px}.nota small{font-size:12px;opacity:.8}
+.sw{display:flex;gap:10px;flex-wrap:wrap}.sw label{margin:0}.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{display:block;width:38px;height:38px;border-radius:50%;border:3px solid transparent;box-shadow:0 0 0 1px var(--ln);cursor:pointer}
+.sw input:checked+span{border-color:var(--tx)}.sw input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+textarea{width:100%;font:inherit;font-size:16px;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);resize:vertical;min-height:110px}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
 nav button{flex:1;background:none;border:0;padding:10px 4px;font:inherit;font-size:13px;color:var(--mu);cursor:pointer}nav button.on{color:var(--ac);font-weight:700}
 .ov{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-end;justify-content:center;z-index:20}.ov[hidden]{display:none}
@@ -91,7 +99,7 @@ const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; wh
 const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
 
 let auth = null;
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], tab:'cuentas', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false}, err:'', shown:false, lock:false, okFn:null};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], tab:'cuentas', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false}, err:'', shown:false, lock:false, okFn:null};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -152,6 +160,25 @@ function vTareas() {
   return '<section class="card"><button class="btn w" data-a="nt">＋ Nueva actividad</button></section><h3>Por hacer (' + pend.length + ')</h3>' + (pend.map(tItem).join('') || '<p class="mu c">No hay actividades pendientes 🎉</p>') + (fin.length ? '<h3>Terminadas (' + fin.length + ')</h3>' + fin.map(tItem).join('') : '');
 }
 
+const NCOL = {amarillo:'#fff3a3', rosado:'#ffc9de', celeste:'#bfe6ff', verde:'#c9f0c0', naranja:'#ffd3a1', lila:'#e0cfff'};
+const ncol = c => NCOL[c] || NCOL.amarillo;
+const fdateTs = t => { if (!t) return ''; const d = new Date(t); return fdate(d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate())); };
+function vNotas() {
+  const L = [...st.notas].sort((x, y) => (y.creado || 0) - (x.creado || 0));
+  return '<section class="card"><button class="btn w" data-a="nn">＋ Nueva nota</button></section>' +
+    (L.length ? '<div class="notas">' + L.map(n => '<button class="nota" style="background:' + ncol(n.color) + '" data-a="vn:' + n.id + '"><p>' + esc(n.texto) + '</p><small><b>De ' + esc(nm(n.autor)) + '</b> · ' + fdateTs(n.creado) + '</small></button>').join('') + '</div>' : '<p class="mu c">Aún no hay notas. ¡Dejen la primera!</p>');
+}
+function formNota(id) {
+  const n = id ? st.notas.find(x => x.id === id) : null; if (id && !n) return;
+  const c = n ? n.color : 'amarillo';
+  openModal('<h2>' + (n ? 'Editar nota' : 'Nueva nota') + '</h2><form data-f="nota" data-id="' + esc(id || '') + '">' +
+    '<label>Escribe tu nota<textarea name="texto" required maxlength="300" placeholder="Ej: ¡No olvides llevar paraguas!">' + esc(n ? n.texto : '') + '</textarea></label>' +
+    '<div class="lb">Color</div><div class="sw">' + Object.keys(NCOL).map(k => '<label><input type="radio" name="color" value="' + k + '" aria-label="' + k + '"' + (k === c ? ' checked' : '') + '><span style="background:' + NCOL[k] + '"></span></label>').join('') + '</div>' +
+    '<p class="mu" style="margin:12px 0 0">De: <b>' + esc(nm(n ? n.autor : st.me)) + '</b></p>' +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>' +
+    (n ? '<button type="button" class="btn dng w" data-a="bn:' + esc(id) + '" style="margin-top:10px">Eliminar nota</button>' : ''));
+}
+
 function vLogin() {
   return '<header><h1>💞 Cuentas de a dos</h1></header>' + (st.err ? '<p class="warn">' + esc(st.err) + '</p>' : '') +
     (!st.authReady ? '<p class="mu c">Cargando…</p>' : '<section class="card"><h2>Iniciar sesión</h2><form data-f="login"><label>Correo<input name="email" type="email" required autocomplete="username"></label><label>Contraseña<input name="pass" type="password" required autocomplete="current-password"></label><div class="row"><button class="btn">Entrar</button></div></form></section>');
@@ -159,12 +186,12 @@ function vLogin() {
 
 function render() {
   if (!st.user) { $('#app').innerHTML = vLogin(); return; }
-  const ok = st.rd.n && st.rd.g && st.rd.t;
+  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o;
   let h = '<header><h1>💞 Cuentas de a dos</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
   if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
   else if (!ok) h += '<p class="mu c">Cargando…</p>';
-  else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : vTareas();
-  h += '<nav>' + [['cuentas', '💸', 'Cuentas'], ['resumen', '📊', 'Resumen'], ['tareas', '✅', 'Pendientes']].map(([k, i, t]) => '<button class="' + (st.tab === k ? 'on' : '') + '" data-a="tab:' + k + '">' + i + '<br>' + t + '</button>').join('') + '</nav>';
+  else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'tareas' ? vTareas() : vNotas();
+  h += '<nav>' + [['cuentas', '💸', 'Cuentas'], ['resumen', '📊', 'Resumen'], ['tareas', '✅', 'Pendientes'], ['notas', '📝', 'Notas']].map(([k, i, t]) => '<button class="' + (st.tab === k ? 'on' : '') + '" data-a="tab:' + k + '">' + i + '<br>' + t + '</button>').join('') + '</nav>';
   $('#app').innerHTML = h;
   if (ok && !st.shown) {
     if (!st.names) { st.shown = true; st.lock = true; ajustes(true); }
@@ -249,6 +276,14 @@ async function comprimir(file) {
 
 /* ---------- Guardado ---------- */
 const subs = {
+  async nota(f, id) {
+    const fd = new FormData(f), texto = fd.get('texto').trim();
+    if (!texto) return toast('Escribe tu nota');
+    const color = NCOL[fd.get('color')] ? fd.get('color') : 'amarillo';
+    if (id) await st.db.doc('notas/' + id).update({texto, color});
+    else await st.db.collection('notas').doc().set({texto, color, autor:st.me === 'b' ? 'b' : 'a', creado:Date.now()});
+    closeModal(); toast('Nota guardada ✅');
+  },
   async login(f) {
     const fd = new FormData(f);
     try { await signInWithEmailAndPassword(auth, fd.get('email').trim(), fd.get('pass')); }
@@ -302,6 +337,13 @@ const acts = {
   cal: () => abrirCalc(),
   cc: () => { $('#calc').hidden = true; },
   ck: p => calcKey(p),
+  nn: () => formNota(),
+  vn: p => {
+    const n = st.notas.find(x => x.id === p); if (!n) return;
+    if (n.autor === st.me) formNota(p);
+    else openModal('<div class="nota" style="background:' + ncol(n.color) + ';cursor:default;transform:none"><p>' + esc(n.texto) + '</p><small><b>De ' + esc(nm(n.autor)) + '</b> · ' + fdateTs(n.creado) + '</small></div><button class="lnk" data-a="x">Cerrar</button>');
+  },
+  bn: p => confirmar('¿Eliminar esta nota?', async () => { await st.db.doc('notas/' + p).delete(); toast('Nota eliminada'); }),
   out: async () => { closeModal(); try { await signOut(auth); } catch (e) { fail(e); } },
   bt: p => confirmar('¿Eliminar esta actividad?', async () => { await st.db.doc('tareas/' + p).delete(); toast('Actividad eliminada'); }),
   tab: p => { st.tab = p; render(); },
@@ -420,12 +462,13 @@ function start(fs) {
   st.unsubs = [
     st.db.doc('config/nombres').onSnapshot(s => { st.names = s.exists ? s.data() : null; st.rd.n = true; render(); }, bad),
     st.db.collection('gastos').onSnapshot(s => { st.gastos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.g = true; render(); }, bad),
-    st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad)
+    st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad),
+    st.db.collection('notas').onSnapshot(s => { st.notas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.o = true; render(); }, bad)
   ];
 }
 function stop() {
   st.unsubs.forEach(u => u());
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], rd:{n:false, g:false, t:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], rd:{n:false, g:false, t:false, o:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
