@@ -1,6 +1,6 @@
 # Cuentas de a dos (app de pareja)
 
-App web para una pareja de 21 años: llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes y notas tipo post-it. Los dos la usan desde su celular y ven los mismos datos al instante.
+App web para una pareja de 21 años: llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes, notas tipo post-it y el álbum "100 citas". Los dos la usan desde su celular y ven los mismos datos al instante.
 
 ## Cómo trabajar con el dueño del proyecto
 - Responder siempre en **español**, con palabras simples. Si hace falta un concepto difícil, explicarlo en una frase.
@@ -32,12 +32,19 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - `fotos`: `{gastoId, data, creado}`. `data` es una imagen JPEG en base64 achicada a menos de ~170.000 caracteres (límite de Firestore por documento: 1 MiB).
 - `tareas`: `{titulo, fecha, prioridad: 'alta'|'media'|'baja', quien: 'a'|'b'|'ambos', hecha, hechaEn, creado}`.
 - `notas`: `{texto (máx. 300), color, autor: 'a'|'b', creado}`. Solo el autor edita o elimina; la otra persona solo lee.
-- El código usa un adaptador `mkDb` que imita una API simple (`doc(ruta)`, `collection(nombre).doc()`, `.where().get()`, `.onSnapshot()`) sobre el SDK de Firebase.
+- `citas/{número}` (id `"1"`…`"100"`): `{num, nombre?, emoji?, hecha, fecha, lugar (máx. 80), sentir (máx. 1000), puntos (0–7), nFotos, mini, hechaEn, creado, editado}`.
+  - Las 90 citas base viven en el código (`CITAS_BASE`: nombre + emoji). Si una cita no tiene documento, o no tiene `nombre`, se usa la base. Las citas 91–100 se crean desde la app (con `nombre`).
+  - `hecha: true` = completada (se marca al guardar su registro). `mini` es una miniatura JPEG (< ~25.000 caracteres) para la cuadrícula. `editado` cambia en cada guardado y sirve para saber si hay que recargar las fotos.
+- `fotosCitas/{número}_{1|2}`: `{citaId, slot, data, creado}`. Dos fotos por cita como máximo, una por documento, con el mismo límite que `fotos`.
+- El código usa un adaptador `mkDb` que imita una API simple (`doc(ruta)`, `collection(nombre).doc()`, `.where().get()`, `.onSnapshot()`, `set(datos, {merge:true})`) sobre el SDK de Firebase.
 
 ## Decisiones de producto ya tomadas
 - Montos en pesos chilenos (CLP), sin decimales.
 - La calculadora (botón dentro de "Nuevo gasto") es una ventana superpuesta tipo iPhone. Es solo para estimar: **no guarda nada** y no rellena el Valor Deuda.
 - Las actividades terminadas se tachan, no se borran solas; también se pueden eliminar a mano, con confirmación (igual que los gastos).
+- **100 citas** (pestaña "Citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
+  - **Cambiar el nombre de una cita borra su registro y sus fotos** (con aviso). Cambiar solo el emoji no borra nada. "Borrar registro" la vuelve a pendiente.
+  - Fuentes Caveat y Righteous desde Google Fonts.
 - Nunca se pidió dividir distinto de mitad y mitad ni una copia de seguridad (aún no se hace).
 
 ## Ideas aún NO implementadas (preguntar antes de hacer cualquiera)
