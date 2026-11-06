@@ -129,11 +129,12 @@ nav button{font-size:12px;padding:10px 2px}
 .pol.n{background:#171513;transform:rotate(-4deg)}.pol.k{margin-top:66px;transform:rotate(5deg)}
 .pf{position:relative;aspect-ratio:4/5;background:#fff;border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .pf img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
-.pf-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;height:100%;margin:0;color:#8a7a68;font-family:Caveat,cursive;font-size:21px;cursor:pointer}
-.pf-add img{cursor:pointer}.pf-add input{display:none}.pf-ic{font-size:30px}
+.pf-add{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;height:100%;margin:0;padding:6px;text-align:center;color:#8a7a68;font-family:Caveat,cursive;font-size:21px;line-height:1.1}
+.pf-add.mal{color:var(--heart)}.pf-ic{font-size:30px}
+.pf-add input[type=file]{position:absolute;z-index:1;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;opacity:0;cursor:pointer;font-size:0}
 .pf-msg{font-family:Caveat,cursive;font-size:20px;color:#9a8a78;padding:8px;text-align:center}
 .pf-x{position:absolute;z-index:2;top:6px;right:6px;width:32px;height:32px;border:0;border-radius:50%;background:#000b;color:#fff;font-size:15px;cursor:pointer}
-.pol.busy .pf::after{content:'Achicando foto…';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#fffe;font-family:Caveat,cursive;font-size:20px;color:#6a5a48}
+.pol.busy .pf::after{content:'Achicando foto…';position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;background:#fffe;font-family:Caveat,cursive;font-size:20px;color:#6a5a48}
 .pol .hrt{position:absolute;right:4px;bottom:22px;width:38px;height:38px;transform:rotate(12deg);filter:drop-shadow(0 2px 2px #0005)}.pol .hrt path{fill:var(--heart)}
 .h-pts{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px;padding:28px 14px 0}
 .h-pts .q{width:100%;text-align:center;font-size:25px;font-weight:700;margin-bottom:2px}
@@ -370,7 +371,8 @@ function polHtml(s) {
   let inner;
   if (v.carg) inner = '<span class="pf-msg">Cargando foto…</span>';
   else if (v.errF) inner = '<span class="pf-msg">No se pudo cargar la foto</span>';
-  else if (v.edit) inner = '<label class="pf-add">' + (img || '<span class="pf-ic">📷</span><span>Agregar foto</span>') + '<input type="file" accept="image/*" data-slot="' + s + '"></label>' +
+  else if (v.edit) inner = '<div class="pf-add' + (!ph && v.mal[s] ? ' mal' : '') + '">' + (img || (v.mal[s] ? '<span class="pf-ic">⚠️</span><span>No se pudo usar esta foto. Prueba con otra</span>' : '<span class="pf-ic">📷</span><span>Agregar foto</span>')) +
+    '<input type="file" accept="image/*" data-slot="' + s + '" aria-label="' + (ph ? 'Cambiar' : 'Agregar') + ' foto ' + s + '"></div>' +
     (ph ? '<button type="button" class="pf-x" data-a="qf:' + s + '" aria-label="Quitar foto ' + s + '">✕</button>' : '');
   else inner = img;
   return '<div class="pf">' + inner + '</div>' + svgH('hrt');
@@ -407,7 +409,7 @@ function paintCita() {
 }
 function abrirCita(n) {
   if (!unirCitas(st.citas).some(x => x.n === n)) return;
-  st.cv = {n, edit:false, ver:-1, f:{1:null, 2:null}, orig:{1:null, 2:null}, tenia:{1:false, 2:false}, carg:false, errF:false, proc:0, pts:0, tok:0, ok:false};
+  st.cv = {n, edit:false, ver:-1, f:{1:null, 2:null}, orig:{1:null, 2:null}, tenia:{1:false, 2:false}, carg:false, errF:false, proc:0, pts:0, tok:0, ok:false, mal:{1:false, 2:false}, tk:{1:0, 2:0}, prom:{1:null, 2:null}};
   const el = $('#cita'); el.hidden = false; el.scrollTop = 0; document.body.style.overflow = 'hidden';
   syncCita();
 }
@@ -569,9 +571,18 @@ function achicar(img, max, q, lim, tope) {
   }
   return out.length < tope ? out : null;
 }
+const conLimite = (p, ms) => Promise.race([p, new Promise((ok, no) => setTimeout(() => no(new Error('tiempo')), ms))]);
 async function comprimir(file) {
   const url = URL.createObjectURL(file);
-  try { return achicar(await cargarImg(url), 1100, 0.72, 170000, 230000); } catch (e) { return null; } finally { URL.revokeObjectURL(url); }
+  try { return achicar(await conLimite(cargarImg(url), 20000), 1100, 0.72, 170000, 230000); }
+  catch (e) {
+    // Otra forma de leer la imagen, que funciona mejor con fotos muy grandes
+    try {
+      if (!window.createImageBitmap) return null;
+      const b = await conLimite(createImageBitmap(file), 20000);
+      try { return achicar(b, 1100, 0.72, 170000, 230000); } finally { if (b.close) b.close(); }
+    } catch (e2) { return null; }
+  } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
 }
 // Miniatura chica para la cuadrícula de citas (va dentro del documento de la cita)
 async function miniatura(src) { try { return achicar(await cargarImg(src), 360, 0.7, 25000, 40000); } catch (e) { return null; } }
@@ -633,8 +644,14 @@ const subs = {
   },
   async registro(f) {
     const v = st.cv; if (!v || !v.edit) return;
-    if (v.carg || v.proc) return toast('Espera un momento, las fotos aún se están preparando.');
+    if (v.carg) return toast('Espera un momento, las fotos aún se están cargando.');
     if (v.errF) return toast('No se pudieron cargar las fotos. Cierra la cita y ábrela otra vez.');
+    // Por si el celular no avisó que se eligió una foto: se procesa ahora, y se espera a las que se están achicando
+    const pend = [...document.querySelectorAll('#cita input[data-slot]')].map(tomarFoto);
+    await Promise.all(pend.concat([v.prom[1], v.prom[2]]));
+    if (st.cv !== v || !v.edit) return;
+    const malas = [1, 2].filter(k => v.mal[k] && !v.f[k]);
+    if (malas.length) { malas.forEach(k => { v.mal[k] = false; polPaint(k); }); return toast('Una foto no se pudo usar. Elige otra, o aprieta Guardar otra vez para guardar sin ella.'); }
     const fd = new FormData(f), fecha = fd.get('fecha') || '';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return toast('Elige la fecha de la cita');
     const lugar = String(fd.get('lugar') || '').trim().slice(0, 80), sentir = String(fd.get('sentir') || '').trim().slice(0, 1000);
@@ -728,11 +745,11 @@ const acts = {
   er: () => {
     const v = st.cv; if (!v || v.edit) return;
     const d = st.citas.find(x => x.id === String(v.n));
-    v.edit = true; v.orig = {1:v.f[1], 2:v.f[2]}; v.pts = d && d.hecha ? (Math.round(+d.puntos) || 0) : 0;
+    v.edit = true; v.orig = {1:v.f[1], 2:v.f[2]}; v.mal = {1:false, 2:false}; v.prom = {1:null, 2:null}; v.pts = d && d.hecha ? (Math.round(+d.puntos) || 0) : 0;
     paintCita(); $('#cita').scrollTop = 0;
   },
-  xe: () => { const v = st.cv; if (!v || !v.edit) return; v.edit = false; v.proc = 0; v.f = {1:v.orig[1], 2:v.orig[2]}; syncCita(); },
-  qf: p => { const v = st.cv, s = +p; if (!v || !v.edit || (s !== 1 && s !== 2)) return; v.f[s] = null; polPaint(s); },
+  xe: () => { const v = st.cv; if (!v || !v.edit) return; v.edit = false; v.proc = 0; v.tk[1]++; v.tk[2]++; v.mal = {1:false, 2:false}; v.f = {1:v.orig[1], 2:v.orig[2]}; syncCita(); },
+  qf: p => { const v = st.cv, s = +p; if (!v || !v.edit || (s !== 1 && s !== 2)) return; v.tk[s]++; v.f[s] = null; v.mal[s] = false; polPaint(s); },
   pt: (p, t) => {
     const v = st.cv, f = t.form; if (!v || !v.edit || !f) return;
     const k = Math.round(+p), val = v.pts === k ? 0 : k;
@@ -771,19 +788,35 @@ document.addEventListener('input', e => {
   if (t.id === 'cq') { st.cq = t.value; const g = $('#cgrid'); if (g) g.innerHTML = gridHtml(unirCitas(st.citas)); }
   else if (t.matches && t.matches('textarea.hl')) crecer(t);
 });
-// Foto elegida para una de las dos polaroids de la cita
-document.addEventListener('change', async e => {
-  const t = e.target; if (!t.matches || !t.matches('input[data-slot]')) return;
-  const v = st.cv, s = +t.dataset.slot, fl = t.files && t.files[0];
-  if (!v || !v.edit || !fl || (s !== 1 && s !== 2)) return;
+// Foto elegida para una de las dos polaroids de la cita.
+// Se procesa una sola vez por archivo, venga del aviso que venga.
+function tomarFoto(inp) {
+  const v = st.cv, s = +inp.dataset.slot, fl = inp.files && inp.files[0];
+  if (!v || !v.edit || (s !== 1 && s !== 2)) return null;
+  if (!fl || inp._listo === fl) return v.prom[s];
+  inp._listo = fl;
+  const tk = ++v.tk[s];
+  v.mal[s] = false;
   const pol = $('#pol' + s); if (pol) pol.classList.add('busy');
   v.proc++;
-  let u = null;
-  try { u = await comprimir(fl); } finally { v.proc = Math.max(0, v.proc - 1); }
-  if (st.cv !== v || !v.edit) return;
-  if (u) v.f[s] = {data:u, nuevo:true}; else toast('No se pudo usar esa foto. Prueba con otra.');
-  polPaint(s);
-});
+  const p = (async () => {
+    let u = null;
+    try { u = fl.size ? await comprimir(fl) : null; } catch (e) { console.error(e); u = null; } finally { v.proc = Math.max(0, v.proc - 1); }
+    if (st.cv !== v || !v.edit || v.tk[s] !== tk) return;
+    if (u) v.f[s] = {data:u, nuevo:true};
+    else { v.mal[s] = true; toast(fl.size ? 'No se pudo usar esa foto. Prueba con otra.' : 'Esa foto no está descargada en el celular. Prueba con otra.'); }
+    polPaint(s);
+  })();
+  v.prom[s] = p;
+  return p;
+}
+const esFoto = t => t && t.matches && t.matches('input[data-slot]');
+document.addEventListener('change', e => { if (esFoto(e.target)) tomarFoto(e.target); });
+document.addEventListener('input', e => { if (esFoto(e.target)) tomarFoto(e.target); });
+// Al volver de la galería: revisar si quedó una foto elegida sin procesar
+function revisarFotos() { if (st.cv && st.cv.edit) document.querySelectorAll('#cita input[data-slot]').forEach(i => { if (i.files && i.files[0]) tomarFoto(i); }); }
+window.addEventListener('focus', () => setTimeout(revisarFotos, 300));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(revisarFotos, 300); });
 
 /* ---------- Calculadora (solo para estimar: nada de esto se guarda) ---------- */
 const kInit = () => ({a:null, op:null, cur:'0', fresh:true, entered:false, expr:''});
