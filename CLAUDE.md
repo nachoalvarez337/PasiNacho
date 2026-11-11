@@ -1,6 +1,46 @@
 # Cuentas de a dos (app de pareja)
 
-App web para una pareja de 21 años: llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes, notas tipo post-it y el álbum "100 citas". Los dos la usan desde su celular y ven los mismos datos al instante.
+## Objetivo del producto (cambió: ya no es solo para dos personas)
+Plataforma para **parejas en general**, hecha de **módulos** que funcionan por separado dentro de **una sola app y una sola cuenta**. Cada pareja activa solo los módulos que quiere o compra, y cuando una pareja tiene un módulo, **lo usan los dos** (paga uno, usan ambos). Los módulos se pueden usar y vender por separado.
+
+- **Hoy** la usan solo sus dos creadores, desde el celular, viendo los mismos datos al instante. Sus datos actuales (gastos, fotos, citas, notas) **se conservan** en todo cambio futuro.
+- **Formato:** primero página web instalable en el celular (PWA); tiendas (Google Play / App Store) después.
+- **Cómo se cobra:** aún no está decidido (precios, suscripción o pago único). No inventar precios ni cobros sin preguntar.
+- El producto todavía **no está construido**: la app actual es el primer paso. Las reglas de "Cómo está hecha" valen **hoy** y cambiarán por fases (ver "Hoja de ruta").
+
+## Módulos
+Un módulo es una parte de la app con sus propios datos y su propia pestaña.
+
+| Módulo | Qué incluye hoy | Colecciones que usa |
+|---|---|---|
+| **Finanzas** | Cuentas, pagos, calculadora y Resumen | `gastos`, `fotos` |
+| **Recordatorios** | Lo que hoy es "Pendientes" (actividades con fecha, prioridad y responsable) | `tareas` |
+| **Notas** | Notas tipo post-it | `notas` |
+| **100 citas** | El álbum de citas | `citas`, `fotosCitas` |
+| **Metas** | Aún no existe (módulo nuevo, por definir) | por definir |
+
+Reglas de módulos (valen para todo trabajo nuevo):
+- Un módulo solo lee y escribe **sus propias colecciones**.
+- Un módulo **no depende de otro** (por ejemplo, 100 citas no puede necesitar nada de Finanzas).
+- Lo compartido vive en la plataforma, no dentro de un módulo: la cuenta (inicio de sesión), la pareja, los nombres (`config/nombres`) y la lista de módulos activos.
+- Un módulo desactivado no aparece en la barra y la app no lee sus datos. **Sus datos no se borran**: quedan guardados por si lo vuelven a activar.
+- Hoy todos los módulos están activos y siempre visibles: la activación por módulos es la fase 2 de la hoja de ruta.
+
+## Hoja de ruta (cada fase se aprueba por separado, con su propio plan)
+1. **Cuentas y parejas:** registro, recuperar contraseña y verificar correo; el concepto de "pareja" (un espacio con dos miembros, invitando a la otra persona con un código o enlace); datos guardados dentro de cada pareja con reglas de Firestore nuevas; **migrar los datos de los creadores sin perder nada**; dejar de usar `localStorage` (`cd_me`) para saber quién es quién.
+2. **Módulos:** lista de módulos activos por pareja, barra y lectura de datos solo de los activos, pantalla "Módulos" (al principio activada a mano, sin cobro), y reglas de Firestore que también exijan el módulo activo.
+3. **Seguridad y privacidad:** política de privacidad, términos de uso, borrar mi cuenta y mis datos, protección contra abuso (Firebase App Check). Revisar con alguien que sepa de la ley chilena de datos personales antes de publicar.
+4. **Instalar como app (PWA):** ícono, pantalla de inicio y mejor uso sin conexión.
+5. **Cobro y costos:** cobrar por módulo necesita un servicio de pagos y *Cloud Functions* (un pequeño servidor de Firebase que avisa a la app cuando se paga). Eso y el límite del plan gratis (lecturas, escrituras y espacio; las fotos dentro de Firestore salen caras con muchas parejas) probablemente exijan **plan de pago y Firebase Storage**, lo que hoy está prohibido más abajo. **Requiere decisión explícita del dueño.**
+6. **Orden del código:** dividir el archivo único (un archivo por módulo). Rompe la regla "un solo archivo": preguntar antes.
+7. **Tiendas:** empaquetar la web como app (cuentas de desarrollador pagadas y revisión de las tiendas; las tiendas cobran comisión por compras dentro de la app).
+8. **Módulos nuevos:** Metas y Recordatorios ampliados, cada uno con su plan.
+9. **Nombre, marca y precios.**
+
+Preguntas abiertas: moneda y país (hoy todo es en pesos chilenos); si las 90 citas base serán iguales para todas las parejas o cada pareja arma su lista; si el repositorio seguirá público cuando haya producto; qué pasa con los datos y los módulos pagados si una pareja se separa; si algún módulo será gratis.
+
+## Hoy: app de una pareja de 21 años
+Llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes, notas tipo post-it y el álbum "100 citas". Los dos la usan desde su celular y ven los mismos datos al instante.
 
 ## Cómo trabajar con el dueño del proyecto
 - Responder siempre en **español**, con palabras simples. Si hace falta un concepto difícil, explicarlo en una frase.
@@ -9,18 +49,18 @@ App web para una pareja de 21 años: llevar las deudas entre los dos, guardar fo
 - No romper datos existentes: cualquier cambio en cómo se guardan los datos debe seguir leyendo bien los registros antiguos.
 - Este repositorio es **público**: nunca escribir correos, contraseñas ni claves privadas en archivos ni en mensajes de commit.
 
-## Cómo está hecha
-- Un solo archivo: `index.html` (HTML + CSS + JavaScript). Sin herramientas de compilación.
+## Cómo está hecha (reglas vigentes HOY; lo marcado con "→ fase N" cambiará según la hoja de ruta)
+- Un solo archivo: `index.html` (HTML + CSS + JavaScript). Sin herramientas de compilación. → fase 6.
 - El script es un módulo (`<script type="module">`) que carga Firebase 10.14.1 desde `gstatic.com`.
 - **Publicación:** GitHub Pages, desde la rama `main`, carpeta raíz. Dirección: https://nachoalvarez337.github.io/PasiNacho/. Lo que no esté en `main` no se ve publicado (tarda 1 o 2 minutos).
-- **Firebase** (proyecto `pasinacho-c4b8c`, plan gratis Spark): Firestore (base `(default)`) y Authentication con correo/contraseña. Hay dos usuarios creados a mano en la consola; el registro público no se usa.
-- **Reglas de Firestore:** solo pueden leer y escribir los dos correos autorizados (`request.auth.token.email in [...]`). Las reglas viven en la consola de Firebase, no en este repositorio. Cubren cualquier colección nueva.
-- **No pasar a plan de pago ni agregar tarjeta.** No usar Firebase Storage (no está en el plan gratis): las fotos van dentro de Firestore.
+- **Firebase** (proyecto `pasinacho-c4b8c`, plan gratis Spark): Firestore (base `(default)`) y Authentication con correo/contraseña. Hay dos usuarios creados a mano en la consola; el registro público no se usa. → fase 1.
+- **Reglas de Firestore:** solo pueden leer y escribir los dos correos autorizados (`request.auth.token.email in [...]`). Las reglas viven en la consola de Firebase, no en este repositorio. Cubren cualquier colección nueva. → fases 1 y 2.
+- **No pasar a plan de pago ni agregar tarjeta.** No usar Firebase Storage (no está en el plan gratis): las fotos van dentro de Firestore. → fase 5, solo si el dueño lo decide de forma explícita.
 - La configuración de Firebase (`firebaseConfig`) está en el archivo a propósito; es pública, la protección son el login y las reglas.
 - La app necesita internet para guardar.
 
 ## Datos (Firestore)
-Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. Cada celular recuerda quién es con `localStorage` (clave `cd_me`).
+Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. Cada celular recuerda quién es con `localStorage` (clave `cd_me`). → fase 1.
 
 - `gastos` (también guarda los pagos), campos:
   - `tipo`: `'gasto'` o `'pago'`.
@@ -45,10 +85,13 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - **100 citas** (pestaña "Citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
   - **Cambiar el nombre de una cita borra su registro y sus fotos** (con aviso). Cambiar solo el emoji no borra nada. "Borrar registro" la vuelve a pendiente.
   - Fuentes Caveat y Righteous desde Google Fonts.
+  - **Fotos en el celular (Android):** el selector de foto de cada polaroid (`input[type=file]`) debe quedar **visible encima del marco** (invisible con `opacity:0`, nunca con `display:none`): así se toca directo. En Chrome para Android un selector escondido a veces no avisa que se eligió la foto y la cita se guardaba sin fotos. La foto se recibe por cualquiera de estos caminos: avisos `change`/`input`, al volver a la página desde la galería, o al apretar "Guardar registro" (función `tomarFoto`). Si una foto no sirve, el marco y un aviso lo dicen.
 - Nunca se pidió dividir distinto de mitad y mitad ni una copia de seguridad (aún no se hace).
 
 ## Ideas aún NO implementadas (preguntar antes de hacer cualquiera)
-Botón "Descargar copia"; gastos fijos que se repiten; metas de ahorro; presupuesto mensual; confirmar deudas; buscar y filtrar movimientos; gráficos; fechas importantes con cuenta regresiva; lista de planes por hacer; lista de compras; reacciones en las notas; resumen semanal; instalar como app (PWA); PIN de acceso; avisos al celular.
+Botón "Descargar copia"; gastos fijos que se repiten; presupuesto mensual; confirmar deudas; buscar y filtrar movimientos; gráficos; fechas importantes con cuenta regresiva; lista de planes por hacer; lista de compras; reacciones en las notas; resumen semanal; PIN de acceso; avisos al celular.
+
+Ya planificadas como parte de la hoja de ruta, pero **sin empezar** (cada una pide su propio plan y aprobación): módulo **Metas** (incluye las "metas de ahorro"), módulo **Recordatorios** ampliado, instalar como app (PWA, fase 4).
 
 ## Probar y publicar
 - No hay servidor propio. Para probar localmente: `python3 -m http.server` y abrir `localhost` (el inicio de sesión de Firebase puede fallar abriendo el archivo directo).
