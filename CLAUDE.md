@@ -1,4 +1,4 @@
-# Cuentas de a dos (app de pareja)
+# Pasinacho (app de pareja; antes "Cuentas de a dos")
 
 ## Objetivo del producto (cambió: ya no es solo para dos personas)
 Plataforma para **parejas en general**, hecha de **módulos** que funcionan por separado dentro de **una sola app y una sola cuenta**. Cada pareja activa solo los módulos que quiere o compra, y cuando una pareja tiene un módulo, **lo usan los dos** (paga uno, usan ambos). Los módulos se pueden usar y vender por separado.
@@ -9,7 +9,7 @@ Plataforma para **parejas en general**, hecha de **módulos** que funcionan por 
 - El producto todavía **no está construido**: la app actual es el primer paso. Las reglas de "Cómo está hecha" valen **hoy** y cambiarán por fases (ver "Hoja de ruta").
 
 ## Módulos
-Un módulo es una parte de la app con sus propios datos y su propia pestaña.
+Un módulo es una parte de la app con sus propios datos y su propio botón en la pantalla principal.
 
 | Módulo | Qué incluye hoy | Colecciones que usa |
 |---|---|---|
@@ -25,6 +25,7 @@ Reglas de módulos (valen para todo trabajo nuevo):
 - Lo compartido vive en la plataforma, no dentro de un módulo: la cuenta (inicio de sesión), la pareja, los nombres (`config/nombres`) y la lista de módulos activos.
 - Un módulo desactivado no aparece en la barra y la app no lee sus datos. **Sus datos no se borran**: quedan guardados por si lo vuelven a activar.
 - Hoy todos los módulos están activos y siempre visibles: la activación por módulos es la fase 2 de la hoja de ruta.
+- En el código los módulos están en la tabla `MODS` (nombre, ícono, pestañas internas, sección de entrada y secciones de la barra). Un módulo nuevo se agrega ahí.
 
 ## Hoja de ruta (cada fase se aprueba por separado, con su propio plan)
 1. **Cuentas y parejas:** registro, recuperar contraseña y verificar correo; el concepto de "pareja" (un espacio con dos miembros, invitando a la otra persona con un código o enlace); datos guardados dentro de cada pareja con reglas de Firestore nuevas; **migrar los datos de los creadores sin perder nada**; dejar de usar `localStorage` (`cd_me`) para saber quién es quién.
@@ -82,9 +83,13 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - Montos en pesos chilenos (CLP), sin decimales.
 - La calculadora (botón dentro de "Nuevo gasto") es una ventana superpuesta tipo iPhone. Es solo para estimar: **no guarda nada** y no rellena el Valor Deuda.
 - Las actividades terminadas se tachan, no se borran solas; también se pueden eliminar a mano, con confirmación (igual que los gastos).
-- **100 citas** (pestaña "Citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
+- **Pantalla principal:** al entrar se ve una pantalla rosada con la guirnalda de corazones, el nombre `“Pasinacho”` (nombre provisional; está en la constante `APP`) y 6 botones: Finanzas, Recordatorios, Notas, 100 citas y, en gris con candado, Metas y +Más. Metas y +Más solo muestran el aviso "Próximamente".
+  - Cada botón abre su módulo. Dentro, la barra de abajo tiene **🏠 Inicio** y las secciones del módulo (Finanzas: Cuentas y Resumen; los demás, solo Inicio). El encabezado muestra el nombre del módulo.
+  - La pantalla principal no espera a que carguen los datos. Tiene su propio fondo (rosado; en modo oscuro, vino oscuro) y no lleva barra de abajo.
+  - Nombres de clases CSS: la guirnalda es `.gar`, los botones `.mt`. **No reutilizar `.gl`**, que ya es el botón "vidrio" de las citas.
+- **100 citas** (módulo "100 citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
   - **Cambiar el nombre de una cita borra su registro y sus fotos** (con aviso). Cambiar solo el emoji no borra nada. "Borrar registro" la vuelve a pendiente.
-  - Fuentes Caveat y Righteous desde Google Fonts.
+  - Fuentes Caveat y Righteous desde Google Fonts. La pantalla principal también usa Pacifico (el título).
   - **Fotos en el celular (Android):** el selector de foto de cada polaroid (`input[type=file]`) debe quedar **visible encima del marco** (invisible con `opacity:0`, nunca con `display:none`): así se toca directo. En Chrome para Android un selector escondido a veces no avisa que se eligió la foto y la cita se guardaba sin fotos. La foto se recibe por cualquiera de estos caminos: avisos `change`/`input`, al volver a la página desde la galería, o al apretar "Guardar registro" (función `tomarFoto`). Si una foto no sirve, el marco y un aviso lo dicen.
 - Nunca se pidió dividir distinto de mitad y mitad ni una copia de seguridad (aún no se hace).
 
