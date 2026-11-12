@@ -17,6 +17,7 @@ Un módulo es una parte de la app con sus propios datos y su propio botón en la
 | **Recordatorios** | Lo que hoy es "Pendientes" (actividades con fecha, prioridad y responsable) | `tareas` |
 | **Notas** | Notas tipo post-it | `notas` |
 | **100 citas** | El álbum de citas | `citas`, `fotosCitas` |
+| **Cine** | Películas y series por ver / vistas, calificación, comentario, ruleta y búsqueda de series | `cine` |
 | **Metas** | Aún no existe (módulo nuevo, por definir) | por definir |
 
 Reglas de módulos (valen para todo trabajo nuevo):
@@ -38,7 +39,7 @@ Reglas de módulos (valen para todo trabajo nuevo):
 8. **Módulos nuevos:** Metas y Recordatorios ampliados, cada uno con su plan.
 9. **Nombre, marca y precios.**
 
-Preguntas abiertas: moneda y país (hoy todo es en pesos chilenos); si las 90 citas base serán iguales para todas las parejas o cada pareja arma su lista; si el repositorio seguirá público cuando haya producto; qué pasa con los datos y los módulos pagados si una pareja se separa; si algún módulo será gratis.
+Preguntas abiertas: moneda y país (hoy todo es en pesos chilenos); si las 90 citas base serán iguales para todas las parejas o cada pareja arma su lista; si el repositorio seguirá público cuando haya producto; qué pasa con los datos y los módulos pagados si una pareja se separa; si algún módulo será gratis; la licencia comercial de TVmaze (ver módulo Cine).
 
 ## Hoy: app de una pareja de 21 años
 Llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes, notas tipo post-it y el álbum "100 citas". Los dos la usan desde su celular y ven los mismos datos al instante.
@@ -76,6 +77,7 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - `citas/{número}` (id `"1"`…`"100"`): `{num, nombre?, emoji?, hecha, fecha, lugar (máx. 80), sentir (máx. 1000), puntos (0–7), nFotos, mini, hechaEn, creado, editado}`.
   - Las 90 citas base viven en el código (`CITAS_BASE`: nombre + emoji). Si una cita no tiene documento, o no tiene `nombre`, se usa la base. Las citas 91–100 se crean desde la app (con `nombre`).
   - `hecha: true` = completada (se marca al guardar su registro). `mini` es una miniatura JPEG (< ~25.000 caracteres) para la cuadrícula. `editado` cambia en cada guardado y sirve para saber si hay que recargar las fotos.
+- `cine/{id}`: `{titulo (máx. 100), tipo: 'pelicula'|'serie', anio ('' o 4 dígitos), afiche (miniatura JPEG propia, máx. ~40.000 caracteres, o ''), poster (enlace https de TVmaze o ''), tvmazeId, sinopsis (texto, máx. 400), visto, fecha, puntos (0–7), comentario (máx. 1000), creado, editado}`. Un título sin `visto` está "por ver".
 - `fotosCitas/{número}_{1|2}`: `{citaId, slot, data, creado}`. Dos fotos por cita como máximo, una por documento, con el mismo límite que `fotos`.
 - El código usa un adaptador `mkDb` que imita una API simple (`doc(ruta)`, `collection(nombre).doc()`, `.where().get()`, `.onSnapshot()`, `set(datos, {merge:true})`) sobre el SDK de Firebase.
 
@@ -83,10 +85,16 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - Montos en pesos chilenos (CLP), sin decimales.
 - La calculadora (botón dentro de "Nuevo gasto") es una ventana superpuesta tipo iPhone. Es solo para estimar: **no guarda nada** y no rellena el Valor Deuda.
 - Las actividades terminadas se tachan, no se borran solas; también se pueden eliminar a mano, con confirmación (igual que los gastos).
-- **Pantalla principal:** al entrar se ve una pantalla rosada con la guirnalda de corazones, el nombre `“Pasinacho”` (nombre provisional; está en la constante `APP`) y 6 botones: Finanzas, Recordatorios, Notas, 100 citas y, en gris con candado, Metas y +Más. Metas y +Más solo muestran el aviso "Próximamente".
+- **Pantalla principal:** al entrar se ve una pantalla rosada con la guirnalda de corazones, el nombre `“Pasinacho”` (nombre provisional; está en la constante `APP`) y los botones de los módulos: Finanzas, Recordatorios, Notas, 100 citas, Cine y, en gris con candado, Metas y +Más. Metas y +Más solo muestran el aviso "Próximamente".
   - Cada botón abre su módulo. Dentro, la barra de abajo tiene **🏠 Inicio** y las secciones del módulo (Finanzas: Cuentas y Resumen; los demás, solo Inicio). El encabezado muestra el nombre del módulo.
   - La pantalla principal no espera a que carguen los datos. Tiene su propio fondo (rosado; en modo oscuro, vino oscuro) y no lleva barra de abajo.
+  - Si la cantidad de botones es impar, el último ocupa todo el ancho.
   - Nombres de clases CSS: la guirnalda es `.gar`, los botones `.mt`. **No reutilizar `.gl`**, que ya es el botón "vidrio" de las citas.
+- **Cine:** lista de películas y series con filtros Por ver / Vistas / Todas (por defecto, Por ver) y buscador por título. "Ya la vimos" pide fecha, calificación de 1 a 7 corazones (opcional) y comentario; "Volver a por ver" borra ese registro. Las dos personas editan todo. Una sola calificación y un solo comentario por título.
+  - **Ruleta "¿Qué vemos hoy?"** con filtros Todo / Películas / Series; elige solo entre lo que falta ver. Usa la ruleta reutilizable `ruleta(o)` (la misma de 100 citas); el módulo Chef también la usará.
+  - **Series con búsqueda en TVmaze** (`https://api.tvmaze.com/search/shows?q=`; gratis, sin clave, ~20 búsquedas cada 10 segundos): se busca en el momento y **solo se guarda lo elegido** (título, año, enlace al afiche y sinopsis), no un catálogo. Siempre debe verse el crédito "Series: datos de TVmaze" con enlace. Las películas se agregan a mano; el afiche propio se guarda achicado.
+  - Seguridad: el afiche de TVmaze solo se acepta si empieza con `https://static.tvmaze.com/`; la sinopsis se convierte a texto plano; todo se escapa al mostrarlo. Si la búsqueda falla, se puede escribir a mano.
+  - **Pendiente antes de cobrar la app:** confirmar en el sitio oficial de TVmaze si su licencia (CC BY-SA 4.0 con crédito) permite el uso comercial. TMDB no se usa porque exige un acuerdo comercial para apps que se venden. Desde la sesión de desarrollo no se pudo probar TVmaze real (el entorno bloquea ese sitio): la búsqueda se probó con respuestas simuladas.
 - **100 citas** (módulo "100 citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
   - **Cambiar el nombre de una cita borra su registro y sus fotos** (con aviso). Cambiar solo el emoji no borra nada. "Borrar registro" la vuelve a pendiente.
   - Fuentes Caveat y Righteous desde Google Fonts. La pantalla principal también usa Pacifico (el título).
