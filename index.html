@@ -163,6 +163,9 @@ nav button{font-size:12px;padding:10px 2px}
 .tvc{font-size:12px;margin:4px 0 0}.tvc a{color:var(--ac)}
 #tvsel{display:flex;gap:10px;align-items:center;margin-top:10px}#tvsel img{width:40px;height:56px;border-radius:5px;object-fit:cover;flex:none}
 .mg .mt:last-child:nth-child(odd){grid-column:1/-1}
+.cf.cg{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin:10px 0 4px}.cf.cg button{flex:none;padding:9px 14px}
+.idl .it{cursor:default}.idl .tx b{overflow-wrap:anywhere}.ib{flex:none;padding:6px 16px;font-size:20px;line-height:1.2}
+.ya{flex:none;color:var(--ac);font-size:13px;font-weight:600;white-space:nowrap}
 /* ---------- Pantalla principal ---------- */
 body.inicio{background:#ffdde8;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.inicio{background:#2b1721}}
@@ -221,7 +224,7 @@ const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; wh
 const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
 
 let auth = null;
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -393,6 +396,86 @@ function cineFiltrar(L, f, q) {
 }
 // Elige al azar solo entre lo que falta ver. tipo: '' (todo) | 'pelicula' | 'serie'.
 const cineAzar = (L, tipo, r = Math.random) => { const P = L.filter(c => !c.visto && (!tipo || c.tipo === tipo)); return P.length ? P[Math.min(P.length - 1, Math.floor(r() * P.length))] : null; };
+// Lista sugerida ("Ideas para ver"): [género, tipo, [[título, año, título original para buscar el afiche (solo series, si es distinto)], ...]]
+const CINE_IDEAS = [
+  ['Romance', 'pelicula', [
+    ['Titanic', 1997], ['El diario de una pasión', 2004], ['Orgullo y prejuicio', 2005], ['La La Land', 2016], ['Antes del amanecer', 1995],
+    ['Ghost', 1990], ['Cuestión de tiempo', 2013], ['A todos los chicos de los que me enamoré', 2018], ['Bajo la misma estrella', 2014],
+    ['Mamma Mia!', 2008], ['Un lugar llamado Notting Hill', 1999], ['Mujer bonita', 1990], ['Cuando Harry conoció a Sally', 1989], ['Amélie', 2001],
+    ['Eterno resplandor de una mente sin recuerdos', 2004], ['P.D. Te amo', 2007], ['Tres metros sobre el cielo', 2010], ['Romeo + Julieta', 1996],
+    ['Moulin Rouge!', 2001], ['Dirty Dancing', 1987], ['Casablanca', 1942], ['Her', 2013], ['Loco y estúpido amor', 2011],
+    ['500 días con ella', 2009]
+  ]],
+  ['Comedia', 'pelicula', [
+    ['Click', 2006], ['Mejor imposible', 1997], ['Pequeña Miss Sunshine', 2006], ['Juno', 2007], ['Tonto y retonto', 1994], ['La máscara', 1994],
+    ['Sr. y Sra. Smith', 2005], ['Una noche en el museo', 2006], ['El gran Lebowski', 1998], ['Legalmente rubia', 2001], ['Mi pobre angelito', 1990],
+    ['Nosotros los nobles', 2013], ['Mi gran boda griega', 2002], ['Chicas pesadas', 2004], ['Resacón en Las Vegas', 2009],
+    ['La boda de mi mejor amiga', 2011], ['Supercool', 2007], ['Barbie', 2023]
+  ]],
+  ['Acción y aventura', 'pelicula', [
+    ['Piratas del Caribe: la maldición de la Perla Negra', 2003], ['Indiana Jones: En busca del arca perdida', 1981], ['Jurassic Park', 1993],
+    ['Mad Max: Furia en el camino', 2015], ['Gladiador', 2000], ['Top Gun: Maverick', 2022], ['Misión imposible', 1996], ['Duro de matar', 1988],
+    ['John Wick', 2014], ['Volver al futuro', 1985], ['Los Vengadores', 2012], ['Batman: El caballero de la noche', 2008], ['Avatar', 2009],
+    ['Dune', 2021], ['Interestelar', 2014], ['Matrix', 1999], ['Star Wars: Una nueva esperanza', 1977],
+    ['El señor de los anillos: La comunidad del anillo', 2001], ['Harry Potter y la piedra filosofal', 2001], ['Los juegos del hambre', 2012],
+    ['Spider-Man: Sin camino a casa', 2021], ['Pantera Negra', 2018]
+  ]],
+  ['Animación y familia', 'pelicula', [
+    ['Toy Story', 1995], ['Buscando a Nemo', 2003], ['Shrek', 2001], ['El rey león', 1994], ['Coco', 2017], ['Intensamente', 2015], ['Up', 2009],
+    ['Ratatouille', 2007], ['Moana', 2016], ['Frozen: una aventura congelada', 2013], ['Encanto', 2021], ['Spider-Man: Un nuevo universo', 2018],
+    ['El viaje de Chihiro', 2001], ['Mi vecino Totoro', 1988], ['Kung Fu Panda', 2008], ['Cómo entrenar a tu dragón', 2010],
+    ['Mi villano favorito', 2010], ['WALL·E', 2008], ['Los Increíbles', 2004], ['Monsters, Inc.', 2001], ['Zootrópolis', 2016], ['Soul', 2020],
+    ['Luca', 2021], ['Ralph, el demoledor', 2012]
+  ]],
+  ['Terror y suspenso', 'pelicula', [
+    ['El resplandor', 1980], ['Psicosis', 1960], ['El exorcista', 1973], ['Actividad paranormal', 2007], ['Hereditary', 2018], ['Corre!', 2017],
+    ['Un lugar en silencio', 2018], ['Scream', 1996], ['El conjuro', 2013], ['It (Eso)', 2017], ['Los otros', 2001], ['El sexto sentido', 1999],
+    ['Seven', 1995], ['El silencio de los inocentes', 1991], ['Parásitos', 2019], ['Isla siniestra', 2010], ['Perdida', 2014], ['Origen', 2010],
+    ['El gran truco', 2006]
+  ]],
+  ['Drama', 'pelicula', [
+    ['Forrest Gump', 1994], ['Cadena perpetua', 1994], ['El padrino', 1972], ['Pulp Fiction', 1994], ['El club de la pelea', 1999],
+    ['El lobo de Wall Street', 2013], ['La lista de Schindler', 1993], ['La vida es bella', 1997], ['Joker', 2019], ['Whiplash', 2014],
+    ['Oppenheimer', 2023], ['Una mente brillante', 2001], ['El pianista', 2002], ['Moonlight', 2016], ['Intocable', 2011], ['Cinema Paradiso', 1988],
+    ['La teoría del todo', 2014], ['Gran Torino', 2008], ['El gran showman', 2017], ['Bohemian Rhapsody', 2018], ['Cuenta conmigo', 1986]
+  ]],
+  ['Cine latino', 'pelicula', [
+    ['El secreto de sus ojos', 2009], ['Relatos salvajes', 2014], ['Roma', 2018], ['Una mujer fantástica', 2017], ['Machuca', 2004], ['No', 2012],
+    ['Gloria', 2013], ['Y tu mamá también', 2001], ['Amores perros', 2000], ['El laberinto del fauno', 2006], ['Volver', 2006],
+    ['Ocho apellidos vascos', 2014], ['Nueve reinas', 2000]
+  ]],
+  ['Series', 'serie', [
+    ['Friends', 1994], ['The Office', 2005], ['Breaking Bad', 2008], ['Stranger Things', 2016], ['Juego de tronos', 2011, 'Game of Thrones'],
+    ['La casa de papel', 2017, 'Money Heist'], ['Merlina', 2022, 'Wednesday'], ['Bridgerton', 2020], ['Los Simpson', 1989, 'The Simpsons'],
+    ['Padre de familia', 1999, 'Family Guy'], ['Rick y Morty', 2013, 'Rick and Morty'],
+    ['Avatar: la leyenda de Aang', 2005, 'Avatar: The Last Airbender'], ['Gravity Falls', 2012], ['Hora de aventura', 2010, 'Adventure Time'],
+    ['Black Mirror', 2011], ['The Crown', 2016], ['Heartstopper', 2022], ['Sex Education', 2019], ['Euphoria', 2019], ['Élite', 2018, 'Elite'],
+    ['Gambito de dama', 2020, "The Queen's Gambit"], ['El juego del calamar', 2021, 'Squid Game'], ['Cobra Kai', 2018], ['Ted Lasso', 2020],
+    ['Brooklyn Nine-Nine', 2013], ['Modern Family', 2009], ['Cómo conocí a vuestra madre', 2005, 'How I Met Your Mother'],
+    ['The Big Bang Theory', 2007], ['New Girl', 2011], ['Parks and Recreation', 2009], ['Gilmore Girls', 2000],
+    ['Anatomía de Grey', 2005, "Grey's Anatomy"], ['Outlander', 2014], ['Downton Abbey', 2010], ['Peaky Blinders', 2013], ['Narcos', 2015],
+    ['Dark', 2017], ['Chernobyl', 2019], ['Sherlock', 2010], ['Lost', 2004], ['Dexter', 2006], ['The Walking Dead', 2010],
+    ['Vikingos', 2013, 'Vikings'], ['The Mandalorian', 2019], ['The Last of Us', 2023], ['Arcane', 2021],
+    ['Ataque a los Titanes', 2013, 'Attack on Titan'], ['Death Note', 2006], ['Fullmetal Alchemist: Brotherhood', 2009],
+    ['Demon Slayer', 2019, 'Demon Slayer'], ['Sailor Moon', 1992], ['Merlí', 2015], ['Gossip Girl', 2007], ['Riverdale', 2017],
+    ['Diarios de vampiros', 2009, 'The Vampire Diaries'], ['Glee', 2009], ['31 minutos', 2003], ['Los 80', 2008], ['Pulseras rojas', 2011],
+    ['El Marginal', 2016], ['Yo soy Betty, la fea', 1999]
+  ]]
+];
+// Todas las ideas en una sola lista (el número de cada una es su posición, y es fijo)
+const cineIdeas = () => { const R = []; for (const [genero, tipo, L] of CINE_IDEAS) for (const [titulo, anio, original] of L) R.push({genero, tipo, titulo, anio:String(anio), original:original || titulo}); return R; };
+const ideaClave = (titulo, anio) => sinTilde(titulo).replace(/[^a-z0-9]+/g, '') + '|' + String(anio || '');
+// Ideas de un género, marcando las que ya están en la lista (mismo título y año; si lo agregado no tiene año, basta el título). "extra" son claves agregadas hace un momento.
+function ideasFiltrar(I, L, genero, extra) {
+  const ya = new Set(L.map(c => ideaClave(c.titulo, c.anio))), sinAnio = new Set(L.filter(c => !c.anio).map(c => ideaClave(c.titulo, '')));
+  return I.map((i, n) => Object.assign({}, i, {n})).filter(i => !genero || i.genero === genero).map(i => Object.assign(i, {ya:ya.has(ideaClave(i.titulo, i.anio)) || sinAnio.has(ideaClave(i.titulo, '')) || !!(extra && extra.has(ideaClave(i.titulo, i.anio)))}));
+}
+// De los resultados de TVmaze, la serie que empezó el año indicado (o a ±2 años); prefiere la que tiene afiche
+function tvElige(R, anio) {
+  const a = +anio; if (!a) return null;
+  const C = R.filter(x => x.anio && Math.abs(+x.anio - a) <= 2);
+  return C.find(x => x.poster) || C[0] || null;
+}
 /* ---------- fin lógica cine ---------- */
 
 const HP = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
@@ -575,6 +658,7 @@ function cnGridHtml(L) {
 function vCine() {
   const L = cnLista(), nv = L.filter(c => c.visto).length;
   return '<div class="row"><button class="btn cr" data-a="cineAzar:todo">🎲 ¿Qué vemos hoy?</button><button class="btn sec" data-a="cineNuevo">＋ Agregar</button></div>' +
+    '<button class="btn sec w" data-a="cineIdeas" style="margin-top:8px">💡 Ideas para ver</button>' +
     '<input id="cinq" type="search" placeholder="🔎 Buscar por título" aria-label="Buscar película o serie" autocomplete="off" enterkeyhint="search" value="' + esc(st.cnq) + '">' +
     '<div class="cf">' + [['pend', 'Por ver', L.length - nv], ['vistas', 'Vistas', nv], ['todas', 'Todas', L.length]].map(([k, t, n]) => '<button class="' + (st.cnf === k ? 'on' : '') + '" data-a="cineFiltro:' + k + '">' + t + ' <small>' + n + '</small></button>').join('') + '</div>' +
     '<div id="cingrid">' + cnGridHtml(L) + '</div>';
@@ -590,6 +674,31 @@ function cnDetalle(id) {
     '<div class="row"><button class="btn sec" data-a="cineEditar:' + esc(id) + '">✏️ Editar datos</button><button class="btn dng" data-a="cineBorrar:' + esc(id) + '">🗑️ Eliminar</button></div>' +
     (c.visto ? '<button class="btn sec w" data-a="cineVolver:' + esc(id) + '" style="margin-top:10px">↩️ Volver a por ver</button>' : '') +
     '<button class="lnk" data-a="x">Cerrar</button></div>');
+}
+/* Ideas para ver */
+const IDEAS = cineIdeas(), IDEAS_ADD = new Set(), IDEAS_GEN = CINE_IDEAS.map(g => g[0]);
+function ideasListaHtml() {
+  const L = ideasFiltrar(IDEAS, cnLista(), st.cig, IDEAS_ADD);
+  return L.map(i => '<div class="it"><span style="font-size:22px">' + CINE_EMO[i.tipo] + '</span><span class="tx"><b>' + esc(i.titulo) + '</b><small>' + esc(i.anio) + '</small></span>' +
+    (i.ya ? '<span class="ya">✓ En tu lista</span>' : '<button type="button" class="btn sec ib" data-a="cineIdea:' + i.n + '" aria-label="Agregar ' + esc(i.titulo) + '">＋</button>') + '</div>').join('');
+}
+function ideasPintar() {
+  const l = $('#ideasl'); if (l) l.innerHTML = ideasListaHtml();
+  document.querySelectorAll('#ideasg button').forEach(b => b.classList.toggle('on', b.dataset.a === 'cineGenero:' + st.cig));
+}
+function abrirIdeas() {
+  if (!IDEAS_GEN.includes(st.cig)) st.cig = IDEAS_GEN[0];
+  openModal('<h2>💡 Ideas para ver</h2><p class="mu" style="margin:0">Toca ＋ para agregar a "Por ver".</p>' +
+    '<div class="cf cg" id="ideasg">' + IDEAS_GEN.map(g => '<button type="button" class="' + (g === st.cig ? 'on' : '') + '" data-a="cineGenero:' + esc(g) + '">' + esc(g) + '</button>').join('') + '</div>' +
+    '<div class="idl" id="ideasl">' + ideasListaHtml() + '</div><button class="lnk" data-a="x">Cerrar</button>');
+}
+// Al agregar una serie de las ideas, se intenta traer su afiche y sinopsis de TVmaze (sin esperar; si falla, queda sin afiche)
+async function cinePosterIdea(id, i) {
+  try {
+    const r = await fetch('https://api.tvmaze.com/search/shows?q=' + encodeURIComponent(i.original)); if (!r.ok) return;
+    const x = tvElige(tvResultados(await r.json()), i.anio); if (!x) return;
+    await st.db.doc('cine/' + id).update({poster:x.poster, tvmazeId:x.id, sinopsis:x.sinopsis, editado:Date.now()});
+  } catch (e) { console.warn('Sin afiche para', i.titulo); }
 }
 function formVisto(id) {
   const c = cnLista().find(x => x.id === id); if (!c) return;
@@ -994,6 +1103,20 @@ const acts = {
   cineFiltro: p => { st.cnf = p === 'vistas' || p === 'todas' ? p : 'pend'; render(); },
   cineVer: p => { closeModal(); cnDetalle(p); },
   cineNuevo: () => formCine(),
+  cineIdeas: () => abrirIdeas(),
+  cineGenero: p => { if (IDEAS_GEN.includes(p)) { st.cig = p; ideasPintar(); } },
+  cineIdea: async p => {
+    const i = IDEAS[+p]; if (!i) return;
+    const k = ideaClave(i.titulo, i.anio);
+    if (IDEAS_ADD.has(k) || cnLista().some(c => ideaClave(c.titulo, c.anio) === k)) return;
+    IDEAS_ADD.add(k); ideasPintar();
+    try {
+      const ref = st.db.collection('cine').doc(), ahora = Date.now();
+      await ref.set({titulo:i.titulo, tipo:i.tipo, anio:i.anio, afiche:'', poster:'', tvmazeId:null, sinopsis:'', visto:false, fecha:'', puntos:0, comentario:'', creado:ahora, editado:ahora});
+      toast('Agregada a "Por ver" 🍿');
+      if (i.tipo === 'serie') cinePosterIdea(ref.id, i);
+    } catch (e) { IDEAS_ADD.delete(k); ideasPintar(); fail(e); }
+  },
   cineEditar: p => formCine(p),
   cineVisto: p => formVisto(p),
   cineAzar: p => ruletaCine(p === 'pelicula' || p === 'serie' ? p : ''),
