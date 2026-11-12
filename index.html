@@ -81,7 +81,7 @@ nav button{font-size:12px;padding:10px 2px}
 .ch-tx{min-width:0}.ch-k{font-size:14px;letter-spacing:1.5px;text-transform:uppercase}
 .ch-big{font-size:42px;line-height:1;margin:2px 0 4px}.ch-big small{font-size:18px}
 .ch-m{font-size:14px;color:#4a3523}
-#cq{margin-top:14px;background:var(--cd)}
+#cq,#cinq{margin-top:14px;background:var(--cd)}
 .cf{display:flex;gap:8px;margin:12px 0 2px}
 .cf button{flex:1;white-space:nowrap;border:1px solid var(--ln);background:var(--cd);color:var(--tx);border-radius:999px;padding:9px 6px;font:inherit;font-size:14px;cursor:pointer}
 .cf button.on{background:var(--tx);color:var(--bg);border-color:var(--tx);font-weight:600}.cf small{opacity:.7}
@@ -150,6 +150,19 @@ nav button{font-size:12px;padding:10px 2px}
 .h-acts{display:flex;flex-direction:column;gap:10px;margin:18px 0 0}.h-acts .row{margin:0}
 .btn.cr{background:var(--heart);color:#fff}.btn.gl{background:#ffffff24;color:#fff}
 @media (prefers-reduced-motion:reduce){.hw,.rul-c.win,.hz-b.pop svg,.hoja.ok .pol .hrt{animation:none}.ct{transition:none}}
+/* ---------- Cine ---------- */
+.cgrid.cn .ct-ph{aspect-ratio:2/3}.cgrid.cn .ct-em{font-size:40px}
+.cn-det{text-align:center}.cn-det h2{margin:12px 0 2px}
+.cn-pos{display:block;margin:0 auto;width:140px;aspect-ratio:2/3;object-fit:cover;border-radius:8px;box-shadow:0 6px 16px #0004}
+.cn-em{display:flex;align-items:center;justify-content:center;font-size:56px;color:var(--ink)}
+.cn-sin{font-size:14px;color:var(--mu);text-align:left;margin:8px 0 12px;max-height:7.5em;overflow:auto}
+.cn-reg{text-align:left;margin:10px 0 12px}.cn-reg .com{white-space:pre-wrap;word-break:break-word;margin:6px 0 0}
+.cn-pts{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin-top:4px}
+.tvr{margin:6px 0}.tv-it img,.tv-no{width:40px;height:56px;flex:none;border-radius:5px;object-fit:cover}
+.tv-no{display:flex;align-items:center;justify-content:center;background:var(--as);font-size:22px}
+.tvc{font-size:12px;margin:4px 0 0}.tvc a{color:var(--ac)}
+#tvsel{display:flex;gap:10px;align-items:center;margin-top:10px}#tvsel img{width:40px;height:56px;border-radius:5px;object-fit:cover;flex:none}
+.mg .mt:last-child:nth-child(odd){grid-column:1/-1}
 /* ---------- Pantalla principal ---------- */
 body.inicio{background:#ffdde8;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.inicio{background:#2b1721}}
@@ -208,7 +221,7 @@ const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; wh
 const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
 
 let auth = null;
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -340,6 +353,47 @@ function filtrarCitas(L, f, q) {
 }
 const azarDe = (L, r = Math.random) => { const P = L.filter(c => !c.hecha); return P.length ? P[Math.min(P.length - 1, Math.floor(r() * P.length))] : null; };
 /* ---------- fin lógica citas ---------- */
+
+/* ---------- Cine: lógica (sin pantalla) ---------- */
+const CINE_EMO = {pelicula:'🎬', serie:'📺'}, CINE_TIPO = {pelicula:'Película', serie:'Serie'};
+// Solo se aceptan afiches de TVmaze (enlace https) o la miniatura propia (imagen en base64)
+const posterOk = u => typeof u === 'string' && u.length <= 300 && /^https:\/\/static\.tvmaze\.com\/[A-Za-z0-9_\/.\-]+$/.test(u);
+const aficheOk = u => typeof u === 'string' && u.length <= 45000 && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u);
+// La sinopsis de TVmaze viene con etiquetas HTML: se deja solo el texto
+const tvTexto = h => String(h == null ? '' : h).replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+function tvResultados(j) {
+  if (!Array.isArray(j)) return [];
+  const R = [];
+  for (const x of j) {
+    const s = x && x.show;
+    if (!s || !Number.isInteger(s.id) || s.id < 1 || typeof s.name !== 'string' || !s.name.trim()) continue;
+    const y = typeof s.premiered === 'string' && /^\d{4}/.test(s.premiered) ? s.premiered.slice(0, 4) : '';
+    const u = s.image && typeof s.image.medium === 'string' ? s.image.medium.replace(/^http:\/\//, 'https://') : '';
+    R.push({id:s.id, titulo:s.name.trim().slice(0, 100), anio:y, poster:posterOk(u) ? u : '', sinopsis:tvTexto(s.summary).slice(0, 400)});
+    if (R.length >= 8) break;
+  }
+  return R;
+}
+const cineNorm = d => ({
+  id:d.id, titulo:String(d.titulo || '').trim() || 'Sin título', tipo:d.tipo === 'serie' ? 'serie' : 'pelicula', anio:/^\d{4}$/.test(d.anio) ? String(d.anio) : '',
+  afiche:aficheOk(d.afiche) ? d.afiche : '', poster:posterOk(d.poster) ? d.poster : '', sinopsis:String(d.sinopsis || '').slice(0, 400),
+  tvmazeId:Number.isInteger(d.tvmazeId) && d.tvmazeId > 0 ? d.tvmazeId : 0,
+  visto:!!d.visto, fecha:/^\d{4}-\d{2}-\d{2}$/.test(d.fecha || '') ? d.fecha : '', puntos:Math.max(0, Math.min(7, Math.round(+d.puntos) || 0)), comentario:String(d.comentario || ''), creado:+d.creado || 0
+});
+// Primero lo que falta ver (lo último agregado arriba) y después lo visto (lo más reciente arriba)
+function cineOrden(L) {
+  const p = L.filter(c => !c.visto).sort((a, b) => b.creado - a.creado);
+  const v = L.filter(c => c.visto).sort((a, b) => b.fecha.localeCompare(a.fecha) || b.creado - a.creado);
+  return p.concat(v);
+}
+// f: 'pend' | 'vistas' | 'todas'. q: texto a buscar en el título (sin importar tildes ni mayúsculas).
+function cineFiltrar(L, f, q) {
+  const t = sinTilde(q).trim();
+  return cineOrden(L.filter(c => (f === 'vistas' ? c.visto : f === 'pend' ? !c.visto : true) && (!t || sinTilde(c.titulo).includes(t))));
+}
+// Elige al azar solo entre lo que falta ver. tipo: '' (todo) | 'pelicula' | 'serie'.
+const cineAzar = (L, tipo, r = Math.random) => { const P = L.filter(c => !c.visto && (!tipo || c.tipo === tipo)); return P.length ? P[Math.min(P.length - 1, Math.floor(r() * P.length))] : null; };
+/* ---------- fin lógica cine ---------- */
 
 const HP = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 const svgH = c => '<svg viewBox="0 0 24 24" aria-hidden="true" class="' + c + '"><path d="' + HP + '"/></svg>';
@@ -480,22 +534,131 @@ function formNombreCita(n) {
     '<div class="lb">Emoji</div><div class="emg">' + L.map(e => '<label><input type="radio" name="emoji" value="' + esc(e) + '" aria-label="' + esc(e) + '"' + (e === em ? ' checked' : '') + '><span>' + esc(e) + '</span></label>').join('') + '</div>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
 }
-function azar() {
-  const P = unirCitas(st.citas).filter(c => !c.hecha);
-  if (!P.length) return toast('¡Ya completaron todas las citas! 🎉');
-  const fin = azarDe(P), tok = azar.tok = (azar.tok || 0) + 1;
-  const pinta = (c, win) => { const el = $('#rul'); if (!el) return false; el.className = 'rul-c kraft' + (win ? ' win' : ''); el.innerHTML = '<span class="rul-em">' + esc(c.emoji) + '</span><b class="fc">' + esc(c.nombre) + '</b><small class="fr">Cita #' + c.n + '</small>'; return true; };
-  openModal('<div class="rul"><h2 class="rul-k fr">¿Qué hacemos hoy?</h2><div id="rul" class="rul-c kraft"><span class="rul-em">🎲</span></div>' +
-    '<div class="row" id="rulb" style="visibility:hidden"><button class="btn sec" data-a="azar">🎲 Otra vez</button><button class="btn cr" data-a="vc:' + fin.n + '">Ver cita</button></div><button class="lnk" data-a="x">Cerrar</button></div>');
+// Ruleta reutilizable. o = {titulo, lista (con nombre y emoji), fin (la elegida), sub(c), ver (acción del botón), verTxt, otra (acción de "Otra vez"), extra (html opcional)}
+function ruleta(o) {
+  const tok = ruleta.tok = (ruleta.tok || 0) + 1, P = o.lista, fin = o.fin;
+  const pinta = (c, win) => { const el = $('#rul'); if (!el) return false; el.className = 'rul-c kraft' + (win ? ' win' : ''); el.innerHTML = '<span class="rul-em">' + esc(c.emoji) + '</span><b class="fc">' + esc(c.nombre) + '</b><small class="fr">' + esc(o.sub(c)) + '</small>'; return true; };
+  openModal('<div class="rul"><h2 class="rul-k fr">' + esc(o.titulo) + '</h2>' + (o.extra || '') + '<div id="rul" class="rul-c kraft"><span class="rul-em">🎲</span></div>' +
+    '<div class="row" id="rulb" style="visibility:hidden"><button class="btn sec" data-a="' + esc(o.otra) + '">🎲 Otra vez</button><button class="btn cr" data-a="' + esc(o.ver) + '">' + esc(o.verTxt) + '</button></div><button class="lnk" data-a="x">Cerrar</button></div>');
   const quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   let i = 0, t = 45;
   const paso = () => {
-    if (azar.tok !== tok) return;
+    if (ruleta.tok !== tok) return;
     if (quieto || t > 260) { if (pinta(fin, true)) $('#rulb').style.visibility = ''; return; }
     if (!pinta(P[(i++ * 7 + Math.floor(Math.random() * P.length)) % P.length], false)) return;
     t *= 1.16; setTimeout(paso, t);
   };
   paso();
+}
+function azar() {
+  const P = unirCitas(st.citas).filter(c => !c.hecha);
+  if (!P.length) return toast('¡Ya completaron todas las citas! 🎉');
+  const fin = azarDe(P);
+  ruleta({titulo:'¿Qué hacemos hoy?', lista:P, fin, sub:c => 'Cita #' + c.n, ver:'vc:' + fin.n, verTxt:'Ver cita', otra:'azar'});
+}
+
+/* ---------- Cine: pantallas ---------- */
+const cnLista = () => st.cine.map(cineNorm);
+const cnImg = c => c.afiche || c.poster;
+const cnHearts = n => { let h = ''; for (let i = 1; i <= 7; i++) h += '<span class="hz-v' + (i <= n ? ' on' : '') + '">' + svgH('') + '</span>'; return h; };
+function cnTile(c) {
+  const im = cnImg(c);
+  return '<button class="ct' + (c.visto ? ' hecha' : '') + '" data-a="cineVer:' + esc(c.id) + '"><span class="ct-ph kraft">' +
+    (im ? '<img src="' + esc(im) + '" alt="" referrerpolicy="no-referrer" loading="lazy">' : '<span class="ct-em">' + CINE_EMO[c.tipo] + '</span>') + (c.visto ? svgH('ct-ok') : '') + '</span>' +
+    '<span class="ct-t fc">' + esc(c.titulo) + '</span><span class="ct-f">' + (c.visto ? esc(fdate(c.fecha)) + (c.puntos ? ' · ' + c.puntos + '/7 ❤' : '') : CINE_TIPO[c.tipo] + (c.anio ? ' · ' + c.anio : '')) + '</span></button>';
+}
+function cnGridHtml(L) {
+  const F = cineFiltrar(L, st.cnf, st.cnq);
+  if (F.length) return '<div class="cgrid cn">' + F.map(cnTile).join('') + '</div>';
+  return '<p class="mu c">' + (st.cnq.trim() ? 'No hay títulos con ese nombre.' : !L.length ? 'Aún no hay películas ni series. ¡Agreguen la primera! 🍿' : st.cnf === 'vistas' ? 'Aún no han visto ninguna. 🎬' : '¡Ya vieron todo lo de la lista! 🎉') + '</p>';
+}
+function vCine() {
+  const L = cnLista(), nv = L.filter(c => c.visto).length;
+  return '<div class="row"><button class="btn cr" data-a="cineAzar:todo">🎲 ¿Qué vemos hoy?</button><button class="btn sec" data-a="cineNuevo">＋ Agregar</button></div>' +
+    '<input id="cinq" type="search" placeholder="🔎 Buscar por título" aria-label="Buscar película o serie" autocomplete="off" enterkeyhint="search" value="' + esc(st.cnq) + '">' +
+    '<div class="cf">' + [['pend', 'Por ver', L.length - nv], ['vistas', 'Vistas', nv], ['todas', 'Todas', L.length]].map(([k, t, n]) => '<button class="' + (st.cnf === k ? 'on' : '') + '" data-a="cineFiltro:' + k + '">' + t + ' <small>' + n + '</small></button>').join('') + '</div>' +
+    '<div id="cingrid">' + cnGridHtml(L) + '</div>';
+}
+function cnDetalle(id) {
+  const c = cnLista().find(x => x.id === id); if (!c) return;
+  const im = cnImg(c);
+  openModal('<div class="cn-det">' + (im ? '<img class="cn-pos" src="' + esc(im) + '" alt="Afiche de ' + esc(c.titulo) + '" referrerpolicy="no-referrer">' : '<div class="cn-pos cn-em kraft">' + CINE_EMO[c.tipo] + '</div>') +
+    '<h2>' + esc(c.titulo) + '</h2><p class="mu" style="margin:0 0 8px">' + CINE_TIPO[c.tipo] + (c.anio ? ' · ' + c.anio : '') + '</p>' +
+    (c.sinopsis ? '<p class="cn-sin">' + esc(c.sinopsis) + '</p>' : '') +
+    (c.visto ? '<div class="card cn-reg"><b>✅ La vimos el ' + esc(fLarga(c.fecha)) + '</b>' + (c.puntos ? '<div class="cn-pts">' + cnHearts(c.puntos) + '<span class="hz-t fr">' + c.puntos + '/7</span></div>' : '') + (c.comentario ? '<p class="com">' + esc(c.comentario) + '</p>' : '') + '</div>' : '<p class="mu">Aún por ver.</p>') +
+    '<button class="btn cr w" data-a="cineVisto:' + esc(id) + '">' + (c.visto ? '✍️ Editar registro' : '✅ Ya la vimos') + '</button>' +
+    '<div class="row"><button class="btn sec" data-a="cineEditar:' + esc(id) + '">✏️ Editar datos</button><button class="btn dng" data-a="cineBorrar:' + esc(id) + '">🗑️ Eliminar</button></div>' +
+    (c.visto ? '<button class="btn sec w" data-a="cineVolver:' + esc(id) + '" style="margin-top:10px">↩️ Volver a por ver</button>' : '') +
+    '<button class="lnk" data-a="x">Cerrar</button></div>');
+}
+function formVisto(id) {
+  const c = cnLista().find(x => x.id === id); if (!c) return;
+  const pts = c.visto ? c.puntos : 0;
+  openModal('<h2>' + (c.visto ? 'Editar registro' : '¡Ya la vimos! 🎬') + '</h2><p class="mu" style="margin:0 0 4px">' + esc(c.titulo) + '</p><form data-f="cineVisto" data-id="' + esc(id) + '">' +
+    '<label>Fecha<input name="fecha" type="date" required value="' + esc(c.visto && c.fecha ? c.fecha : hoy()) + '"></label>' +
+    '<div class="lb">Calificación (opcional)</div><div class="cn-pts"><input type="hidden" name="puntos" value="' + pts + '">' +
+    [1, 2, 3, 4, 5, 6, 7].map(i => '<button type="button" class="hz-b' + (i <= pts ? ' on' : '') + '" data-a="cinePt:' + i + '" aria-label="' + i + ' de 7">' + svgH('') + '</button>').join('') + '<span class="hz-t fr" id="cnhzt">' + (pts ? pts + '/7' : 'Toca un corazón') + '</span></div>' +
+    '<label>Comentario (opcional)<textarea name="comentario" maxlength="1000" placeholder="¿Qué les pareció?">' + esc(c.visto ? c.comentario : '') + '</textarea></label>' +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+}
+function formCine(id) {
+  const c = id ? cnLista().find(x => x.id === id) : null; if (id && !c) return;
+  const tipo = c ? c.tipo : 'pelicula', im = c ? cnImg(c) : '';
+  TV.tok++; TV.res = [];
+  openModal('<h2>' + (c ? 'Editar datos' : 'Agregar película o serie') + '</h2><form data-f="cine" data-id="' + esc(id || '') + '">' +
+    '<div class="lb">Tipo</div><div class="seg">' + [['pelicula', '🎬 Película'], ['serie', '📺 Serie']].map(([k, t]) => '<label><input type="radio" name="tipo" value="' + k + '"' + (k === tipo ? ' checked' : '') + '><span>' + t + '</span></label>').join('') + '</div>' +
+    '<div id="tvbox"' + (tipo === 'serie' ? '' : ' hidden') + '><label>🔎 Buscar la serie<input id="tvq" type="search" placeholder="Escribe el nombre" autocomplete="off" enterkeyhint="search"></label><div id="tvres" class="tvr"></div>' +
+    '<p class="mu tvc">Series: datos de <a href="https://www.tvmaze.com" target="_blank" rel="noopener noreferrer">TVmaze</a></p></div>' +
+    '<label>Título<input name="titulo" required maxlength="100" autocomplete="off" placeholder="Ej: Shrek" value="' + esc(c ? c.titulo : '') + '"></label>' +
+    '<label>Año (opcional)<input name="anio" type="number" inputmode="numeric" min="1888" max="2100" step="1" value="' + esc(c ? c.anio : '') + '"></label>' +
+    '<input type="hidden" name="poster" value="' + esc(c ? c.poster : '') + '"><input type="hidden" name="tvid" value="' + esc(c && c.tvmazeId ? c.tvmazeId : '') + '"><input type="hidden" name="sinopsis" value="' + esc(c ? c.sinopsis : '') + '">' +
+    '<div id="tvsel"></div>' +
+    '<label>Afiche propio (opcional)<input name="afiche" type="file" accept="image/*"></label>' +
+    (im ? '<label style="display:flex;gap:8px;align-items:center;margin:8px 0 0"><input type="checkbox" name="quitar" value="1" style="width:auto"> Quitar el afiche actual</label>' : '') +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+  tvSel($('form[data-f="cine"]'));
+}
+// Muestra el afiche de TVmaze elegido (si hay uno)
+function tvSel(f) {
+  const el = $('#tvsel'); if (!el || !f) return;
+  const u = f.elements.poster.value;
+  el.innerHTML = posterOk(u) ? '<img src="' + esc(u) + '" alt="" referrerpolicy="no-referrer"><span class="mu" style="flex:1">Afiche de TVmaze</span><button type="button" class="btn sec" data-a="cineQuitaPoster">Quitar</button>' : '';
+}
+
+/* Búsqueda de series en TVmaze (solo se guarda lo que eligen; nada de la búsqueda se guarda sola) */
+const TV = {tok:0, cache:new Map(), res:[], timer:0};
+const tvPintar = h => { const el = $('#tvres'); if (el) el.innerHTML = h; };
+function tvLanzar(q, ya) {
+  clearTimeout(TV.timer);
+  q = q.trim(); const tok = ++TV.tok;
+  if (q.length < 2) { TV.res = []; tvPintar(''); return; }
+  const go = async () => {
+    tvPintar('<p class="mu">Buscando…</p>');
+    try {
+      const k = sinTilde(q); let R = TV.cache.get(k);
+      if (!R) {
+        const r = await fetch('https://api.tvmaze.com/search/shows?q=' + encodeURIComponent(q));
+        if (!r.ok) { const e = new Error('http'); e.status = r.status; throw e; }
+        R = tvResultados(await r.json()); TV.cache.set(k, R);
+      }
+      if (TV.tok !== tok) return;
+      TV.res = R;
+      tvPintar(R.length ? R.map((x, i) => '<button type="button" class="it tv-it" data-a="cineElige:' + i + '">' + (x.poster ? '<img src="' + esc(x.poster) + '" alt="" referrerpolicy="no-referrer" loading="lazy">' : '<span class="tv-no">📺</span>') +
+        '<span class="tx"><b>' + esc(x.titulo) + '</b><small>' + (x.anio ? esc(x.anio) : 'Sin año') + '</small></span></button>').join('') : '<p class="mu">No encontré esa serie. Puedes escribirla a mano.</p>');
+    } catch (e) {
+      if (TV.tok !== tok) return;
+      tvPintar('<p class="mu">' + (e && e.status === 429 ? 'Demasiadas búsquedas seguidas. Espera unos segundos.' : 'No se pudo buscar ahora. Puedes escribir la serie a mano.') + '</p>');
+    }
+  };
+  if (ya) go(); else TV.timer = setTimeout(go, 450);
+}
+function ruletaCine(tipo) {
+  const L = cnLista(), P = L.filter(c => !c.visto && (!tipo || c.tipo === tipo));
+  const chips = '<div class="cf" style="margin:0 0 12px">' + [['todo', 'Todo', ''], ['pelicula', 'Películas', 'pelicula'], ['serie', 'Series', 'serie']].map(([k, t, v]) => '<button type="button" class="' + (v === tipo ? 'on' : '') + '" data-a="cineAzar:' + k + '">' + t + '</button>').join('') + '</div>';
+  if (!P.length) { openModal('<div class="rul"><h2 class="rul-k fr">¿Qué vemos hoy?</h2>' + chips + '<p class="mu">No hay ' + (tipo === 'serie' ? 'series' : tipo === 'pelicula' ? 'películas' : 'títulos') + ' por ver. ¡Agreguen alguna! 🍿</p><button class="lnk" data-a="x">Cerrar</button></div>'); return; }
+  const fin = cineAzar(L, tipo);
+  ruleta({titulo:'¿Qué vemos hoy?', lista:P.map(c => ({nombre:c.titulo, emoji:CINE_EMO[c.tipo], tipo:c.tipo, anio:c.anio})), fin:{nombre:fin.titulo, emoji:CINE_EMO[fin.tipo], tipo:fin.tipo, anio:fin.anio},
+    sub:c => CINE_TIPO[c.tipo] + (c.anio ? ' · ' + c.anio : ''), ver:'cineVer:' + fin.id, verTxt:'Ver detalle', otra:'cineAzar:' + (tipo || 'todo'), extra:chips});
 }
 
 /* ---------- Pantalla principal y módulos ---------- */
@@ -506,6 +669,7 @@ const MODS = [
   {id:'recordatorios', nom:'Recordatorios', ico:'⏰', t1:'Recorda<br>torios', tabs:['tareas'], entrada:'tareas', secs:[]},
   {id:'notas', nom:'Notas', ico:'📝', t1:'Notas', tabs:['notas'], entrada:'notas', secs:[]},
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
+  {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
   {id:'metas', nom:'Metas', t1:'Metas', lock:true, msg:'Metas: próximamente 🎯'},
   {id:'mas', nom:'Más módulos', t1:'+Mas', lock:true, msg:'Más módulos: próximamente ✨'}
 ];
@@ -516,6 +680,7 @@ const IC = {
   recordatorios:'<circle cx="32" cy="35" r="17"/><path d="M14 20a8 8 0 0 1 11-9M50 20a8 8 0 0 0-11-9M32 35V25M32 35l8 4M19 51l-6 7M45 51l6 7M32 18v-4"/>',
   notas:'<path d="M20 15V8h24l9 9v31h-6"/><path d="M11 15h23l9 9v32H11zM34 15v9h9M18 34h18M18 41h18M18 48h12"/>',
   citas:'<g transform="translate(3 24) scale(1.55) rotate(-12 12 12)" stroke-width="1.8"><path d="' + HP + '"/></g><g transform="translate(26 8) scale(1.45) rotate(12 12 12)" stroke-width="1.9"><path d="' + HP + '"/></g>',
+  cine:'<path d="M8 28h48v28H8zM8 28l4-12h44l-4 12M20 16l-4 12M32 16l-4 12M44 16l-4 12M27 37v13l12-6.5z"/>',
   metas:'<circle cx="30" cy="36" r="22"/><circle cx="30" cy="36" r="14"/><circle cx="30" cy="36" r="6"/><path d="M32 34l20-20M46 20l6-6M52 14V7M52 14h7"/>',
   mas:'<text x="32" y="55" text-anchor="middle" font-size="64" font-family="Righteous,sans-serif" fill="#fff" stroke="#111" stroke-width="3" paint-order="stroke">?</text>'
 };
@@ -540,20 +705,20 @@ function render() {
   const mod = modDe(st.tab);
   document.body.classList.toggle('inicio', !!st.user && !mod);
   if (!st.user) { $('#app').innerHTML = vLogin(); return; }
-  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o && st.rd.c;
+  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o && st.rd.c && st.rd.ci;
   let h;
   if (!mod) h = vInicio(); // la pantalla principal no espera a los datos
   else {
     h = '<header><h1>' + mod.ico + ' ' + esc(mod.nom) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'tareas' ? vTareas() : st.tab === 'citas' ? vCitas() : vNotas();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'tareas' ? vTareas() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : vNotas();
     h += '<nav>' + [['ini', '🏠', 'Inicio']].concat(mod.secs).map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="' + (k === 'ini' ? 'ini' : 'tab:' + k) + '">' + i + '<br>' + t + '</button>').join('') + '</nav>';
   }
   // El buscador de citas no debe perder el cursor cuando llegan datos nuevos
-  const ae = document.activeElement, keep = ae && ae.id === 'cq' ? [ae.selectionStart, ae.selectionEnd] : null;
+  const ae = document.activeElement, kid = ae && ae.id && ae.type === 'search' && ae.closest && ae.closest('#app') ? ae.id : '', keep = kid ? [ae.selectionStart, ae.selectionEnd] : null;
   $('#app').innerHTML = h;
-  if (keep) { const q = $('#cq'); if (q) { q.focus(); try { q.setSelectionRange(keep[0], keep[1]); } catch (e) {} } }
+  if (keep) { const q = document.getElementById(kid); if (q) { q.focus(); try { q.setSelectionRange(keep[0], keep[1]); } catch (e) {} } }
   if (ok && !st.shown) {
     if (!st.names) { st.shown = true; st.lock = true; ajustes(true); }
     else if (!st.me) { st.shown = true; st.lock = true; openModal('<h2>¿Quién eres?</h2><div class="row">' + ['a', 'b'].map(k => '<button class="btn" data-a="soy:' + k + '">' + esc(nm(k)) + '</button>').join('') + '</div>'); }
@@ -633,15 +798,15 @@ function achicar(img, max, q, lim, tope) {
   return out.length < tope ? out : null;
 }
 const conLimite = (p, ms) => Promise.race([p, new Promise((ok, no) => setTimeout(() => no(new Error('tiempo')), ms))]);
-async function comprimir(file) {
+async function comprimir(file, max = 1100, q = 0.72, lim = 170000, tope = 230000) {
   const url = URL.createObjectURL(file);
-  try { return achicar(await conLimite(cargarImg(url), 20000), 1100, 0.72, 170000, 230000); }
+  try { return achicar(await conLimite(cargarImg(url), 20000), max, q, lim, tope); }
   catch (e) {
     // Otra forma de leer la imagen, que funciona mejor con fotos muy grandes
     try {
       if (!window.createImageBitmap) return null;
       const b = await conLimite(createImageBitmap(file), 20000);
-      try { return achicar(b, 1100, 0.72, 170000, 230000); } finally { if (b.close) b.close(); }
+      try { return achicar(b, max, q, lim, tope); } finally { if (b.close) b.close(); }
     } catch (e2) { return null; }
   } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
 }
@@ -702,6 +867,28 @@ const subs = {
     const q = fd.get('quien'), d = {titulo, fecha:fd.get('fecha') || '', prioridad:fd.get('prioridad'), quien:(q === 'a' || q === 'b') ? q : 'ambos'};
     if (id) await st.db.doc('tareas/' + id).update(d); else { d.hecha = false; d.hechaEn = 0; d.creado = Date.now(); await st.db.collection('tareas').doc().set(d); }
     closeModal(); toast('Guardado ✅');
+  },
+  async cine(f, id) {
+    const fd = new FormData(f), titulo = String(fd.get('titulo') || '').trim().replace(/\s+/g, ' ').slice(0, 100);
+    if (!titulo) return toast('Escribe el título');
+    const serie = fd.get('tipo') === 'serie', anioT = String(fd.get('anio') || '').trim();
+    const old = id ? cnLista().find(x => x.id === id) : null; if (id && !old) return toast('Ese título ya no existe.');
+    let afiche = old ? old.afiche : '', poster = serie && posterOk(fd.get('poster')) ? fd.get('poster') : '';
+    if (fd.get('quitar')) { afiche = ''; poster = ''; }
+    const fl = f.elements.afiche.files[0];
+    if (fl) { const u = await comprimir(fl, 360, 0.7, 25000, 40000); if (u && aficheOk(u)) afiche = u; else toast('No se pudo usar ese afiche. Prueba con otro.'); }
+    const tv = Math.round(+fd.get('tvid'));
+    const d = {titulo, tipo:serie ? 'serie' : 'pelicula', anio:/^\d{4}$/.test(anioT) ? anioT : '', afiche, poster, tvmazeId:serie && tv > 0 ? tv : null, sinopsis:serie ? String(fd.get('sinopsis') || '').slice(0, 400) : '', editado:Date.now()};
+    if (id) await st.db.doc('cine/' + id).update(d);
+    else { d.visto = false; d.fecha = ''; d.puntos = 0; d.comentario = ''; d.creado = Date.now(); await st.db.collection('cine').doc().set(d); }
+    closeModal(); toast(id ? 'Guardado ✅' : '¡Agregada a la lista! 🍿');
+  },
+  async cineVisto(f, id) {
+    const fd = new FormData(f), fecha = fd.get('fecha') || '';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return toast('Elige la fecha');
+    const p = Math.round(+fd.get('puntos')), puntos = p >= 1 && p <= 7 ? p : 0;
+    await st.db.doc('cine/' + id).update({visto:true, fecha, puntos, comentario:String(fd.get('comentario') || '').trim().slice(0, 1000), editado:Date.now()});
+    closeModal(); toast('¡Registrado! 💞');
   },
   async registro(f) {
     const v = st.cv; if (!v || !v.edit) return;
@@ -803,6 +990,30 @@ const acts = {
   cf: p => { st.cf = p === 'pend' || p === 'hechas' ? p : 'todas'; render(); },
   vc: p => { closeModal(); abrirCita(+p); },
   azar: () => azar(),
+  // Cine
+  cineFiltro: p => { st.cnf = p === 'vistas' || p === 'todas' ? p : 'pend'; render(); },
+  cineVer: p => { closeModal(); cnDetalle(p); },
+  cineNuevo: () => formCine(),
+  cineEditar: p => formCine(p),
+  cineVisto: p => formVisto(p),
+  cineAzar: p => ruletaCine(p === 'pelicula' || p === 'serie' ? p : ''),
+  cineVolver: p => confirmar('¿Volver este título a "Por ver"? Se borran la fecha, la calificación y el comentario.', async () => { await st.db.doc('cine/' + p).update({visto:false, fecha:'', puntos:0, comentario:'', editado:Date.now()}); toast('Volvió a "Por ver"'); }, 'Sí, volver'),
+  cineBorrar: p => confirmar('¿Eliminar este título de la lista?', async () => { await st.db.doc('cine/' + p).delete(); toast('Eliminado'); }),
+  cineElige: p => {
+    const x = TV.res[+p], f = $('form[data-f="cine"]'); if (!x || !f) return;
+    f.elements.titulo.value = x.titulo; f.elements.anio.value = x.anio; f.elements.poster.value = x.poster; f.elements.tvid.value = x.id; f.elements.sinopsis.value = x.sinopsis;
+    if (f.elements.quitar) f.elements.quitar.checked = false;
+    TV.tok++; TV.res = []; tvPintar(''); const q = $('#tvq'); if (q) q.value = ''; tvSel(f);
+  },
+  cineQuitaPoster: () => { const f = $('form[data-f="cine"]'); if (!f) return; f.elements.poster.value = ''; f.elements.tvid.value = ''; f.elements.sinopsis.value = ''; tvSel(f); },
+  cinePt: (p, t) => {
+    const f = t.form; if (!f) return;
+    const k = Math.round(+p), val = +f.elements.puntos.value === k ? 0 : k;
+    f.elements.puntos.value = val;
+    f.querySelectorAll('.hz-b').forEach((b, i) => b.classList.toggle('on', i < val));
+    t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop');
+    const tx = $('#cnhzt'); if (tx) tx.textContent = val ? val + '/7' : 'Toca un corazón';
+  },
   nc: () => formNombreCita(0),
   cn: p => formNombreCita(+p),
   xc: () => { if (st.cv && st.cv.edit) confirmar('¿Salir sin guardar los cambios?', () => cerrarCita(), 'Salir'); else cerrarCita(); },
@@ -850,6 +1061,8 @@ document.addEventListener('submit', async e => {
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'cq') { st.cq = t.value; const g = $('#cgrid'); if (g) g.innerHTML = gridHtml(unirCitas(st.citas)); }
+  else if (t.id === 'cinq') { st.cnq = t.value; const g = $('#cingrid'); if (g) g.innerHTML = cnGridHtml(cnLista()); }
+  else if (t.id === 'tvq') tvLanzar(t.value, false);
   else if (t.matches && t.matches('textarea.hl')) crecer(t);
 });
 // Foto elegida para una de las dos polaroids de la cita.
@@ -875,6 +1088,9 @@ function tomarFoto(inp) {
   return p;
 }
 const esFoto = t => t && t.matches && t.matches('input[data-slot]');
+// Cine: en el formulario, el buscador de TVmaze solo aparece para series; Enter busca en vez de guardar
+document.addEventListener('change', e => { const t = e.target; if (t.name === 'tipo' && t.form && t.form.dataset.f === 'cine') { const b = $('#tvbox'); if (b) b.hidden = t.value !== 'serie'; } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'tvq') { e.preventDefault(); tvLanzar(e.target.value, true); } });
 document.addEventListener('change', e => { if (esFoto(e.target)) tomarFoto(e.target); });
 document.addEventListener('input', e => { if (esFoto(e.target)) tomarFoto(e.target); });
 // Al volver de la galería: revisar si quedó una foto elegida sin procesar
@@ -963,13 +1179,14 @@ function start(fs) {
     st.db.collection('gastos').onSnapshot(s => { st.gastos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.g = true; render(); }, bad),
     st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad),
     st.db.collection('notas').onSnapshot(s => { st.notas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.o = true; render(); }, bad),
-    st.db.collection('citas').onSnapshot(s => { st.citas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.c = true; render(); syncCita(); }, bad)
+    st.db.collection('citas').onSnapshot(s => { st.citas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.c = true; render(); syncCita(); }, bad),
+    st.db.collection('cine').onSnapshot(s => { st.cine = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ci = true; render(); }, bad)
   ];
 }
 function stop() {
   st.unsubs.forEach(u => u());
   cerrarCita();
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
