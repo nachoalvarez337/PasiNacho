@@ -81,7 +81,7 @@ nav button{font-size:12px;padding:10px 2px}
 .ch-tx{min-width:0}.ch-k{font-size:14px;letter-spacing:1.5px;text-transform:uppercase}
 .ch-big{font-size:42px;line-height:1;margin:2px 0 4px}.ch-big small{font-size:18px}
 .ch-m{font-size:14px;color:#4a3523}
-#cq,#cinq{margin-top:14px;background:var(--cd)}
+#cq,#cinq,#chq{margin-top:14px;background:var(--cd)}
 .cf{display:flex;gap:8px;margin:12px 0 2px}
 .cf button{flex:1;white-space:nowrap;border:1px solid var(--ln);background:var(--cd);color:var(--tx);border-radius:999px;padding:9px 6px;font:inherit;font-size:14px;cursor:pointer}
 .cf button.on{background:var(--tx);color:var(--bg);border-color:var(--tx);font-weight:600}.cf small{opacity:.7}
@@ -166,6 +166,11 @@ nav button{font-size:12px;padding:10px 2px}
 .cf.cg{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin:10px 0 4px}.cf.cg button{flex:none;padding:9px 14px}
 .idl .it{cursor:default}.idl .tx b{overflow-wrap:anywhere}.ib{flex:none;padding:6px 16px;font-size:20px;line-height:1.2}
 .ya{flex:none;color:var(--ac);font-size:13px;font-weight:600;white-space:nowrap}
+/* ---------- Chef ---------- */
+.chl .it .tx b{overflow-wrap:anywhere}.chl .it .em{font-size:28px;flex:none}
+.ch-rec{white-space:pre-wrap;word-break:break-word;text-align:left;margin:10px 0 14px;max-height:50vh;overflow:auto;font-size:15px;line-height:1.5}
+.ch-det{text-align:center}.ch-det .big-em{font-size:56px;line-height:1.1}.ch-det h2{margin:6px 0 2px}
+#chpedido{margin-top:10px}#chpedido textarea{min-height:90px;font-size:14px}
 /* ---------- Pantalla principal ---------- */
 body.inicio{background:#ffdde8;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.inicio{background:#2b1721}}
@@ -224,7 +229,7 @@ const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; wh
 const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
 
 let auth = null;
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -477,6 +482,16 @@ function tvElige(R, anio) {
   return C.find(x => x.poster) || C[0] || null;
 }
 /* ---------- fin lógica cine ---------- */
+
+/* ---------- Chef: lógica (sin pantalla) ---------- */
+const CHEF_EMO = ['🍽️', '🍝', '🍕', '🍔', '🌮', '🌯', '🥗', '🍲', '🍜', '🍣', '🍱', '🥘', '🍛', '🥪', '🌭', '🍟', '🍗', '🥩', '🍖', '🥟', '🥞', '🍳', '🥐', '🍞', '🧀', '🥑', '🍅', '🍤', '🐟', '🍚', '🥣', '🍰', '🧁', '🍩', '🍪', '🍫', '🍦', '🍓', '🍎', '🍌'];
+const chefNorm = d => ({id:d.id, nombre:String(d.nombre || '').trim().slice(0, 60) || 'Sin nombre', emoji:CHEF_EMO.includes(d.emoji) ? d.emoji : '🍽️', receta:String(d.receta || '').slice(0, 4000), creado:+d.creado || 0});
+// Orden alfabético (sin importar tildes ni mayúsculas) y búsqueda por nombre
+const chefFiltrar = (L, q) => { const t = sinTilde(q).trim(); return L.filter(c => !t || sinTilde(c.nombre).includes(t)).sort((a, b) => sinTilde(a.nombre).localeCompare(sinTilde(b.nombre), 'es') || a.creado - b.creado); };
+const chefAzar = (L, r = Math.random) => L.length ? L[Math.min(L.length - 1, Math.floor(r() * L.length))] : null;
+// Texto que se copia para pegarlo en una IA
+const chefPedido = nombre => 'Dame una receta fácil de ' + String(nombre).trim().replace(/\s+/g, ' ') + ' para 2 personas. Escríbela en español, con la lista de ingredientes con cantidades y luego los pasos numerados. Que sea clara y breve.';
+/* ---------- fin lógica chef ---------- */
 
 const HP = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 const svgH = c => '<svg viewBox="0 0 24 24" aria-hidden="true" class="' + c + '"><path d="' + HP + '"/></svg>';
@@ -771,6 +786,50 @@ function ruletaCine(tipo) {
     sub:c => CINE_TIPO[c.tipo] + (c.anio ? ' · ' + c.anio : ''), ver:'cineVer:' + fin.id, verTxt:'Ver detalle', otra:'cineAzar:' + (tipo || 'todo'), extra:chips});
 }
 
+/* ---------- Chef: pantallas ---------- */
+const chLista = () => st.recetas.map(chefNorm);
+function chListaHtml(L) {
+  const F = chefFiltrar(L, st.chq);
+  if (F.length) return F.map(c => '<button class="it" data-a="chefVer:' + esc(c.id) + '"><span class="em">' + esc(c.emoji) + '</span><span class="tx"><b>' + esc(c.nombre) + '</b><small>' + (c.receta ? 'Con receta' : 'Sin receta aún') + '</small></span></button>').join('');
+  return '<p class="mu c">' + (st.chq.trim() ? 'No hay comidas con ese nombre.' : 'Aún no hay comidas. ¡Agreguen su primera favorita! 🍳') + '</p>';
+}
+function vChef() {
+  const L = chLista();
+  return '<div class="row"><button class="btn cr" data-a="chefAzar">🎲 ¿Qué comemos hoy?</button><button class="btn sec" data-a="chefNuevo">＋ Agregar comida</button></div>' +
+    '<input id="chq" type="search" placeholder="🔎 Buscar comida" aria-label="Buscar comida" autocomplete="off" enterkeyhint="search" value="' + esc(st.chq) + '">' +
+    '<h3>' + L.length + (L.length === 1 ? ' comida favorita' : ' comidas favoritas') + '</h3><div class="chl" id="chlista">' + chListaHtml(L) + '</div>';
+}
+function chefDetalle(id) {
+  const c = chLista().find(x => x.id === id); if (!c) return;
+  openModal('<div class="ch-det"><div class="big-em">' + esc(c.emoji) + '</div><h2>' + esc(c.nombre) + '</h2></div>' +
+    (c.receta ? '<div class="ch-rec">' + esc(c.receta) + '</div>' : '<p class="mu c" style="margin:14px 0">Aún no tiene receta. Toca Editar para escribirla o pedirla a la IA.</p>') +
+    '<div class="row"><button class="btn sec" data-a="chefEditar:' + esc(id) + '">✏️ Editar</button><button class="btn dng" data-a="chefBorrar:' + esc(id) + '">🗑️ Eliminar</button></div><button class="lnk" data-a="x">Cerrar</button>');
+}
+function formChef(id) {
+  const c = id ? chLista().find(x => x.id === id) : null; if (id && !c) return;
+  const em = c ? c.emoji : CHEF_EMO[0];
+  openModal('<h2>' + (c ? 'Editar comida' : 'Agregar comida') + '</h2><form data-f="chef" data-id="' + esc(id || '') + '">' +
+    '<label>Nombre de la comida<input name="nombre" required maxlength="60" autocomplete="off" placeholder="Ej: Lasaña" value="' + esc(c ? c.nombre : '') + '"></label>' +
+    '<div class="lb">Emoji</div><div class="emg">' + CHEF_EMO.map(e => '<label><input type="radio" name="emoji" value="' + esc(e) + '" aria-label="' + esc(e) + '"' + (e === em ? ' checked' : '') + '><span>' + esc(e) + '</span></label>').join('') + '</div>' +
+    '<label>Receta (opcional)<textarea name="receta" maxlength="4000" placeholder="Ingredientes y pasos…" style="min-height:170px">' + esc(c ? c.receta : '') + '</textarea></label>' +
+    '<button type="button" class="btn sec w" data-a="chefIA" style="margin-top:8px">✨ Pedir receta a la IA</button><div id="chpedido" hidden></div>' +
+    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+}
+// Copia un texto al portapapeles (con un segundo método por si el celular no deja usar el primero)
+async function copiar(txt) {
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(txt); return true; } } catch (e) {}
+  try {
+    const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length);
+    const ok = document.execCommand('copy'); ta.remove(); return !!ok;
+  } catch (e) { return false; }
+}
+function chefRuleta() {
+  const L = chLista(); if (!L.length) return toast('Aún no hay comidas. ¡Agreguen alguna! 🍳');
+  const fin = chefAzar(L), mapa = c => ({nombre:c.nombre, emoji:c.emoji, con:!!c.receta});
+  ruleta({titulo:'¿Qué comemos hoy?', lista:L.map(mapa), fin:mapa(fin), sub:c => c.con ? 'Con receta' : 'Sin receta aún', ver:'chefVer:' + fin.id, verTxt:'Ver receta', otra:'chefAzar'});
+}
+
 /* ---------- Pantalla principal y módulos ---------- */
 const APP = 'Pasinacho';
 // Cada módulo: sus pestañas internas (tabs), la primera que se abre (entrada) y las secciones que muestra la barra.
@@ -780,6 +839,7 @@ const MODS = [
   {id:'notas', nom:'Notas', ico:'📝', t1:'Notas', tabs:['notas'], entrada:'notas', secs:[]},
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
   {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
+  {id:'chef', nom:'Chef', ico:'🍳', t1:'Chef', tabs:['chef'], entrada:'chef', secs:[]},
   {id:'metas', nom:'Metas', t1:'Metas', lock:true, msg:'Metas: próximamente 🎯'},
   {id:'mas', nom:'Más módulos', t1:'+Mas', lock:true, msg:'Más módulos: próximamente ✨'}
 ];
@@ -791,6 +851,7 @@ const IC = {
   notas:'<path d="M20 15V8h24l9 9v31h-6"/><path d="M11 15h23l9 9v32H11zM34 15v9h9M18 34h18M18 41h18M18 48h12"/>',
   citas:'<g transform="translate(3 24) scale(1.55) rotate(-12 12 12)" stroke-width="1.8"><path d="' + HP + '"/></g><g transform="translate(26 8) scale(1.45) rotate(12 12 12)" stroke-width="1.9"><path d="' + HP + '"/></g>',
   cine:'<path d="M8 28h48v28H8zM8 28l4-12h44l-4 12M20 16l-4 12M32 16l-4 12M44 16l-4 12M27 37v13l12-6.5z"/>',
+  chef:'<path d="M18 38a9 9 0 0 1 2-17 11 11 0 0 1 12-6 11 11 0 0 1 12 6 9 9 0 0 1 2 17zM21 38v16h22V38M21 46h22"/>',
   metas:'<circle cx="30" cy="36" r="22"/><circle cx="30" cy="36" r="14"/><circle cx="30" cy="36" r="6"/><path d="M32 34l20-20M46 20l6-6M52 14V7M52 14h7"/>',
   mas:'<text x="32" y="55" text-anchor="middle" font-size="64" font-family="Righteous,sans-serif" fill="#fff" stroke="#111" stroke-width="3" paint-order="stroke">?</text>'
 };
@@ -815,14 +876,14 @@ function render() {
   const mod = modDe(st.tab);
   document.body.classList.toggle('inicio', !!st.user && !mod);
   if (!st.user) { $('#app').innerHTML = vLogin(); return; }
-  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o && st.rd.c && st.rd.ci;
+  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o && st.rd.c && st.rd.ci && st.rd.ch;
   let h;
   if (!mod) h = vInicio(); // la pantalla principal no espera a los datos
   else {
     h = '<header><h1>' + mod.ico + ' ' + esc(mod.nom) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'tareas' ? vTareas() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : vNotas();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'tareas' ? vTareas() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : vNotas();
     h += '<nav>' + [['ini', '🏠', 'Inicio']].concat(mod.secs).map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="' + (k === 'ini' ? 'ini' : 'tab:' + k) + '">' + i + '<br>' + t + '</button>').join('') + '</nav>';
   }
   // El buscador de citas no debe perder el cursor cuando llegan datos nuevos
@@ -993,6 +1054,16 @@ const subs = {
     else { d.visto = false; d.fecha = ''; d.puntos = 0; d.comentario = ''; d.creado = Date.now(); await st.db.collection('cine').doc().set(d); }
     closeModal(); toast(id ? 'Guardado ✅' : '¡Agregada a la lista! 🍿');
   },
+  async chef(f, id) {
+    const fd = new FormData(f), nombre = String(fd.get('nombre') || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+    if (!nombre) return toast('Escribe el nombre de la comida');
+    const emoji = CHEF_EMO.includes(fd.get('emoji')) ? fd.get('emoji') : CHEF_EMO[0], receta = String(fd.get('receta') || '').replace(/\r\n/g, '\n').trim().slice(0, 4000), ahora = Date.now();
+    if (id) {
+      if (!chLista().some(x => x.id === id)) return toast('Esa comida ya no existe.');
+      await st.db.doc('recetas/' + id).update({nombre, emoji, receta, editado:ahora});
+    } else await st.db.collection('recetas').doc().set({nombre, emoji, receta, creado:ahora, editado:ahora, autor:st.me === 'b' ? 'b' : 'a'});
+    closeModal(); toast(id ? 'Guardado ✅' : '¡Comida agregada! 🍳');
+  },
   async cineVisto(f, id) {
     const fd = new FormData(f), fecha = fd.get('fecha') || '';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return toast('Elige la fecha');
@@ -1104,6 +1175,23 @@ const acts = {
   cineFiltro: p => { st.cnf = p === 'vistas' || p === 'todas' ? p : 'pend'; render(); },
   cineVer: p => { closeModal(); cnDetalle(p); },
   cineNuevo: () => formCine(),
+  // Chef
+  chefNuevo: () => formChef(),
+  chefEditar: p => formChef(p),
+  chefVer: p => { closeModal(); chefDetalle(p); },
+  chefAzar: () => chefRuleta(),
+  chefBorrar: p => confirmar('¿Eliminar esta comida y su receta?', async () => { await st.db.doc('recetas/' + p).delete(); toast('Eliminada'); }),
+  chefIA: async (p, t) => {
+    const f = t.form; if (!f) return;
+    const nombre = f.elements.nombre.value.trim();
+    if (!nombre) { toast('Escribe primero el nombre de la comida'); f.elements.nombre.focus(); return; }
+    const txt = chefPedido(nombre), caja = $('#chpedido');
+    if (await copiar(txt)) { if (caja) { caja.hidden = true; caja.innerHTML = ''; } toast('Pedido copiado. Pégalo en tu IA favorita y vuelve a pegar aquí la receta ✨'); }
+    else if (caja) { // el celular no dejó copiar: se muestra el texto para copiarlo a mano
+      caja.hidden = false; caja.innerHTML = '<p class="mu" style="margin:0 0 4px">No pude copiarlo solo. Copia este texto y pégalo en tu IA:</p><textarea readonly id="chpedidot"></textarea>';
+      const ta = $('#chpedidot'); ta.value = txt; ta.focus(); ta.select();
+    }
+  },
   cineBuscar: () => formCine(null, true),
   cineIdeas: () => abrirIdeas(),
   cineGenero: p => { if (IDEAS_GEN.includes(p)) { st.cig = p; ideasPintar(); } },
@@ -1187,6 +1275,7 @@ document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'cq') { st.cq = t.value; const g = $('#cgrid'); if (g) g.innerHTML = gridHtml(unirCitas(st.citas)); }
   else if (t.id === 'cinq') { st.cnq = t.value; const g = $('#cingrid'); if (g) g.innerHTML = cnGridHtml(cnLista()); }
+  else if (t.id === 'chq') { st.chq = t.value; const g = $('#chlista'); if (g) g.innerHTML = chListaHtml(chLista()); }
   else if (t.id === 'tvq') tvLanzar(t.value, false);
   else if (t.matches && t.matches('textarea.hl')) crecer(t);
 });
@@ -1305,13 +1394,14 @@ function start(fs) {
     st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad),
     st.db.collection('notas').onSnapshot(s => { st.notas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.o = true; render(); }, bad),
     st.db.collection('citas').onSnapshot(s => { st.citas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.c = true; render(); syncCita(); }, bad),
-    st.db.collection('cine').onSnapshot(s => { st.cine = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ci = true; render(); }, bad)
+    st.db.collection('cine').onSnapshot(s => { st.cine = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ci = true; render(); }, bad),
+    st.db.collection('recetas').onSnapshot(s => { st.recetas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ch = true; render(); }, bad)
   ];
 }
 function stop() {
   st.unsubs.forEach(u => u());
   cerrarCita();
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
