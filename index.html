@@ -658,7 +658,7 @@ function cnGridHtml(L) {
 function vCine() {
   const L = cnLista(), nv = L.filter(c => c.visto).length;
   return '<div class="row"><button class="btn cr" data-a="cineAzar:todo">🎲 ¿Qué vemos hoy?</button><button class="btn sec" data-a="cineNuevo">＋ Agregar</button></div>' +
-    '<button class="btn sec w" data-a="cineIdeas" style="margin-top:8px">💡 Ideas para ver</button>' +
+    '<div class="row"><button class="btn sec" data-a="cineBuscar">🔎 Buscar serie</button><button class="btn sec" data-a="cineIdeas">💡 Ideas para ver</button></div>' +
     '<input id="cinq" type="search" placeholder="🔎 Buscar por título" aria-label="Buscar película o serie" autocomplete="off" enterkeyhint="search" value="' + esc(st.cnq) + '">' +
     '<div class="cf">' + [['pend', 'Por ver', L.length - nv], ['vistas', 'Vistas', nv], ['todas', 'Todas', L.length]].map(([k, t, n]) => '<button class="' + (st.cnf === k ? 'on' : '') + '" data-a="cineFiltro:' + k + '">' + t + ' <small>' + n + '</small></button>').join('') + '</div>' +
     '<div id="cingrid">' + cnGridHtml(L) + '</div>';
@@ -710,9 +710,9 @@ function formVisto(id) {
     '<label>Comentario (opcional)<textarea name="comentario" maxlength="1000" placeholder="¿Qué les pareció?">' + esc(c.visto ? c.comentario : '') + '</textarea></label>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
 }
-function formCine(id) {
+function formCine(id, serie) {
   const c = id ? cnLista().find(x => x.id === id) : null; if (id && !c) return;
-  const tipo = c ? c.tipo : 'pelicula', im = c ? cnImg(c) : '';
+  const tipo = c ? c.tipo : (serie ? 'serie' : 'pelicula'), im = c ? cnImg(c) : '';
   TV.tok++; TV.res = [];
   openModal('<h2>' + (c ? 'Editar datos' : 'Agregar película o serie') + '</h2><form data-f="cine" data-id="' + esc(id || '') + '">' +
     '<div class="lb">Tipo</div><div class="seg">' + [['pelicula', '🎬 Película'], ['serie', '📺 Serie']].map(([k, t]) => '<label><input type="radio" name="tipo" value="' + k + '"' + (k === tipo ? ' checked' : '') + '><span>' + t + '</span></label>').join('') + '</div>' +
@@ -726,6 +726,7 @@ function formCine(id) {
     (im ? '<label style="display:flex;gap:8px;align-items:center;margin:8px 0 0"><input type="checkbox" name="quitar" value="1" style="width:auto"> Quitar el afiche actual</label>' : '') +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
   tvSel($('form[data-f="cine"]'));
+  if (serie && !c) { const q = $('#tvq'); if (q) q.focus(); } // el cursor queda en el buscador
 }
 // Muestra el afiche de TVmaze elegido (si hay uno)
 function tvSel(f) {
@@ -1103,6 +1104,7 @@ const acts = {
   cineFiltro: p => { st.cnf = p === 'vistas' || p === 'todas' ? p : 'pend'; render(); },
   cineVer: p => { closeModal(); cnDetalle(p); },
   cineNuevo: () => formCine(),
+  cineBuscar: () => formCine(null, true),
   cineIdeas: () => abrirIdeas(),
   cineGenero: p => { if (IDEAS_GEN.includes(p)) { st.cig = p; ideasPintar(); } },
   cineIdea: async p => {
