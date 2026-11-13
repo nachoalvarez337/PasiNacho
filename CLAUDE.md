@@ -18,6 +18,7 @@ Un módulo es una parte de la app con sus propios datos y su propio botón en la
 | **Notas** | Notas tipo post-it | `notas` |
 | **100 citas** | El álbum de citas | `citas`, `fotosCitas` |
 | **Cine** | Películas y series por ver / vistas, calificación, comentario, ruleta, ideas para ver y búsqueda de series | `cine` |
+| **Chef** | Comidas favoritas con su receta, y ruleta "¿Qué comemos hoy?" | `recetas` |
 | **Metas** | Aún no existe (módulo nuevo, por definir) | por definir |
 
 Reglas de módulos (valen para todo trabajo nuevo):
@@ -78,6 +79,7 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
   - Las 90 citas base viven en el código (`CITAS_BASE`: nombre + emoji). Si una cita no tiene documento, o no tiene `nombre`, se usa la base. Las citas 91–100 se crean desde la app (con `nombre`).
   - `hecha: true` = completada (se marca al guardar su registro). `mini` es una miniatura JPEG (< ~25.000 caracteres) para la cuadrícula. `editado` cambia en cada guardado y sirve para saber si hay que recargar las fotos.
 - `cine/{id}`: `{titulo (máx. 100), tipo: 'pelicula'|'serie', anio ('' o 4 dígitos), afiche (miniatura JPEG propia, máx. ~40.000 caracteres, o ''), poster (enlace https de TVmaze o ''), tvmazeId, sinopsis (texto, máx. 400), visto, fecha, puntos (0–7), comentario (máx. 1000), creado, editado}`. Un título sin `visto` está "por ver".
+- `recetas/{id}`: `{nombre (máx. 60), emoji (uno de los 40 de `CHEF_EMO`), receta (texto libre, máx. 4000, puede estar vacío), creado, editado, autor: 'a'|'b'}`.
 - `fotosCitas/{número}_{1|2}`: `{citaId, slot, data, creado}`. Dos fotos por cita como máximo, una por documento, con el mismo límite que `fotos`.
 - El código usa un adaptador `mkDb` que imita una API simple (`doc(ruta)`, `collection(nombre).doc()`, `.where().get()`, `.onSnapshot()`, `set(datos, {merge:true})`) sobre el SDK de Firebase.
 
@@ -85,7 +87,7 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
 - Montos en pesos chilenos (CLP), sin decimales.
 - La calculadora (botón dentro de "Nuevo gasto") es una ventana superpuesta tipo iPhone. Es solo para estimar: **no guarda nada** y no rellena el Valor Deuda.
 - Las actividades terminadas se tachan, no se borran solas; también se pueden eliminar a mano, con confirmación (igual que los gastos).
-- **Pantalla principal:** al entrar se ve una pantalla rosada con la guirnalda de corazones, el nombre `“Pasinacho”` (nombre provisional; está en la constante `APP`) y los botones de los módulos: Finanzas, Recordatorios, Notas, 100 citas, Cine y, en gris con candado, Metas y +Más. Metas y +Más solo muestran el aviso "Próximamente".
+- **Pantalla principal:** al entrar se ve una pantalla rosada con la guirnalda de corazones, el nombre `“Pasinacho”` (nombre provisional; está en la constante `APP`) y los botones de los módulos: Finanzas, Recordatorios, Notas, 100 citas, Cine, Chef y, en gris con candado, Metas y +Más. Metas y +Más solo muestran el aviso "Próximamente".
   - Cada botón abre su módulo. Dentro, la barra de abajo tiene **🏠 Inicio** y las secciones del módulo (Finanzas: Cuentas y Resumen; los demás, solo Inicio). El encabezado muestra el nombre del módulo.
   - La pantalla principal no espera a que carguen los datos. Tiene su propio fondo (rosado; en modo oscuro, vino oscuro) y no lleva barra de abajo.
   - Si la cantidad de botones es impar, el último ocupa todo el ancho.
@@ -98,6 +100,9 @@ Dos personas: `'a'` y `'b'`. Sus nombres están en `config/nombres` = `{a, b}`. 
   - **TVmaze verificado de verdad** (sesión de noviembre de 2026): permite usarse desde una página web (`access-control-allow-origin: *`), devuelve enlaces `https` y 57 de las 61 series de la lista se encuentran con afiche (no se encuentran `31 minutos` ni `Pulseras rojas`).
   - **Buscador de películas abierto: NO se hizo, por esto:** se probó Wikidata (datos CC0, sin licencia comercial). Permite usarse desde la web, pero (1) el límite de uso para consultas sin cuenta es muy bajo: respondió 429 "espera ~35 segundos" casi en cada consulta, incluso con 50 segundos de pausa (desde la sesión de desarrollo; puede ser peor o mejor en el celular de cada persona); (2) buscar por nombre trae de todo (discos, bandas, matemática) y el filtro "solo películas" (`haswbstatement:P31=Q11424`) pierde películas conocidas que Wikidata clasifica con tipos más específicos (por ejemplo, Shrek no apareció). Una opción confiable pide un servidor propio con caché (fase 5). Decisión pendiente del dueño.
   - **Pendiente antes de cobrar la app:** confirmar en el sitio oficial de TVmaze si su licencia (CC BY-SA 4.0 con crédito) permite el uso comercial. TMDB no se usa porque exige un acuerdo comercial para apps que se venden.
+- **Chef:** las comidas favoritas de la pareja. Lista alfabética (sin importar tildes ni mayúsculas) con buscador, marca "Con receta" / "Sin receta aún", y detalle con Editar y Eliminar (con confirmación). La receta es un texto libre, sin ingredientes separados, porciones, categorías ni fotos (no se pidieron).
+  - **"✨ Pedir receta a la IA"** copia al portapapeles un pedido ("Dame una receta fácil de {nombre} para 2 personas…", función `chefPedido`) para pegarlo en una IA; después se pega la receta en el recuadro. Si el celular no deja copiar (`copiar()` prueba `navigator.clipboard` y luego `execCommand`), se muestra el texto seleccionado dentro del formulario para copiarlo a mano. Pide escribir primero el nombre. **La IA directa (un botón que genere la receta solo) necesita servidor y plan de pago: fase 5, solo con decisión explícita del dueño.**
+  - **Ruleta "¿Qué comemos hoy?"**: elige entre todas las comidas, con "Ver receta" y "Otra vez" (usa `ruleta(o)`).
 - **100 citas** (módulo "100 citas"): cada cita es una hoja con el estilo del cuadernillo (papel kraft, dos polaroids, Fecha, Lugar, "¿Cómo nos sentimos?") y una nota de 1 a 7 corazones (opcional). Filtros Todas / Pendientes / Completadas, buscador por nombre o número, y "¿Qué hacemos hoy?" que elige al azar una pendiente. Las dos personas pueden editar cualquier cita.
   - **Cambiar el nombre de una cita borra su registro y sus fotos** (con aviso). Cambiar solo el emoji no borra nada. "Borrar registro" la vuelve a pendiente.
   - Fuentes Caveat y Righteous desde Google Fonts. La pantalla principal también usa Pacifico (el título).
