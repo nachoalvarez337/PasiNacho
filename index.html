@@ -170,7 +170,7 @@ nav button{font-size:12px;padding:10px 2px}
 .chl .it .tx b{overflow-wrap:anywhere}.chl .it .em{font-size:28px;flex:none}
 .ch-rec{white-space:pre-wrap;word-break:break-word;text-align:left;margin:10px 0 14px;max-height:50vh;overflow:auto;font-size:15px;line-height:1.5}
 .ch-det{text-align:center}.ch-det .big-em{font-size:56px;line-height:1.1}.ch-det h2{margin:6px 0 2px}
-#chpedido{margin-top:10px}#chpedido textarea{min-height:90px;font-size:14px}
+#chpedido,#chia{margin-top:10px}.ia-n{margin:0 0 6px;font-size:13px}#chia .row{margin-top:8px}#chpedido textarea{min-height:90px;font-size:14px}
 /* ---------- Pantalla principal ---------- */
 body.inicio{background:#ffdde8;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.inicio{background:#2b1721}}
@@ -203,9 +203,9 @@ body.inicio{background:#ffdde8;padding-bottom:calc(28px + env(safe-area-inset-bo
 <div id="cita" hidden></div>
 <div id="toast" hidden></div>
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import { getFirestore, doc, collection, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js';
+import { getFirestore, doc, collection, setDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js';
 
 // Datos de tu proyecto de Firebase (se completan una sola vez)
 const firebaseConfig = {
@@ -228,7 +228,12 @@ const fdate = s => { if (!s) return ''; const [y, m, d] = s.split('-'); return +
 const shiftMes = (ym, n) => { let [y, m] = ym.split('-').map(Number); m += n; while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; } return y + '-' + p2(m); };
 const mesTxt = ym => { const [y, m] = ym.split('-'); const t = MES[m - 1]; return t[0].toUpperCase() + t.slice(1) + ' ' + y; };
 
-let auth = null;
+let auth = null, fbApp = null;
+const FB = 'https://www.gstatic.com/firebasejs/12.5.0/'; // misma versión que los imports de arriba
+// IA directa en Chef (Firebase AI Logic con Gemini, plan gratis Spark). El botón "Generar receta" solo aparece cuando hay clave de sitio.
+// La clave de sitio de reCAPTCHA Enterprise (App Check) es pública, como firebaseConfig. NO poner aquí claves privadas ni tokens de depuración.
+const APPCHECK_SITEKEY = '';
+const CHEF_MODELO = 'gemini-2.5-flash-lite';
 const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
@@ -492,6 +497,32 @@ const chefAzar = (L, r = Math.random) => L.length ? L[Math.min(L.length - 1, Mat
 // Texto que se copia para pegarlo en una IA
 const chefPedido = nombre => 'Dame una receta fácil de ' + String(nombre).trim().replace(/\s+/g, ' ') + ' para 2 personas. Escríbela en español, con la lista de ingredientes con cantidades y luego los pasos numerados. Que sea clara y breve.';
 /* ---------- fin lógica chef ---------- */
+
+/* ---------- Chef IA: lógica (sin pantalla) ---------- */
+// Pedido para Gemini. Solo se envía el nombre de la comida.
+const chefPromptIA = nombre => 'Eres un cocinero amable. Escribe una receta fácil de "' + String(nombre == null ? '' : nombre).replace(/[\u0000-\u001f"]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) + '" para 2 personas, en español de Chile. ' +
+  'Formato: la línea "Ingredientes:" y debajo una lista con guiones y cantidades; luego la línea "Pasos:" y los pasos numerados (1., 2., 3.). ' +
+  'Usa texto simple: sin asteriscos, sin almohadillas, sin negritas y sin tablas. Máximo 250 palabras. No agregues introducción ni despedida.';
+// Quita los símbolos de formato que la IA pueda poner, y respeta el máximo de la receta
+function limpiaIA(t) {
+  let x = String(t == null ? '' : t).replace(/\r\n?/g, '\n');
+  x = x.replace(/```[a-z]*\n?/gi, '').replace(/^\s*#{1,6}\s*/gm, '').replace(/\*\*([^*\n]+)\*\*/g, '$1').replace(/__([^_\n]+)__/g, '$1').replace(/^(\s*)[*•]\s+/gm, '$1- ').replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,;:]|$)/g, '$1$2').replace(/`/g, '').replace(/^\s*[-_*]{3,}\s*$/gm, '').replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
+  if (x.length > 4000) { x = x.slice(0, 4000); const i = x.lastIndexOf('\n'); if (i > 2000) x = x.slice(0, i); x = x.trim(); }
+  return x;
+}
+const recetaIAok = t => limpiaIA(t).length >= 20;
+// Traduce un error de la IA a un aviso claro
+function errorIA(e) {
+  const m = String((e && e.message) || e || '').toLowerCase(), c = String((e && e.code) || '').toLowerCase(), st = +((e && e.customErrorData && e.customErrorData.status) || (e && e.status) || 0);
+  if (m === 'tiempo' || (e && e.name === 'TimeoutError')) return 'La IA tardó demasiado. Inténtalo otra vez o usa "Copiar pedido".';
+  if (st === 429 || /quota|resource.?exhausted|rate.?limit|\b429\b|too many/.test(m)) return 'Se acabó el límite gratis de la IA por ahora. Inténtalo más tarde o usa "Copiar pedido".';
+  if (/app.?check|appcheck|recaptcha|attestation|app.?verif/.test(m + ' ' + c) || st === 401 || st === 403) return 'No se pudo verificar que la app es auténtica. Recarga la página e inténtalo de nuevo.';
+  if (/api-not-enabled/.test(c) || /not been used|api.*not.*enabled|disabled/.test(m)) return 'La IA todavía no está activada en el proyecto de Firebase.';
+  if (/safety|blocked|prohibited|candidate|response was blocked|invalid-content|parse/.test(m + ' ' + c)) return 'La IA no pudo hacer esa receta. Prueba con otro nombre o usa "Copiar pedido".';
+  if (/failed to fetch|network|offline|fetch-error|load failed|networkerror/.test(m + ' ' + c) || (typeof navigator !== 'undefined' && navigator.onLine === false)) return 'Sin conexión con la IA. Revisa tu internet.';
+  return 'No se pudo generar la receta. Usa "Copiar pedido" como alternativa.';
+}
+/* ---------- fin lógica chef IA ---------- */
 
 const HP = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 const svgH = c => '<svg viewBox="0 0 24 24" aria-hidden="true" class="' + c + '"><path d="' + HP + '"/></svg>';
@@ -812,7 +843,8 @@ function formChef(id) {
     '<label>Nombre de la comida<input name="nombre" required maxlength="60" autocomplete="off" placeholder="Ej: Lasaña" value="' + esc(c ? c.nombre : '') + '"></label>' +
     '<div class="lb">Emoji</div><div class="emg">' + CHEF_EMO.map(e => '<label><input type="radio" name="emoji" value="' + esc(e) + '" aria-label="' + esc(e) + '"' + (e === em ? ' checked' : '') + '><span>' + esc(e) + '</span></label>').join('') + '</div>' +
     '<label>Receta (opcional)<textarea name="receta" maxlength="4000" placeholder="Ingredientes y pasos…" style="min-height:170px">' + esc(c ? c.receta : '') + '</textarea></label>' +
-    '<button type="button" class="btn sec w" data-a="chefIA" style="margin-top:8px">✨ Pedir receta a la IA</button><div id="chpedido" hidden></div>' +
+    (APPCHECK_SITEKEY ? '<button type="button" class="btn cr w" data-a="chefGenerar" style="margin-top:8px">✨ Generar receta</button><div id="chia" hidden></div>' : '') +
+    '<button type="button" class="btn sec w" data-a="chefIA" style="margin-top:8px">📋 Copiar pedido para la IA</button><div id="chpedido" hidden></div>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
 }
 // Copia un texto al portapapeles (con un segundo método por si el celular no deja usar el primero)
@@ -823,6 +855,24 @@ async function copiar(txt) {
     document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length);
     const ok = document.execCommand('copy'); ta.remove(); return !!ok;
   } catch (e) { return false; }
+}
+// App Check (reCAPTCHA Enterprise) y la IA se cargan recién al usar el botón, y una sola vez
+let iaP = null;
+function iaModelo() {
+  if (!iaP) iaP = (async () => {
+    if (!APPCHECK_SITEKEY || !fbApp) throw new Error('ia-no-lista');
+    const [ac, ai] = await Promise.all([import(FB + 'firebase-app-check.js'), import(FB + 'firebase-ai.js')]);
+    ac.initializeAppCheck(fbApp, {provider:new ac.ReCaptchaEnterpriseProvider(APPCHECK_SITEKEY), isTokenAutoRefreshEnabled:true});
+    return ai.getGenerativeModel(ai.getAI(fbApp, {backend:new ai.GoogleAIBackend()}), {model:CHEF_MODELO, generationConfig:{maxOutputTokens:1200, temperature:0.6}});
+  })().catch(e => { iaP = null; throw e; });
+  return iaP;
+}
+async function recetaIA(nombre) {
+  const modelo = await iaModelo();
+  const r = await conLimite(modelo.generateContent(chefPromptIA(nombre)), 30000);
+  const txt = limpiaIA(r.response.text());
+  if (!recetaIAok(txt)) throw new Error('La respuesta de la IA vino vacía (invalid-content)');
+  return txt;
 }
 function chefRuleta() {
   const L = chLista(); if (!L.length) return toast('Aún no hay comidas. ¡Agreguen alguna! 🍳');
@@ -1181,6 +1231,25 @@ const acts = {
   chefVer: p => { closeModal(); chefDetalle(p); },
   chefAzar: () => chefRuleta(),
   chefBorrar: p => confirmar('¿Eliminar esta comida y su receta?', async () => { await st.db.doc('recetas/' + p).delete(); toast('Eliminada'); }),
+  chefGenerar: async (p, t) => {
+    const f = t.form; if (!f || t.disabled) return;
+    const nombre = f.elements.nombre.value.trim(), caja = $('#chia');
+    if (!nombre) { toast('Escribe primero el nombre de la comida'); f.elements.nombre.focus(); return; }
+    const txt0 = t.textContent; t.disabled = true; t.textContent = '⏳ Generando…';
+    if (caja) { caja.hidden = true; caja.innerHTML = ''; }
+    try {
+      const r = await recetaIA(nombre), ta = f.elements.receta; if (!f.isConnected) return;
+      const nota = '<p class="mu ia-n">🤖 Receta hecha por IA. Revísala (alergias, cocción) antes de guardar.</p>';
+      if (!ta.value.trim()) { ta.value = r.slice(0, 4000); if (caja) { caja.innerHTML = nota; caja.hidden = false; } toast('Receta lista ✨ Revísala y guarda'); }
+      else if (caja) { // ya había texto: no se pisa sin preguntar
+        caja.innerHTML = nota + '<textarea readonly id="chiat" style="min-height:130px;font-size:14px"></textarea><div class="row"><button type="button" class="btn sec" data-a="chefIAno">Descartar</button><button type="button" class="btn cr" data-a="chefIAsi">Reemplazar mi receta</button></div>';
+        caja.hidden = false; $('#chiat').value = r;
+      }
+    } catch (e) { console.warn('IA:', e); if (f.isConnected) toast(errorIA(e)); }
+    finally { if (t.isConnected) { t.disabled = false; t.textContent = txt0; } }
+  },
+  chefIAsi: (p, t) => { const f = t.form, ta = $('#chiat'); if (!f || !ta) return; f.elements.receta.value = ta.value.slice(0, 4000); $('#chia').innerHTML = '<p class="mu ia-n">🤖 Receta hecha por IA. Revísala (alergias, cocción) antes de guardar.</p>'; },
+  chefIAno: () => { const c = $('#chia'); if (c) { c.hidden = true; c.innerHTML = ''; } },
   chefIA: async (p, t) => {
     const f = t.form; if (!f) return;
     const nombre = f.elements.nombre.value.trim();
@@ -1406,7 +1475,7 @@ function stop() {
 (function init() {
   render();
   try {
-    const app = initializeApp(firebaseConfig); auth = getAuth(app);
+    const app = fbApp = initializeApp(firebaseConfig); auth = getAuth(app);
     const fs = getFirestore(app);
     onAuthStateChanged(auth, user => {
       st.authReady = true;
