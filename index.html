@@ -233,7 +233,8 @@ const FB = 'https://www.gstatic.com/firebasejs/12.5.0/'; // misma versión que l
 // IA directa en Chef (Firebase AI Logic con Gemini, plan gratis Spark). El botón "Generar receta" solo aparece cuando hay clave de sitio.
 // La clave de sitio de reCAPTCHA Enterprise (App Check) es pública, como firebaseConfig. NO poner aquí claves privadas ni tokens de depuración.
 const APPCHECK_SITEKEY = '6Lfv7B8uAAAAADGCgzf80Y4D3A6zsgO320V0oGqS';
-const CHEF_MODELO = 'gemini-2.5-flash-lite';
+// Modelos de IA, del preferido al de respaldo. Google retira modelos con el tiempo (error 404): si el primero falla por eso, se prueba el siguiente.
+const CHEF_MODELOS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash'];
 const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
@@ -511,6 +512,11 @@ function limpiaIA(t) {
   return x;
 }
 const recetaIAok = t => limpiaIA(t).length >= 20;
+// ¿Google retiró el modelo? (error 404: "no longer available" / "not found")
+function modeloRetirado(e) {
+  const m = String((e && e.message) || e || '').toLowerCase(), st = +((e && e.customErrorData && e.customErrorData.status) || (e && e.status) || 0);
+  return st === 404 || /no longer available|is not found|not found for api|models\/[\w.-]+ (is )?not/.test(m);
+}
 // Traduce un error de la IA a un aviso claro.
 // OJO: en el SDK de Firebase, "fetch-error" es el código de CUALQUIER consulta que falla (error HTTP, bloqueo, etc.), no solo de falta de internet.
 function errorIA(e) {
@@ -519,6 +525,7 @@ function errorIA(e) {
   if (/genai config not found|genai-config-not-found/.test(m)) return 'La IA todavía no está configurada en tu proyecto de Firebase. Falta activar la "Gemini Developer API" en AI Logic > Configuración.';
   if (st === 429 || /quota|resource.?exhausted|rate.?limit|\b429\b|too many/.test(m)) return 'Se acabó el límite gratis de la IA por ahora. Inténtalo más tarde o usa "Copiar pedido".';
   if (/app.?check|appcheck|recaptcha|attestation|app.?verif/.test(m + ' ' + c) || st === 401 || st === 403) return 'No se pudo verificar que la app es auténtica (o la clave de API no permite la IA). Recarga la página e inténtalo de nuevo.';
+  if (modeloRetirado(e)) return 'El modelo de IA ya no está disponible. Hay que actualizar la app. Mientras tanto usa "Copiar pedido".';
   if (/api-not-enabled/.test(c) || /not been used|api.*not.*enabled|disabled/.test(m)) return 'La IA todavía no está activada en el proyecto de Firebase.';
   if (/safety|blocked|prohibited|candidate|response was blocked|invalid-content|parse/.test(m + ' ' + c)) return 'La IA no pudo hacer esa receta. Prueba con otro nombre o usa "Copiar pedido".';
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return 'Sin conexión a internet. Revísala e inténtalo de nuevo.';
@@ -531,7 +538,7 @@ function errorIA(e) {
 function detalleIA(e) {
   const c = String((e && e.code) || '').trim(), st = (e && e.customErrorData && e.customErrorData.status) || (e && e.status) || '';
   let m = String((e && e.message) || e || '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
-  if (m.length > 160) m = m.slice(0, 160) + '…';
+  if (m.length > 300) m = m.slice(0, 300) + '…';
   return [c, st, m].filter(Boolean).join(' · ');
 }
 /* ---------- fin lógica chef IA ---------- */
@@ -869,19 +876,34 @@ async function copiar(txt) {
   } catch (e) { return false; }
 }
 // App Check (reCAPTCHA Enterprise) y la IA se cargan recién al usar el botón, y una sola vez
-let iaP = null;
-function iaModelo() {
-  if (!iaP) iaP = (async () => {
+const iaP = {};
+let iaIdx = 0, iaLibs = null;
+function iaModelo(i) {
+  if (!iaP[i]) iaP[i] = (async () => {
     if (!APPCHECK_SITEKEY || !fbApp) throw new Error('ia-no-lista');
-    const [ac, ai] = await Promise.all([import(FB + 'firebase-app-check.js'), import(FB + 'firebase-ai.js')]);
-    ac.initializeAppCheck(fbApp, {provider:new ac.ReCaptchaEnterpriseProvider(APPCHECK_SITEKEY), isTokenAutoRefreshEnabled:true});
-    return ai.getGenerativeModel(ai.getAI(fbApp, {backend:new ai.GoogleAIBackend()}), {model:CHEF_MODELO, generationConfig:{maxOutputTokens:1200, temperature:0.6}});
-  })().catch(e => { iaP = null; throw e; });
-  return iaP;
+    if (!iaLibs) iaLibs = (async () => {
+      const [ac, ai] = await Promise.all([import(FB + 'firebase-app-check.js'), import(FB + 'firebase-ai.js')]);
+      ac.initializeAppCheck(fbApp, {provider:new ac.ReCaptchaEnterpriseProvider(APPCHECK_SITEKEY), isTokenAutoRefreshEnabled:true});
+      return ai;
+    })().catch(e => { iaLibs = null; throw e; });
+    const ai = await iaLibs;
+    return ai.getGenerativeModel(ai.getAI(fbApp, {backend:new ai.GoogleAIBackend()}), {model:CHEF_MODELOS[i], generationConfig:{maxOutputTokens:1200, temperature:0.6}});
+  })().catch(e => { delete iaP[i]; throw e; });
+  return iaP[i];
 }
 async function recetaIA(nombre) {
-  const modelo = await iaModelo();
-  const r = await conLimite(modelo.generateContent(chefPromptIA(nombre)), 30000);
+  let r;
+  for (;;) {
+    try {
+      const modelo = await iaModelo(iaIdx);
+      r = await conLimite(modelo.generateContent(chefPromptIA(nombre)), 30000);
+      break;
+    } catch (e) {
+      // Si Google retiró el modelo, pasa al siguiente de la lista; si no hay más, muestra el error
+      if (modeloRetirado(e) && iaIdx < CHEF_MODELOS.length - 1) { iaIdx++; continue; }
+      throw e;
+    }
+  }
   const txt = limpiaIA(r.response.text());
   if (!recetaIAok(txt)) throw new Error('La respuesta de la IA vino vacía (invalid-content)');
   return txt;
