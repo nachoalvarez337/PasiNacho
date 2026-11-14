@@ -511,16 +511,28 @@ function limpiaIA(t) {
   return x;
 }
 const recetaIAok = t => limpiaIA(t).length >= 20;
-// Traduce un error de la IA a un aviso claro
+// Traduce un error de la IA a un aviso claro.
+// OJO: en el SDK de Firebase, "fetch-error" es el código de CUALQUIER consulta que falla (error HTTP, bloqueo, etc.), no solo de falta de internet.
 function errorIA(e) {
   const m = String((e && e.message) || e || '').toLowerCase(), c = String((e && e.code) || '').toLowerCase(), st = +((e && e.customErrorData && e.customErrorData.status) || (e && e.status) || 0);
   if (m === 'tiempo' || (e && e.name === 'TimeoutError')) return 'La IA tardó demasiado. Inténtalo otra vez o usa "Copiar pedido".';
+  if (/genai config not found|genai-config-not-found/.test(m)) return 'La IA todavía no está configurada en tu proyecto de Firebase. Falta activar la "Gemini Developer API" en AI Logic > Configuración.';
   if (st === 429 || /quota|resource.?exhausted|rate.?limit|\b429\b|too many/.test(m)) return 'Se acabó el límite gratis de la IA por ahora. Inténtalo más tarde o usa "Copiar pedido".';
-  if (/app.?check|appcheck|recaptcha|attestation|app.?verif/.test(m + ' ' + c) || st === 401 || st === 403) return 'No se pudo verificar que la app es auténtica. Recarga la página e inténtalo de nuevo.';
+  if (/app.?check|appcheck|recaptcha|attestation|app.?verif/.test(m + ' ' + c) || st === 401 || st === 403) return 'No se pudo verificar que la app es auténtica (o la clave de API no permite la IA). Recarga la página e inténtalo de nuevo.';
   if (/api-not-enabled/.test(c) || /not been used|api.*not.*enabled|disabled/.test(m)) return 'La IA todavía no está activada en el proyecto de Firebase.';
   if (/safety|blocked|prohibited|candidate|response was blocked|invalid-content|parse/.test(m + ' ' + c)) return 'La IA no pudo hacer esa receta. Prueba con otro nombre o usa "Copiar pedido".';
-  if (/failed to fetch|network|offline|fetch-error|load failed|networkerror/.test(m + ' ' + c) || (typeof navigator !== 'undefined' && navigator.onLine === false)) return 'Sin conexión con la IA. Revisa tu internet.';
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) return 'Sin conexión a internet. Revísala e inténtalo de nuevo.';
+  if (!st && /failed to fetch|networkerror|load failed|network request failed|internet_disconnected/.test(m)) return 'No se pudo conectar con la IA. Revisa tu internet o desactiva el bloqueador de anuncios.';
+  if (st >= 500) return 'El servidor de la IA tuvo un problema (código ' + st + '). Inténtalo más tarde o usa "Copiar pedido".';
+  if (st >= 400) return 'La IA respondió con un error (código ' + st + '). Usa "Copiar pedido" como alternativa.';
   return 'No se pudo generar la receta. Usa "Copiar pedido" como alternativa.';
+}
+// Detalle técnico corto para mostrar junto al aviso (sin enlaces), así se ve la causa real sin abrir consolas
+function detalleIA(e) {
+  const c = String((e && e.code) || '').trim(), st = (e && e.customErrorData && e.customErrorData.status) || (e && e.status) || '';
+  let m = String((e && e.message) || e || '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
+  if (m.length > 160) m = m.slice(0, 160) + '…';
+  return [c, st, m].filter(Boolean).join(' · ');
 }
 /* ---------- fin lógica chef IA ---------- */
 
@@ -1245,7 +1257,14 @@ const acts = {
         caja.innerHTML = nota + '<textarea readonly id="chiat" style="min-height:130px;font-size:14px"></textarea><div class="row"><button type="button" class="btn sec" data-a="chefIAno">Descartar</button><button type="button" class="btn cr" data-a="chefIAsi">Reemplazar mi receta</button></div>';
         caja.hidden = false; $('#chiat').value = r;
       }
-    } catch (e) { console.warn('IA:', e); if (f.isConnected) toast(errorIA(e)); }
+    } catch (e) {
+      console.warn('IA:', e);
+      if (f.isConnected) {
+        toast(errorIA(e));
+        const d = detalleIA(e); // el motivo queda visible en el formulario (el aviso desaparece a los 3 segundos)
+        if (caja) { caja.innerHTML = '<p class="mu ia-n">⚠️ ' + esc(errorIA(e)) + (d ? '<br><small>Detalle técnico: ' + esc(d) + '</small>' : '') + '</p>'; caja.hidden = false; }
+      }
+    }
     finally { if (t.isConnected) { t.disabled = false; t.textContent = txt0; } }
   },
   chefIAsi: (p, t) => { const f = t.form, ta = $('#chiat'); if (!f || !ta) return; f.elements.receta.value = ta.value.slice(0, 4000); $('#chia').innerHTML = '<p class="mu ia-n">🤖 Receta hecha por IA. Revísala (alergias, cocción) antes de guardar.</p>'; },
