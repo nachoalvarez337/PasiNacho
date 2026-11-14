@@ -232,7 +232,7 @@ let auth = null, fbApp = null;
 const FB = 'https://www.gstatic.com/firebasejs/12.5.0/'; // misma versión que los imports de arriba
 // IA directa en Chef (Firebase AI Logic con Gemini, plan gratis Spark). El botón "Generar receta" solo aparece cuando hay clave de sitio.
 // La clave de sitio de reCAPTCHA Enterprise (App Check) es pública, como firebaseConfig. NO poner aquí claves privadas ni tokens de depuración.
-const APPCHECK_SITEKEY = '';
+const APPCHECK_SITEKEY = '6Lfv7B8uAAAAADGCgzf80Y4D3A6zsgO320V0oGqS';
 const CHEF_MODELO = 'gemini-2.5-flash-lite';
 const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
