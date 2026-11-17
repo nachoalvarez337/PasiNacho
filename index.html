@@ -385,8 +385,8 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 // Avisos al celular (notificaciones). La opción solo aparece en Ajustes cuando estas dos constantes tienen valor.
 // AVISOS_VAPID: clave PÚBLICA de "Certificados push web" (Firebase > Configuración del proyecto > Cloud Messaging).
 // AVISOS_URL: dirección del mini servidor de Cloudflare (su código está en cloudflare/avisos-worker.js). NO poner aquí claves privadas.
-const AVISOS_VAPID = '';
-const AVISOS_URL = '';
+const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
+const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
 const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
