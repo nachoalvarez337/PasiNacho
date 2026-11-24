@@ -162,7 +162,6 @@ nav button{flex:1;background:none;border:0;padding:8px 2px;font:inherit;font-siz
 .tv-no{display:flex;align-items:center;justify-content:center;background:var(--as);font-size:22px}
 .tvc{font-size:12px;margin:4px 0 0}.tvc a{color:var(--at)}
 #tvsel{display:flex;gap:10px;align-items:center;margin-top:10px}#tvsel img{width:40px;height:56px;border-radius:5px;object-fit:cover;flex:none}
-.mg .mt:last-child:nth-child(odd){grid-column:1/-1}
 .cf.cg{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin:10px 0 4px}.cf.cg button{flex:none;padding:9px 14px}
 .idl .it{cursor:default}.idl .tx b{overflow-wrap:anywhere}.ib{flex:none;padding:6px 16px;font-size:20px;line-height:1.2}
 .ya{flex:none;color:var(--at);font-size:13px;font-weight:600;white-space:nowrap}
@@ -214,7 +213,6 @@ body[data-mod="chef"]{--ac:var(--m-che);--atm:#b02a22;--hd:linear-gradient(135de
 .chl .it .em{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:var(--as);font-size:24px}
 /* ---------- Cuidados (la mascota de la pareja) ---------- */
 body[data-mod="cuidados"]{--ac:var(--m-cui);--atm:#a31a5c;--hd:linear-gradient(135deg,#8e1650,#e0528f);--hx:radial-gradient(circle,#ffffff33 2.6px,#0000 3.2px) 0 0/20px 20px,radial-gradient(circle,#ffffff1f 1.8px,#0000 2.4px) 10px 10px/20px 20px}
-.mt[data-a="mod:cuidados"]{--m1:#8e1650;--m2:#e0528f}
 header h1{min-width:0;overflow-wrap:anywhere}
 .cu-svg{display:block;width:100%;height:auto;overflow:visible;border-radius:50%;background:radial-gradient(circle at 50% 55%,#ffe9f0 0 60%,#0000 61%)}
 .cu-pet{position:relative;text-align:center;padding-top:20px;background:radial-gradient(120% 70% at 50% 0,var(--as) 0,#0000 72%) var(--cd)}
@@ -285,27 +283,12 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .ini-t{margin:0;text-align:center;font:400 clamp(34px,11vw,52px)/1.2 Pacifico,"Brush Script MT","Segoe Script",cursive;color:var(--ti)}
 .ini-d{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 26px;color:var(--ti)}
 .ini-d::before,.ini-d::after{content:'';width:54px;height:1.5px;border-radius:1px;background:currentColor;opacity:.45}.ini-d svg{width:16px;height:16px;fill:currentColor}
-.mg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px clamp(10px,3.4vw,14px);max-width:420px;margin:0 auto}
-.mg .mt:last-child:nth-child(odd){grid-column:1/-1}
-.mt{--m1:#c81e4a;--m2:#ff4d86;position:relative;display:block;width:100%;padding:16px 6px 13px;border:1.5px solid var(--ln);border-radius:24px;background:var(--cd);box-shadow:0 6px 16px var(--sh);color:var(--tx);font:inherit;cursor:pointer}
-.mt:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
-.mt-in{display:flex;flex-direction:column;align-items:center;gap:9px;overflow:hidden}
 .mt-c{display:flex;align-items:center;justify-content:center;width:clamp(52px,16vw,62px);height:clamp(52px,16vw,62px);border-radius:50%;background:linear-gradient(135deg,var(--m1),var(--m2));color:#fff;box-shadow:0 6px 14px var(--sh),inset 0 -3px 6px #0000001f}
 .mt-i{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
-.mt-t{font:600 clamp(13px,4.1vw,16px)/1.2 var(--ft);text-align:center;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.mt[data-a="mod:finanzas"]{--m1:#6d0f28;--m2:#c81e4a}.mt[data-a="mod:momentos"]{--m1:#d23a59;--m2:#ff8a9e}.mt[data-a="mod:notas"]{--m1:#c93a78;--m2:#ff9bc4}
-.mt[data-a="mod:citas"]{--m1:#b3122a;--m2:#ff5a5f}.mt[data-a="mod:cine"]{--m1:#4a0d22;--m2:#a81d47}.mt[data-a="mod:chef"]{--m1:#c22a23;--m2:#ff7a59}
-.mt.lk{--m1:#b9a3aa;--m2:#d3c2c8;background:#f3e9ec;border-style:dashed;border-color:#d9c3cb;box-shadow:none;color:#6e5c62}
-.lk-ic{position:absolute;z-index:2;top:9px;right:10px;width:17px;height:auto;color:#6e5c62}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mt.lk{--m1:#5e4850;--m2:#7a626b;background:#2a1a20;border-color:#4a3239;color:#b79aa3}:root:not([data-theme="light"]) .lk-ic{color:#b79aa3}}
-:root[data-theme="dark"] .mt.lk{--m1:#5e4850;--m2:#7a626b;background:#2a1a20;border-color:#4a3239;color:#b79aa3}:root[data-theme="dark"] .lk-ic{color:#b79aa3}
-.in-aj{display:block;margin:24px auto 0;background:var(--as);border:0;color:var(--at);font-weight:500}
 /* Inicio nuevo: encabezado, recuadros de cada módulo, botón y hoja de módulos */
 .hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 22px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
-.hm-top .ini-t,.hm-top .ini-d,.hm-hi{position:relative;z-index:1}
+.hm-top .ini-t,.hm-top .ini-d{position:relative;z-index:1}
 .hm-top .ini-d{margin:2px 0 6px}
-.hm-hi{margin:0;color:var(--mu);font-size:15px}
-.hm-top>.in-aj{position:absolute;top:14px;right:14px;z-index:2;margin:0}
 .hm-s{display:flex;flex-direction:column;gap:12px;margin:16px 0 4px}
 .hm-c{--m1:#c81e4a;--m2:#ff4d86;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:16px;border:1.5px solid var(--ln);border-radius:24px;background:var(--cd);box-shadow:0 6px 18px var(--sh);color:var(--tx);font:inherit;text-align:left;cursor:pointer}
 .hm-c:focus-visible,.mn-i:focus-visible,.mn-fab:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
@@ -327,7 +310,6 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .hm-sg{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--as);font:600 16px/1.3 var(--ft);overflow-wrap:anywhere}.hm-sg i{flex:none;font-style:normal;font-size:24px}
 .hm-sk{display:block;width:70%;height:14px;margin-top:6px;border-radius:7px;background:linear-gradient(90deg,var(--as),var(--ln),var(--as));background-size:200% 100%;animation:sk 1.4s linear infinite}.hm-sk.s{width:45%}
 @keyframes sk{to{background-position:-200% 0}}
-.hm-h{margin-top:26px}
 .mn-fab{position:fixed;z-index:6;left:0;right:0;width:max-content;margin:0 auto;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px;padding:13px 24px;border:0;border-radius:999px;background:var(--ac);color:#fff;font:600 15px/1 var(--fb);box-shadow:0 10px 24px #b0264766;cursor:pointer}
 .mn-fab:active{transform:scale(.94)}
 .mn-ic{width:1.3em;height:1.3em;fill:currentColor;vertical-align:-.28em}.mn-fab .mn-ic{width:20px;height:20px;vertical-align:0}
@@ -337,6 +319,26 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .mn-i .mt-c{flex:none;width:40px;height:40px}.mn-i.on{border-color:var(--ac);background:var(--as)}
 .mn-e{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--as);font-size:20px}
 .mn-i:active{transform:scale(.97)}
+.hm-pf{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;gap:12px;margin-top:8px}
+.hm-p{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;max-width:42%;padding:0;border:0;background:none;color:var(--tx);font:inherit;cursor:pointer}
+.hm-p b{font:600 15px/1.2 var(--ft);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-p:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:16px}.hm-p:active .hm-avw{transform:scale(.94)}
+.hm-avw{position:relative;display:block;transition:transform .14s ease}
+.hm-av{display:flex;align-items:center;justify-content:center;width:clamp(68px,21vw,84px);height:clamp(68px,21vw,84px);border-radius:50%;object-fit:cover;border:3px solid var(--cd);box-shadow:0 0 0 2px var(--ac),0 6px 14px var(--sh);background:var(--as)}
+.hm-ini{--m1:#c81e4a;--m2:#d42a5b;background:linear-gradient(135deg,var(--m1),var(--m2));color:#fff;font:400 32px/1 Pacifico,"Brush Script MT","Segoe Script",cursive}
+.hm-ini[data-k="b"]{--m1:#a8205a;--m2:#c43a73}
+.hm-cam{position:absolute;right:-2px;bottom:-2px;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;border:2px solid var(--cd);font:600 17px/1 var(--fb)}
+.hm-pc{flex:none;width:20px;height:20px;margin-top:30px;fill:var(--ac);opacity:.6}
+.hm-ft{margin:22px 0 0}
+.hm-aj{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1.5px solid var(--ln);border-radius:20px;background:var(--cd);box-shadow:0 4px 12px var(--sh);color:var(--tx);font:600 15px/1.2 var(--fb);text-align:left;cursor:pointer}.hm-aj>span:nth-child(2){flex:1}
+.hm-aj:active{transform:scale(.985)}.hm-aj:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.hm-cr{margin:14px 6px 0;text-align:center;font-size:12px;line-height:1.5;color:var(--mu)}
+.pf-big{display:flex;justify-content:center;margin:10px 0 4px}.pf-big .hm-av{width:132px;height:132px;font-size:52px}
+.pf-up{position:relative;overflow:hidden;display:block;text-align:center;cursor:pointer}.pf-up input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.aj-s{margin-top:16px;padding-top:4px;border-top:1px solid var(--ln)}
+.aj-c{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px}.aj-c b{font-weight:500;overflow-wrap:anywhere;text-align:right}.aj-c em{color:var(--mu);font-style:normal}.aj-c small{color:var(--mu)}
+.aj-d{margin:4px 0 0;font-weight:600;font-size:14px}.aj-n{margin:6px 0 0;font-size:12px;line-height:1.5}
+[data-g="cuidados"]{--m1:#8e1650;--m2:#e0528f}
 [data-g="finanzas"]{--m1:#6d0f28;--m2:#c81e4a}[data-g="momentos"]{--m1:#d23a59;--m2:#ff8a9e}[data-g="notas"]{--m1:#c93a78;--m2:#ff9bc4}[data-g="citas"]{--m1:#b3122a;--m2:#ff5a5f}[data-g="cine"]{--m1:#4a0d22;--m2:#a81d47}[data-g="chef"]{--m1:#c22a23;--m2:#ff7a59}
 .fl{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .fl i{position:absolute;bottom:-34px;width:20px;height:20px;background:var(--as);-webkit-mask:var(--hm) center/contain no-repeat;mask:var(--hm) center/contain no-repeat;animation:flota 13s linear infinite}
@@ -344,9 +346,9 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .fl i:nth-child(4){left:63%;width:15px;height:15px;animation-delay:-11s}.fl i:nth-child(5){left:80%;animation-duration:18s;animation-delay:-14s}.fl i:nth-child(6){left:92%;width:12px;height:12px;animation-duration:16s;animation-delay:-7s}
 @keyframes flota{from{transform:translateY(0) rotate(-12deg);opacity:0}8%{opacity:1}85%{opacity:1}to{transform:translateY(-118vh) rotate(16deg);opacity:0}}
 /* ---------- Animaciones ---------- */
-.btn,.me,.it,.cf button,nav button span,.mes button,.chk,.nota,.mt,.ib,.h-back{transition:transform .14s ease,background-color .2s,box-shadow .2s}
+.btn,.me,.it,.cf button,nav button span,.mes button,.chk,.nota,.ib,.h-back{transition:transform .14s ease,background-color .2s,box-shadow .2s}
 .btn:active,.me:active,.cf button:active,.mes button:active,.ib:active,.h-back:active{transform:scale(.95)}
-.it:active{transform:scale(.985)}.mt:active{transform:scale(.95)}.chk:active{transform:scale(.85)}nav button:active span{transform:scale(.92)}
+.it:active{transform:scale(.985)}.chk:active{transform:scale(.85)}nav button:active span{transform:scale(.92)}
 .nota:active,.nota:nth-child(even):active{transform:rotate(0) scale(.96)}
 @keyframes ent{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes baja{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
@@ -359,10 +361,8 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 #app.ent>:nth-child(2){--i:1}#app.ent>:nth-child(3){--i:2}#app.ent>:nth-child(4){--i:3}#app.ent>:nth-child(5){--i:4}#app.ent>:nth-child(6){--i:5}
 #app.ent>header{animation:baja .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(0ms - var(--el,0ms))}
 #app.ent>.ini{animation:ent .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(0ms - var(--el,0ms))}
-#app.ent .mt{animation:brota .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(140ms + var(--i,0)*55ms - var(--el,0ms))}
 #app.ent .hm-c{animation:brota .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(120ms + var(--i,0)*70ms - var(--el,0ms))}
 #app.ent .hm-s>:nth-child(2){--i:1}#app.ent .hm-s>:nth-child(3){--i:2}#app.ent .hm-s>:nth-child(4){--i:3}#app.ent .hm-s>:nth-child(5){--i:4}
-#app.ent .mt:nth-child(2){--i:1}#app.ent .mt:nth-child(3){--i:2}#app.ent .mt:nth-child(4){--i:3}#app.ent .mt:nth-child(5){--i:4}#app.ent .mt:nth-child(6){--i:5}#app.ent .mt:nth-child(7){--i:6}#app.ent .mt:nth-child(n+8){--i:7}
 @keyframes respira{50%{transform:scale(1.035)}}
 .cu-fig .cu-svg{transform-origin:50% 90%;animation:respira 3.6s ease-in-out infinite}.cu-fig.sube .cu-svg{animation:brota .8s cubic-bezier(.2,.8,.2,1)}
 #app.ent .cu-med.on svg{animation:brota .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(420ms - var(--el,0ms))}
@@ -427,7 +427,7 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
 const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -1540,7 +1540,7 @@ const cuOpciones = (q, name, sel) => q.o.map((o, i) => '<label class="cu-op"><in
 function vCuidados() {
   const E = st.cuEst, me = st.me;
   if (!E) return '<section class="card cu-new c"><div class="cu-trio">' + Object.keys(CUID_OBJ).map(k => cuSvg(k, 3)).join('') + '</div><h2>Su mascota los espera</h2><p class="mu">Elijan una, pónganle nombre y cuídenla juntos: crece cada día que los dos responden la pregunta.</p><button class="btn w" data-a="cuCrear">💞 Crear mascota</button></section>';
-  if (me !== 'a' && me !== 'b') return '<p class="mu c">Primero elige quién eres en Ajustes ⚙️</p>';
+  if (me !== 'a' && me !== 'b') return '<p class="mu c">Primero elige quién eres en Configuración ⚙️</p>';
   const ot = cuOtro(me), h = hoy(), R = cuResumen(st.cuid, h), et = cuEtapa(R.puntos), hd = cuHoy(st.cuid, E, h), q = CUID_PREG[hd.p], sb = CUID_SOBRES[hd.s];
   if (st.cuEt && et.n > st.cuEt) st.cuUp = Date.now();
   st.cuEt = et.n;
@@ -1597,8 +1597,7 @@ const MODS = [
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
   {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
   {id:'chef', nom:'Chef', ico:'🍳', t1:'Chef', tabs:['chef'], entrada:'chef', secs:[]},
-  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados'], entrada:'cuidados', secs:[]},
-  {id:'mas', nom:'Más módulos', t1:'+Mas', lock:true, msg:'Más módulos: próximamente ✨'}
+  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados'], entrada:'cuidados', secs:[]}
 ];
 const modDe = tab => MODS.find(m => !m.lock && m.tabs.includes(tab)) || null;
 const modPorId = id => MODS.find(m => m.id === id) || null;
@@ -1622,7 +1621,6 @@ const IC_CU = {
   gato:'<path d="M13 12l13 9h12l13-9v25a19 17 0 0 1-38 0zM25 35v3M39 35v3M28 45q4 4 8 0M8 40l8 1M56 40l-8 1"/>',
   perro:'<path d="M22 16h20a10 10 0 0 1 10 10v12a20 17 0 0 1-40 0V26a10 10 0 0 1 10-10zM13 22c-7 3-8 14-3 21M51 22c7 3 8 14 3 21M25 33v3M39 33v3M28 43h8l-4 5z"/>'
 };
-const LOCK = '<svg class="lk-ic" viewBox="0 0 64 70" aria-hidden="true"><path d="M17 32V21C17 6 47 6 47 21v11" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><rect x="8" y="30" width="48" height="38" rx="8" fill="currentColor"/></svg>';
 const GCOL = ['#ff9bbd', '#ff4d86', '#ff9bbd', '#ff4d86'];
 const GARL = '<svg class="gar" viewBox="0 0 200 130" aria-hidden="true"><path d="M0 62C50 108 130 84 196 6" fill="none" stroke="#d98aa3" stroke-width="1.3"/>' +
   [[24, 78, -12], [72, 85, 6], [123, 67, -8], [172, 32, 10]].map(([x, y, r], i) => '<g transform="translate(' + x + ' ' + y + ') rotate(' + r + ') scale(1.55) translate(-12 -3)"><path d="' + HP + '" fill="' + GCOL[i] + '" stroke="#c81e4a" stroke-width=".8" stroke-linejoin="round"/></g>').join('') + '</svg>';
@@ -1662,6 +1660,68 @@ function inCita(docs, h) {
 }
 /* ---------- fin lógica inicio ---------- */
 
+// Perfiles: foto y correo de cada persona (perfiles/a y perfiles/b). La foto es un JPEG cuadrado chico dentro del documento.
+const APP_DERECHOS = '© 2026 ' + APP + '. Todos los derechos reservados.';
+const APP_LEGAL = 'Esta aplicación, su diseño, textos, dibujos y código están protegidos por derechos de autor. Se prohíbe copiarla, distribuirla, modificarla o publicar versiones derivadas sin autorización escrita del titular.';
+const PF_MAX = 30000; // caracteres de la foto de perfil
+const inicial = n => { const c = Array.from(String(n || '').trim())[0]; return c && c !== '—' ? c.toUpperCase() : '?'; };
+const perfNorm = d => ({foto:d && typeof d.foto === 'string' && d.foto.length < PF_MAX * 2 && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(d.foto) ? d.foto : '', email:d && typeof d.email === 'string' ? d.email.slice(0, 120) : ''});
+const hmAv = k => {
+  if (!st.rd.p) return '<span class="hm-av hm-ini" data-k="' + k + '" aria-hidden="true"></span>';
+  const f = st.perf[k] && st.perf[k].foto;
+  return f ? '<img class="hm-av" src="' + esc(f) + '" alt="Foto de ' + esc(nm(k)) + '">' : '<span class="hm-av hm-ini" data-k="' + k + '" aria-hidden="true">' + esc(inicial(nm(k))) + '</span>';
+};
+// Las dos fotos con sus nombres, debajo del título: primero la persona de este celular
+function hmPerfiles() {
+  if (!st.names) return '';
+  const ord = st.me === 'a' || st.me === 'b' ? [st.me, cuOtro(st.me)] : ['a', 'b'];
+  return '<div class="hm-pf">' + ord.map((k, i) => (i ? svgH('hm-pc') : '') + '<button class="hm-p" data-a="pf:' + k + '" aria-label="' + (k === st.me ? 'Cambiar mi foto de perfil' : 'Ver la foto de ' + esc(nm(k))) + '"><span class="hm-avw">' + hmAv(k) +
+    (k === st.me ? '<span class="hm-cam" aria-hidden="true">＋</span>' : '') + '</span><b>' + esc(nm(k)) + '</b></button>').join('') + '</div>';
+}
+// Foto de perfil: se corta en cuadrado y se achica hasta que quepa en PF_MAX caracteres
+async function fotoPerfil(file) {
+  const u = await comprimir(file, 600, 0.8, 200000, 260000); if (!u) return null;
+  const img = await cargarImg(u), lado = Math.min(img.width, img.height);
+  if (!(lado > 0)) return null;
+  for (let i = 0, L = 256, q = 0.82; i < 6; i++, L = Math.round(L * 0.85), q = Math.max(0.5, q - 0.08)) {
+    const c = document.createElement('canvas'); c.width = c.height = L;
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, L, L);
+    x.drawImage(img, (img.width - lado) / 2, (img.height - lado) / 2, lado, lado, 0, 0, L, L);
+    const out = c.toDataURL('image/jpeg', q); if (out.length < PF_MAX) return out;
+  }
+  return null;
+}
+function pfSheet() {
+  const k = st.me; if (k !== 'a' && k !== 'b') return toast('Primero elige quién eres en Configuración');
+  openModal('<h2>Tu foto de perfil</h2><div class="pf-big">' + hmAv(k) + '</div><p class="mu c">Se ve en la pantalla principal, junto a tu nombre.</p>' +
+    '<label class="btn w pf-up">📷 Elegir foto<input id="pfin" type="file" accept="image/*"></label>' +
+    (st.perf[k] && st.perf[k].foto ? '<button class="btn sec w" data-a="pfDel" style="margin-top:10px">Quitar foto</button>' : '') + '<button class="lnk" data-a="x">Cerrar</button>');
+}
+async function pfElegida(inp) {
+  const f = inp.files && inp.files[0], k = st.me; if (!f || (k !== 'a' && k !== 'b')) return;
+  toast('Guardando tu foto…');
+  try {
+    const u = await fotoPerfil(f);
+    if (!u) { toast('No se pudo usar esa foto. Prueba con otra.'); if ($('#pfin')) pfSheet(); return; }
+    await st.db.doc('perfiles/' + k).set({foto:u, editado:Date.now()}, {merge:true});
+    if ($('#pfin')) closeModal();
+    toast('Foto guardada 💞');
+  } catch (e) { fail(e); }
+}
+// Cada celular deja su correo en su perfil para que la otra persona lo vea en Configuración
+function perfilCorreo() {
+  const e = st.user && st.user.email, k = st.me;
+  if (!st.db || !e || (k !== 'a' && k !== 'b') || !st.rd.p) return;
+  const clave = e + '|' + k; if (perfilCorreo.ok === clave) return; // una sola vez por sesión, para que dos celulares que eligieran a la misma persona no se pisen sin parar
+  perfilCorreo.ok = clave;
+  if (st.perf[k] && st.perf[k].email === e) return;
+  st.db.doc('perfiles/' + k).set({email:e, editado:Date.now()}, {merge:true}).catch(x => { perfilCorreo.ok = ''; console.warn('perfil', x); });
+}
+function ajCorreos() {
+  const f = k => { const e = k === st.me && st.user && st.user.email ? st.user.email : (st.perf[k] && st.perf[k].email) || ''; return '<div class="aj-c"><span>' + esc(nm(k)) + (k === st.me ? ' <small>(tú)</small>' : '') + '</span><b>' + (e ? esc(e) : '<em>aún no disponible</em>') + '</b></div>'; };
+  return '<div class="aj-s"><div class="lb">Correos de las cuentas</div>' + f('a') + f('b') + '<p class="mu aj-n">El correo de tu pareja aparece cuando abre la app con esta versión.</p></div>';
+}
+const ajAcerca = () => '<div class="aj-s"><div class="lb">Acerca de</div><p class="aj-d">' + esc(APP_DERECHOS) + '</p><p class="mu aj-n">' + esc(APP_LEGAL) + '</p></div>';
 const HM_SK = '<span class="hm-sk"></span><span class="hm-sk s"></span>';
 const ICO_MOD = '<svg class="mn-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>';
 const hmIc = svg => '<span class="mt-c"><svg class="mt-i" viewBox="0 0 64 64" aria-hidden="true">' + svg + '</svg></span>';
@@ -1669,8 +1729,6 @@ const hmCard = (g, accion, svg, titulo, cuerpo) => '<button class="hm-c" data-g=
 const hmFila = (e, t, est, pend) => '<span class="hm-r"><span class="hm-e" aria-hidden="true">' + e + '</span><span class="hm-rt"><b>' + esc(t) + '</b><small class="hm-st' + (pend ? ' pen' : '') + '">' + esc(est) + '</small></span></span>';
 function vInicio() {
   const h = hoy(), me = st.me, rd = st.rd, yo = me === 'a' || me === 'b', otro = yo ? nm(cuOtro(me)) : 'tu pareja';
-  const T = m => '<button class="mt' + (m.lock ? ' lk' : '') + '" data-a="' + (m.lock ? 'prox:' : 'mod:') + m.id + '" aria-label="' + esc(modNom(m)) + (m.lock ? ', próximamente' : '') + '">' + (m.lock ? LOCK : '') +
-    '<span class="mt-in"><span class="mt-c"><svg class="mt-i" viewBox="0 0 64 64" aria-hidden="true">' + modIc(m) + '</svg></span><span class="mt-t">' + esc(modNom(m)) + '</span></span></button>';
   // 1. Pagos pendientes (Finanzas)
   let fin = HM_SK;
   if (rd.g && rd.n) { const p = inPagos(saldo(), me, nm('a'), nm('b')); fin = '<span class="hm-v ' + p.est + '">' + esc(p.t) + '</span><span class="hm-m">' + esc(p.s) + '</span>'; }
@@ -1678,7 +1736,7 @@ function vInicio() {
   let cui = HM_SK;
   if (rd.cu && rd.n) {
     const c = inMascota(st.cuEst, st.cuid, h, me, otro);
-    cui = c.crear ? '<span class="hm-v">Crea su mascota 🐾</span><span class="hm-m">Cuídenla juntos cada día</span>' : c.sinYo ? '<span class="hm-m">Elige quién eres en Ajustes ⚙️</span>' : hmFila('💬', c.preg, c.pe, c.pPend) + hmFila('💌', c.sob, c.se, c.sPend);
+    cui = c.crear ? '<span class="hm-v">Crea su mascota 🐾</span><span class="hm-m">Cuídenla juntos cada día</span>' : c.sinYo ? '<span class="hm-m">Elige quién eres en Configuración ⚙️</span>' : hmFila('💬', c.preg, c.pe, c.pPend) + hmFila('💌', c.sob, c.se, c.sPend);
   }
   // 3. Actividades pendientes (Momentos)
   let act = HM_SK;
@@ -1699,14 +1757,13 @@ function vInicio() {
     const bot = c.sug && !c.completas ? '<div class="row"><button class="btn" data-a="vc:' + c.sug.n + '">Ver cita</button><button class="btn sec" data-a="azar">🎲 Otra idea</button></div>' : '<div class="row"><button class="btn" data-a="mod:citas">Ir a 100 citas</button></div>';
     cit = '<section class="hm-c hm-col" data-g="citas"><span class="hm-row">' + hmIc(IC.citas) + '<span class="hm-b"><span class="hm-k">Cita de hoy</span>' + cuerpo + '</span></span>' + sug + bot + '</section>';
   }
-  const mc = modPorId('cuidados'), hi = st.names && yo ? '<p class="hm-hi">Hola, ' + esc(nm(me)) + ' 💗</p>' : '';
+  const mc = modPorId('cuidados');
   return '<div class="ini"><div class="hm-top"><div class="fl" aria-hidden="true">' + '<i></i>'.repeat(6) + '</div>' + GARL.replace('class="gar"', 'class="gar l"') + GARL.replace('class="gar"', 'class="gar r"') +
     CZ.replace('class="cz"', 'class="cz l"') + CZ.replace('class="cz"', 'class="cz r"') +
-    '<h1 class="ini-t">“' + esc(APP) + '”</h1><div class="ini-d" aria-hidden="true">' + svgH('') + '</div>' + hi +
-    (st.names ? '<button class="me in-aj" data-a="aj">Ajustes ⚙️</button>' : '') + '</div>' +
+    '<h1 class="ini-t">“' + esc(APP) + '”</h1><div class="ini-d" aria-hidden="true">' + svgH('') + '</div>' + hmPerfiles() + '</div>' +
     '<div class="hm-s">' + hmCard('finanzas', 'mod:finanzas', IC.finanzas, 'Pagos pendientes', fin) + hmCard('cuidados', 'mod:cuidados', modIc(mc), 'Pregunta y sobre de hoy', cui) +
     hmCard('momentos', 'ir:calendario', IC.momentos, 'Actividades pendientes', act) + cit + '</div>' +
-    '<h3 class="hm-h">Módulos</h3><div class="mg">' + MODS.filter(m => !m.oculto).map(T).join('') + '</div></div>' +
+    '<section class="hm-ft">' + (st.names ? '<button class="hm-aj" data-a="aj"><span class="hm-e" aria-hidden="true">⚙️</span><span>Configuración</span><span class="hm-go" aria-hidden="true">›</span></button>' : '') + '<p class="hm-cr">' + esc(APP_DERECHOS) + '<br>Prohibida su copia o distribución.</p></section></div>' +
     '<button class="mn-fab" data-a="menu" aria-label="Abrir la lista de módulos">' + ICO_MOD + 'Módulos</button>';
 }
 // Hoja con todos los módulos (botón "Módulos" de Inicio y de la barra de abajo)
@@ -1765,11 +1822,11 @@ function render() {
 
 /* ---------- Formularios ---------- */
 function ajustes(first) {
-  openModal('<h2>' + (first ? '¡Bienvenidos! 👋' : 'Ajustes') + '</h2>' + (first ? '<p class="mu">Escriban sus nombres para empezar. Solo se pide una vez.</p>' : '') +
+  openModal('<h2>' + (first ? '¡Bienvenidos! 👋' : 'Configuración') + '</h2>' + (first ? '<p class="mu">Escriban sus nombres para empezar. Solo se pide una vez.</p>' : '') +
     '<form data-f="nombres"><label>' + (first ? 'Tu nombre' : 'Nombre 1') + '<input name="a" required maxlength="20" value="' + esc(st.names ? st.names.a : '') + '"></label>' +
     '<label>' + (first ? 'Nombre de tu pareja' : 'Nombre 2') + '<input name="b" required maxlength="20" value="' + esc(st.names ? st.names.b : '') + '"></label>' +
     (first ? '<input type="hidden" name="soy" value="a">' : '<div class="lb">¿Quién eres en este celular?</div>' + seg('soy', st.me || 'a')) +
-    '<div class="row">' + (first ? '' : '<button type="button" class="btn sec" data-a="x">Cancelar</button>') + '<button class="btn">Guardar</button></div></form>' + (first ? '' : '<div id="avbox" style="margin-top:14px">' + avCaja() + '</div><button class="lnk" data-a="out">Cerrar sesión</button>'));
+    '<div class="row">' + (first ? '' : '<button type="button" class="btn sec" data-a="x">Cancelar</button>') + '<button class="btn">Guardar</button></div></form>' + (first ? '' : (avYo() ? '<button type="button" class="btn sec w" data-a="pf:' + st.me + '" style="margin-top:12px">📷 Mi foto de perfil</button>' : '') + '<div id="avbox" style="margin-top:14px">' + avCaja() + '</div>' + ajCorreos() + ajAcerca() + '<button class="lnk" data-a="out">Cerrar sesión</button>'));
 }
 function formGasto(id) {
   const g = id ? st.gastos.find(x => x.id === id) : null; if (id && !g) return;
@@ -1960,7 +2017,7 @@ const subs = {
     if (!a || !b || a.toLowerCase() === b.toLowerCase()) return toast('Escriban dos nombres distintos');
     await st.db.doc('config/nombres').set({a, b});
     const antes = st.me;
-    setMe(fd.get('soy') === 'b' ? 'b' : 'a'); closeModal(); render();
+    setMe(fd.get('soy') === 'b' ? 'b' : 'a'); closeModal(); render(); perfilCorreo();
     if (antes && antes !== st.me && avOk() && avTok()) avAnotar(avTok(), '').catch(e => console.warn('avisos', e));
   },
   async gasto(f, id) {
@@ -2116,13 +2173,19 @@ const acts = {
   tab: p => { st.tab = p; render(); },
   mod: p => { const m = modPorId(p); if (!m || m.lock) return; st.tab = m.entrada; render(); window.scrollTo(0, 0); },
   ini: () => { st.tab = 'inicio'; render(); window.scrollTo(0, 0); },
+  pf: p => {
+    if (p !== 'a' && p !== 'b') return;
+    if (p === st.me) return pfSheet();
+    const f = st.perf[p] && st.perf[p].foto; if (!f) return toast(nm(p) + ' aún no tiene foto de perfil');
+    const z = $('#zoom'); z.innerHTML = '<img src="' + esc(f) + '" alt="Foto de ' + esc(nm(p)) + '">'; z.hidden = false;
+  },
+  pfDel: async () => { try { await st.db.doc('perfiles/' + st.me).set({foto:'', editado:Date.now()}, {merge:true}); closeModal(); toast('Foto quitada'); } catch (e) { fail(e); } },
   ir: p => { st.tab = p; render(); window.scrollTo(0, 0); },
   menu: () => menuMod(),
   mn: p => { const cur = modDe(st.tab); if (cur && cur.id === p) return closeModal(); histPausa = true; try { closeModal(); } finally { histPausa = false; } if (p === 'ini') acts.ini(); else acts.mod(p); },
-  prox: p => { const m = modPorId(p); toast(m && m.msg ? m.msg : 'Próximamente'); },
   mes: p => { st.mes = shiftMes(st.mes, +p); render(); },
   aj: () => ajustes(false),
-  soy: p => { setMe(p); closeModal(); render(); },
+  soy: p => { setMe(p); closeModal(); render(); perfilCorreo(); },
   ng: () => formGasto(), np: () => formPago(), nt: () => formTarea('', hoy()), ntd: p => formTarea('', p),
   dg: p => detalle(p),
   eg: p => { const g = st.gastos.find(x => x.id === p); if (g) g.tipo === 'pago' ? formPago(p) : formGasto(p); },
@@ -2395,6 +2458,7 @@ function tomarFoto(inp) {
 }
 const esFoto = t => t && t.matches && t.matches('input[data-slot]');
 // Cine: en el formulario, el buscador de TVmaze solo aparece para series; Enter busca en vez de guardar
+document.addEventListener('change', e => { if (e.target && e.target.id === 'pfin') pfElegida(e.target); });
 document.addEventListener('change', e => { const t = e.target; if (t.name === 'tipo' && t.form && t.form.dataset.f === 'cine') { const b = $('#tvbox'); if (b) b.hidden = t.value !== 'serie'; } });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'tvq') { e.preventDefault(); tvLanzar(e.target.value, true); } });
 document.addEventListener('change', e => { if (esFoto(e.target)) tomarFoto(e.target); });
@@ -2611,13 +2675,15 @@ function start(fs) {
     st.db.collection('cuidados').onSnapshot(s => { const e = s.docs.find(d => d.id === 'estado'); st.cuEst = cuEstado(e ? e.data() : null); st.cuid = s.docs.filter(d => d.id.startsWith('d_')).map(d => d.data()); st.rd.cu = true; render(); }, bad),
     st.db.collection('hitos').onSnapshot(s => { st.hitos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.h = true; render(); }, bad),
     st.db.doc('momentos/juntos').onSnapshot(s => { const d = s.exists ? s.data() : null; st.juntos = d && moEsDia(d.desde) ? d.desde : ''; st.rd.j = true; render(); }, bad),
+    st.db.collection('perfiles').onSnapshot(s => { const P = {}; for (const d of s.docs) if (d.id === 'a' || d.id === 'b') P[d.id] = perfNorm(d.data()); st.perf = P; st.rd.p = true; render(); perfilCorreo(); }, bad),
     st.db.collection('metas').onSnapshot(s => { st.metas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.m = true; render(); }, bad)
   ];
 }
 function stop() {
   st.unsubs.forEach(u => u());
   cerrarCita();
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, hitos:[], juntos:'', metas:[], calFin:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false}, shown:false, err:'', db:null});
+  perfilCorreo.ok = '';
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calFin:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
