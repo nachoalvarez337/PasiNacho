@@ -275,11 +275,10 @@ nav:has(button:nth-child(4)) button{font-size:11px}nav:has(button:nth-child(4)) 
 .meta-p{margin:0 0 10px;font-size:14px}.meta-i b{display:block;overflow-wrap:anywhere}.meta-i .row{margin-top:12px}.meta-i .row>.btn{white-space:nowrap;padding-left:8px;padding-right:8px}.meta-i .row>.btn.sec{flex:.55}
 .meta-e{flex:none;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--as);font-size:22px}.meta-c .tx b{overflow-wrap:anywhere}
 /* ---------- Pantalla principal ---------- */
-body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #ffeef3;padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #ffeef3;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.inicio{background:radial-gradient(130% 55% at 50% 0,#4a1a2c 0,#0000 70%) #1f0d14}}
 :root[data-theme="dark"] body.inicio{background:radial-gradient(130% 55% at 50% 0,#4a1a2c 0,#0000 70%) #1f0d14}
-.ini{position:relative;overflow:hidden;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:92px clamp(12px,4vw,20px) 30px;background:var(--cd);border-radius:36px;box-shadow:0 16px 44px var(--sh)}
-.ini>:not(.fl):not(.gar):not(.cz){position:relative;z-index:1}
+.ini{position:relative}
 .gar{position:absolute;top:0;width:min(42vw,190px);height:auto;pointer-events:none;overflow:visible}
 .gar.l{left:-14px}.gar.r{right:-14px;transform:scaleX(-1)}
 .cz{position:absolute;bottom:-12px;width:clamp(58px,18vw,82px);height:auto;pointer-events:none}.cz.l{left:-8px}.cz.r{right:-8px;transform:scaleX(-1)}
@@ -301,6 +300,44 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mt.lk{--m1:#5e4850;--m2:#7a626b;background:#2a1a20;border-color:#4a3239;color:#b79aa3}:root:not([data-theme="light"]) .lk-ic{color:#b79aa3}}
 :root[data-theme="dark"] .mt.lk{--m1:#5e4850;--m2:#7a626b;background:#2a1a20;border-color:#4a3239;color:#b79aa3}:root[data-theme="dark"] .lk-ic{color:#b79aa3}
 .in-aj{display:block;margin:24px auto 0;background:var(--as);border:0;color:var(--at);font-weight:500}
+/* Inicio nuevo: encabezado, recuadros de cada módulo, botón y hoja de módulos */
+.hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 22px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
+.hm-top .ini-t,.hm-top .ini-d,.hm-hi{position:relative;z-index:1}
+.hm-top .ini-d{margin:2px 0 6px}
+.hm-hi{margin:0;color:var(--mu);font-size:15px}
+.hm-top>.in-aj{position:absolute;top:14px;right:14px;z-index:2;margin:0}
+.hm-s{display:flex;flex-direction:column;gap:12px;margin:16px 0 4px}
+.hm-c{--m1:#c81e4a;--m2:#ff4d86;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:16px;border:1.5px solid var(--ln);border-radius:24px;background:var(--cd);box-shadow:0 6px 18px var(--sh);color:var(--tx);font:inherit;text-align:left;cursor:pointer}
+.hm-c:focus-visible,.mn-i:focus-visible,.mn-fab:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.hm-c:active{transform:scale(.985)}
+.hm-c .mt-c{flex:none;width:52px;height:52px}
+.hm-col{flex-direction:column;align-items:stretch;gap:12px;cursor:default}.hm-col:active{transform:none}
+.hm-row{display:flex;align-items:center;gap:14px}
+.hm-b{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.hm-k{font:600 11.5px/1.2 var(--fb);letter-spacing:.08em;text-transform:uppercase;color:var(--at)}
+.hm-v{font:600 clamp(17px,5vw,20px)/1.25 var(--ft);overflow-wrap:anywhere}.hm-v.debo{color:var(--rd)}
+.hm-m{font-size:13px;line-height:1.35;color:var(--mu)}.hm-al{color:var(--rd);font-weight:600}
+.hm-go{flex:none;font-size:28px;line-height:1;color:var(--at)}
+.hm-r{display:flex;align-items:flex-start;gap:10px;margin-top:4px}.hm-e{flex:none;font-size:20px;line-height:1.3}
+.hm-rt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.hm-rt b{font-weight:500;font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hm-st{padding:2px 9px;border-radius:12px;background:var(--as);color:var(--at);font-size:12px;font-weight:600}.hm-st.pen{background:var(--ac);color:#fff}
+.hm-ar{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}.hm-ar b{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-cu{flex:none;color:var(--mu);font-size:12px}.hm-cu.al{color:var(--rd);font-weight:600}
+.hm-sg{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--as);font:600 16px/1.3 var(--ft);overflow-wrap:anywhere}.hm-sg i{flex:none;font-style:normal;font-size:24px}
+.hm-sk{display:block;width:70%;height:14px;margin-top:6px;border-radius:7px;background:linear-gradient(90deg,var(--as),var(--ln),var(--as));background-size:200% 100%;animation:sk 1.4s linear infinite}.hm-sk.s{width:45%}
+@keyframes sk{to{background-position:-200% 0}}
+.hm-h{margin-top:26px}
+.mn-fab{position:fixed;z-index:6;left:0;right:0;width:max-content;margin:0 auto;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px;padding:13px 24px;border:0;border-radius:999px;background:var(--ac);color:#fff;font:600 15px/1 var(--fb);box-shadow:0 10px 24px #b0264766;cursor:pointer}
+.mn-fab:active{transform:scale(.94)}
+.mn-ic{width:1.3em;height:1.3em;fill:currentColor;vertical-align:-.28em}.mn-fab .mn-ic{width:20px;height:20px;vertical-align:0}
+.mn-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 6px}
+.mn-i{--m1:#c81e4a;--m2:#ff4d86;display:flex;align-items:center;gap:10px;min-width:0;padding:10px 12px;border:1.5px solid var(--ln);border-radius:18px;background:var(--cd);color:var(--tx);font:inherit;text-align:left;cursor:pointer}
+.mn-i b{font:600 15px/1.2 var(--ft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mn-i .mt-c{flex:none;width:40px;height:40px}.mn-i.on{border-color:var(--ac);background:var(--as)}
+.mn-e{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--as);font-size:20px}
+.mn-i:active{transform:scale(.97)}
+[data-g="finanzas"]{--m1:#6d0f28;--m2:#c81e4a}[data-g="momentos"]{--m1:#d23a59;--m2:#ff8a9e}[data-g="notas"]{--m1:#c93a78;--m2:#ff9bc4}[data-g="citas"]{--m1:#b3122a;--m2:#ff5a5f}[data-g="cine"]{--m1:#4a0d22;--m2:#a81d47}[data-g="chef"]{--m1:#c22a23;--m2:#ff7a59}
 .fl{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .fl i{position:absolute;bottom:-34px;width:20px;height:20px;background:var(--as);-webkit-mask:var(--hm) center/contain no-repeat;mask:var(--hm) center/contain no-repeat;animation:flota 13s linear infinite}
 .fl i:nth-child(1){left:7%;animation-delay:-2s}.fl i:nth-child(2){left:24%;width:13px;height:13px;animation-duration:17s;animation-delay:-9s}.fl i:nth-child(3){left:46%;width:26px;height:26px;animation-duration:15s;animation-delay:-5s}
@@ -323,6 +360,8 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 #app.ent>header{animation:baja .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(0ms - var(--el,0ms))}
 #app.ent>.ini{animation:ent .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(0ms - var(--el,0ms))}
 #app.ent .mt{animation:brota .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(140ms + var(--i,0)*55ms - var(--el,0ms))}
+#app.ent .hm-c{animation:brota .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(120ms + var(--i,0)*70ms - var(--el,0ms))}
+#app.ent .hm-s>:nth-child(2){--i:1}#app.ent .hm-s>:nth-child(3){--i:2}#app.ent .hm-s>:nth-child(4){--i:3}#app.ent .hm-s>:nth-child(5){--i:4}
 #app.ent .mt:nth-child(2){--i:1}#app.ent .mt:nth-child(3){--i:2}#app.ent .mt:nth-child(4){--i:3}#app.ent .mt:nth-child(5){--i:4}#app.ent .mt:nth-child(6){--i:5}#app.ent .mt:nth-child(7){--i:6}#app.ent .mt:nth-child(n+8){--i:7}
 @keyframes respira{50%{transform:scale(1.035)}}
 .cu-fig .cu-svg{transform-origin:50% 90%;animation:respira 3.6s ease-in-out infinite}.cu-fig.sube .cu-svg{animation:brota .8s cubic-bezier(.2,.8,.2,1)}
@@ -1591,13 +1630,91 @@ const GARL = '<svg class="gar" viewBox="0 0 200 130" aria-hidden="true"><path d=
 const CZ = '<svg class="cz" viewBox="0 0 110 120" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
   [[6, 52, 2.6, -14, '#c81e4a', 1.25], [52, 8, 1.15, 12, '#ff9bbd', 1.5], [66, 40, 1.5, 18, '#ff9bbd', 1.3], [44, 0, .7, -8, '#c81e4a', 1.7]].map(([x, y, k, r, c, w]) =>
     '<g transform="translate(' + x + ' ' + y + ') scale(' + k + ') rotate(' + r + ' 12 12)" stroke="' + c + '" stroke-width="' + w + '"><path d="' + HP + '"/><path d="' + HP + '" transform="translate(.9 .7) rotate(4 12 12) scale(.97)" opacity=".55"/></g>').join('') + '</svg>';
+/* ---------- Inicio: lógica de los recuadros (sin pantalla) ---------- */
+// "Pagos pendientes": el saldo de las cuentas dicho desde quien mira. s > 0: la persona 2 le debe a la persona 1.
+function inPagos(s, me, na, nb) {
+  const v = +s || 0, m = Math.round(Math.abs(v));
+  if (m === 0) return {est:'ok', t:'Están al día 🎉', s:'No hay deudas entre ustedes'};
+  const deu = v > 0 ? 'b' : 'a', acr = deu === 'a' ? 'b' : 'a', N = {a:na, b:nb};
+  if (me === deu) return {est:'debo', t:'Le debes ' + fmt(m) + ' a ' + N[acr], s:'Toca para ver las cuentas'};
+  if (me === acr) return {est:'deben', t:N[deu] + ' te debe ' + fmt(m), s:'Toca para ver las cuentas'};
+  return {est:'deben', t:N[deu] + ' le debe ' + fmt(m) + ' a ' + N[acr], s:'Toca para ver las cuentas'};
+}
+// Estado de una respuesta del día (pregunta o sobre). Nunca muestra lo respondido, solo si ya respondieron.
+const inEstado = (mia, suya, otro) => !mia ? (suya ? otro + ' ya respondió' : 'Responde') : suya ? '¡Listo! 💞' : 'Esperando a ' + otro;
+function inMascota(est, dias, h, me, otroNom) {
+  if (!est) return {crear:true};
+  if (me !== 'a' && me !== 'b') return {sinYo:true};
+  const ot = cuOtro(me), hd = cuHoy(dias, est, h), q = CUID_PREG[hd.p], sb = CUID_SOBRES[hd.s];
+  const mp = cuResp(hd.doc, me) !== null, op = cuResp(hd.doc, ot) !== null, ms = !!cuSob(hd.doc, me), os = !!cuSob(hd.doc, ot);
+  return {preg:cuTexto(q.t, otroNom), pe:inEstado(mp, op, otroNom), pPend:!mp, sob:sb.t, se:inEstado(ms, os, otroNom), sPend:!ms};
+}
+// Actividades pendientes: total, cuántas vencidas y para hoy, y las 3 más próximas.
+function inActividades(L, h) {
+  const P = tareasPend(L), dia = t => moEsDia(t.fecha) ? t.fecha : '';
+  return {n:P.length, venc:P.filter(t => dia(t) && dia(t) < h).length, hoyN:P.filter(t => dia(t) === h).length,
+    top:P.slice(0, 3).map(t => ({titulo:String(t.titulo || '').trim() || '(sin título)', cuando:!dia(t) ? 'sin fecha' : dia(t) === h ? 'hoy' : dia(t) < h ? 'vencida' : fdate(dia(t)), alerta:!!dia(t) && dia(t) <= h}))};
+}
+// Cita de hoy: una pendiente según el día (la misma para los dos, no cambia al redibujar).
+function inCita(docs, h) {
+  const L = unirCitas(docs), pend = L.filter(c => !c.hecha), nh = L.length - pend.length;
+  return {nh, completas:nh >= CMAX, pend:pend.length, sug:pend.length ? pend[moNum(h) % pend.length] : null};
+}
+/* ---------- fin lógica inicio ---------- */
+
+const HM_SK = '<span class="hm-sk"></span><span class="hm-sk s"></span>';
+const ICO_MOD = '<svg class="mn-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>';
+const hmIc = svg => '<span class="mt-c"><svg class="mt-i" viewBox="0 0 64 64" aria-hidden="true">' + svg + '</svg></span>';
+const hmCard = (g, accion, svg, titulo, cuerpo) => '<button class="hm-c" data-g="' + g + '" data-a="' + accion + '">' + hmIc(svg) + '<span class="hm-b"><span class="hm-k">' + titulo + '</span>' + cuerpo + '</span><span class="hm-go" aria-hidden="true">›</span></button>';
+const hmFila = (e, t, est, pend) => '<span class="hm-r"><span class="hm-e" aria-hidden="true">' + e + '</span><span class="hm-rt"><b>' + esc(t) + '</b><small class="hm-st' + (pend ? ' pen' : '') + '">' + esc(est) + '</small></span></span>';
 function vInicio() {
+  const h = hoy(), me = st.me, rd = st.rd, yo = me === 'a' || me === 'b', otro = yo ? nm(cuOtro(me)) : 'tu pareja';
   const T = m => '<button class="mt' + (m.lock ? ' lk' : '') + '" data-a="' + (m.lock ? 'prox:' : 'mod:') + m.id + '" aria-label="' + esc(modNom(m)) + (m.lock ? ', próximamente' : '') + '">' + (m.lock ? LOCK : '') +
     '<span class="mt-in"><span class="mt-c"><svg class="mt-i" viewBox="0 0 64 64" aria-hidden="true">' + modIc(m) + '</svg></span><span class="mt-t">' + esc(modNom(m)) + '</span></span></button>';
-  return '<div class="ini"><div class="fl" aria-hidden="true">' + '<i></i>'.repeat(6) + '</div>' + GARL.replace('class="gar"', 'class="gar l"') + GARL.replace('class="gar"', 'class="gar r"') +
+  // 1. Pagos pendientes (Finanzas)
+  let fin = HM_SK;
+  if (rd.g && rd.n) { const p = inPagos(saldo(), me, nm('a'), nm('b')); fin = '<span class="hm-v ' + p.est + '">' + esc(p.t) + '</span><span class="hm-m">' + esc(p.s) + '</span>'; }
+  // 2. Pregunta y sobre de hoy (mascota)
+  let cui = HM_SK;
+  if (rd.cu && rd.n) {
+    const c = inMascota(st.cuEst, st.cuid, h, me, otro);
+    cui = c.crear ? '<span class="hm-v">Crea su mascota 🐾</span><span class="hm-m">Cuídenla juntos cada día</span>' : c.sinYo ? '<span class="hm-m">Elige quién eres en Ajustes ⚙️</span>' : hmFila('💬', c.preg, c.pe, c.pPend) + hmFila('💌', c.sob, c.se, c.sPend);
+  }
+  // 3. Actividades pendientes (Momentos)
+  let act = HM_SK;
+  if (rd.t) {
+    const a = inActividades(st.tareas, h), pt = [];
+    if (a.venc) pt.push(a.venc + (a.venc === 1 ? ' vencida' : ' vencidas'));
+    if (a.hoyN) pt.push(a.hoyN + ' para hoy');
+    act = !a.n ? '<span class="hm-v">Sin pendientes 🎉</span><span class="hm-m">Todo al día</span>' :
+      '<span class="hm-v">' + a.n + (a.n === 1 ? ' pendiente' : ' pendientes') + '</span>' + (pt.length ? '<span class="hm-m hm-al">' + pt.join(' · ') + '</span>' : '') +
+      a.top.map(t => '<span class="hm-ar"><b>' + esc(t.titulo) + '</b><small class="hm-cu' + (t.alerta ? ' al' : '') + '">' + esc(t.cuando) + '</small></span>').join('') + (a.n > a.top.length ? '<span class="hm-m">y ' + (a.n - a.top.length) + ' más…</span>' : '');
+  }
+  // 4. Cita de hoy (100 citas)
+  let cit = '<section class="hm-c hm-col" data-g="citas"><span class="hm-row">' + hmIc(IC.citas) + '<span class="hm-b"><span class="hm-k">Cita de hoy</span>' + HM_SK + '</span></span></section>';
+  if (rd.c) {
+    const c = inCita(st.citas, h);
+    const cuerpo = c.completas ? '<span class="hm-v">¡Completaron las 100 citas! 🏆</span>' : c.sug ? '<span class="hm-v">¿Hacemos una cita hoy? 💌</span><span class="hm-m">Llevan ' + c.nh + ' de ' + CMAX + ' citas</span>' : '<span class="hm-v">Completaron todas las citas disponibles 🎉</span><span class="hm-m">Creen una nueva en 100 citas</span>';
+    const sug = c.sug && !c.completas ? '<span class="hm-sg"><i aria-hidden="true">' + esc(c.sug.emoji) + '</i><span>' + esc(c.sug.nombre) + '</span></span>' : '';
+    const bot = c.sug && !c.completas ? '<div class="row"><button class="btn" data-a="vc:' + c.sug.n + '">Ver cita</button><button class="btn sec" data-a="azar">🎲 Otra idea</button></div>' : '<div class="row"><button class="btn" data-a="mod:citas">Ir a 100 citas</button></div>';
+    cit = '<section class="hm-c hm-col" data-g="citas"><span class="hm-row">' + hmIc(IC.citas) + '<span class="hm-b"><span class="hm-k">Cita de hoy</span>' + cuerpo + '</span></span>' + sug + bot + '</section>';
+  }
+  const mc = modPorId('cuidados'), hi = st.names && yo ? '<p class="hm-hi">Hola, ' + esc(nm(me)) + ' 💗</p>' : '';
+  return '<div class="ini"><div class="hm-top"><div class="fl" aria-hidden="true">' + '<i></i>'.repeat(6) + '</div>' + GARL.replace('class="gar"', 'class="gar l"') + GARL.replace('class="gar"', 'class="gar r"') +
     CZ.replace('class="cz"', 'class="cz l"') + CZ.replace('class="cz"', 'class="cz r"') +
-    '<h1 class="ini-t">“' + esc(APP) + '”</h1><div class="ini-d" aria-hidden="true">' + svgH('') + '</div><div class="mg">' + MODS.map(T).join('') + '</div>' +
-    (st.names ? '<button class="me in-aj" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</div>';
+    '<h1 class="ini-t">“' + esc(APP) + '”</h1><div class="ini-d" aria-hidden="true">' + svgH('') + '</div>' + hi +
+    (st.names ? '<button class="me in-aj" data-a="aj">Ajustes ⚙️</button>' : '') + '</div>' +
+    '<div class="hm-s">' + hmCard('finanzas', 'mod:finanzas', IC.finanzas, 'Pagos pendientes', fin) + hmCard('cuidados', 'mod:cuidados', modIc(mc), 'Pregunta y sobre de hoy', cui) +
+    hmCard('momentos', 'ir:calendario', IC.momentos, 'Actividades pendientes', act) + cit + '</div>' +
+    '<h3 class="hm-h">Módulos</h3><div class="mg">' + MODS.filter(m => !m.oculto).map(T).join('') + '</div></div>' +
+    '<button class="mn-fab" data-a="menu" aria-label="Abrir la lista de módulos">' + ICO_MOD + 'Módulos</button>';
+}
+// Hoja con todos los módulos (botón "Módulos" de Inicio y de la barra de abajo)
+function menuMod() {
+  const cur = modDe(st.tab);
+  openModal('<h2>Módulos</h2><div class="mn-g"><button class="mn-i' + (!cur ? ' on' : '') + '" data-a="mn:ini"><span class="mn-e" aria-hidden="true">🏠</span><b>Inicio</b></button>' +
+    MODS.filter(m => !m.lock && !m.oculto).map(m => '<button class="mn-i' + (cur && cur.id === m.id ? ' on' : '') + '" data-g="' + m.id + '" data-a="mn:' + m.id + '"><span class="mt-c"><svg class="mt-i" viewBox="0 0 64 64" aria-hidden="true">' + modIc(m) + '</svg></span><b>' + esc(modNom(m)) + '</b></button>').join('') +
+    '</div><button class="lnk" data-a="x">Cerrar</button>');
 }
 
 function vLogin() {
@@ -1618,6 +1735,7 @@ function entrada(pant) {
   entrada.h = setTimeout(() => app.classList.remove('ent'), ENT_MS - el + 30);
 }
 function render() {
+  render.dia = hoy(); // para redibujar al volver a la app si cambió el día
   const mod = modDe(st.tab);
   document.body.classList.toggle('inicio', !!st.user && !mod);
   if (st.user && mod) document.body.dataset.mod = mod.id; else delete document.body.dataset.mod;
@@ -1631,7 +1749,7 @@ function render() {
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
     else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'cuidados' ? vCuidados() : vNotas();
-    h += '<nav>' + [['ini', '🏠', 'Inicio']].concat(mod.secs).map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="' + (k === 'ini' ? 'ini' : 'tab:' + k) + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
+    h += '<nav><button data-a="menu" aria-label="Abrir la lista de módulos"><span>' + ICO_MOD + '<br>Módulos</span></button>' + mod.secs.map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="tab:' + k + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
   }
   // Los buscadores y la respuesta de Cuidados no deben perder el cursor cuando llegan datos nuevos
   const ae = document.activeElement, kid = ae && ae.id && (ae.type === 'search' || ae.id === 'cutx') && ae.closest && ae.closest('#app') ? ae.id : '', keep = kid ? [ae.selectionStart, ae.selectionEnd] : null;
@@ -1998,6 +2116,9 @@ const acts = {
   tab: p => { st.tab = p; render(); },
   mod: p => { const m = modPorId(p); if (!m || m.lock) return; st.tab = m.entrada; render(); window.scrollTo(0, 0); },
   ini: () => { st.tab = 'inicio'; render(); window.scrollTo(0, 0); },
+  ir: p => { st.tab = p; render(); window.scrollTo(0, 0); },
+  menu: () => menuMod(),
+  mn: p => { const cur = modDe(st.tab); if (cur && cur.id === p) return closeModal(); histPausa = true; try { closeModal(); } finally { histPausa = false; } if (p === 'ini') acts.ini(); else acts.mod(p); },
   prox: p => { const m = modPorId(p); toast(m && m.msg ? m.msg : 'Próximamente'); },
   mes: p => { st.mes = shiftMes(st.mes, +p); render(); },
   aj: () => ajustes(false),
@@ -2217,9 +2338,10 @@ document.addEventListener('touchend', e => {
 // Botón atrás del celular: mientras haya un módulo o una ventana abiertos se mantiene UNA entrada "de guardia" en el historial.
 // Al apretar atrás se cierra lo que esté encima (ventana, luego módulo); en el menú principal no hay guardia y la app se cierra como siempre.
 const histEstado = () => ({zoom:!$('#zoom').hidden, calc:!$('#calc').hidden, modal:!$('#modal').hidden, lock:st.lock, cita:!$('#cita').hidden, mod:!!(st.user && modDe(st.tab))});
-let histG = false, histSalta = 0;
+let histG = false, histSalta = 0, histPausa = false; // histPausa: al elegir un módulo desde la hoja, la guardia no se retira y se vuelve a poner (history.back() es asíncrono y se cruzaría con el pushState)
 try { history.scrollRestoration = 'manual'; } catch (e) {} // al retirar la guardia el navegador no debe mover la página a una posición antigua
 function histSync() {
+  if (histPausa) return;
   const p = atrasPaso(histEstado());
   try {
     if (p && !histG) { history.pushState({guardia:1}, ''); histG = true; }
@@ -2280,7 +2402,7 @@ document.addEventListener('input', e => { if (esFoto(e.target)) tomarFoto(e.targ
 // Al volver de la galería: revisar si quedó una foto elegida sin procesar
 function revisarFotos() { if (st.cv && st.cv.edit) document.querySelectorAll('#cita input[data-slot]').forEach(i => { if (i.files && i.files[0]) tomarFoto(i); }); }
 window.addEventListener('focus', () => setTimeout(revisarFotos, 300));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(revisarFotos, 300); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { setTimeout(revisarFotos, 300); if (st.user && render.dia && render.dia !== hoy()) render(); } });
 
 /* ---------- Calculadora (solo para estimar: nada de esto se guarda) ---------- */
 const kInit = () => ({a:null, op:null, cur:'0', fresh:true, entered:false, expr:''});
