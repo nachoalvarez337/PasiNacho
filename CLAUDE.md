@@ -5,7 +5,7 @@ Plataforma para **parejas en general**, hecha de **módulos** que funcionan por 
 
 - **Hoy** la usan solo sus dos creadores, desde el celular, viendo los mismos datos al instante. Sus datos actuales (gastos, fotos, citas, notas) **se conservan** en todo cambio futuro.
 - **Formato:** primero página web instalable en el celular (PWA); tiendas (Google Play / App Store) después.
-- **Cómo se cobra:** aún no está decidido (precios, suscripción o pago único). No inventar precios ni cobros sin preguntar.
+- **Cómo se cobra:** aún no está decidido (precios, suscripción o pago único). No inventar precios ni cobros sin preguntar. **Decidido (noviembre de 2026): se vende solo en Chile (pesos chilenos), con la web instalable primero y las tiendas después.** La forma de cobro sigue abierta; el plan comparó suscripción por módulo, pago único y módulos gratis, y recomienda un módulo liviano gratis + suscripción por módulo (sin fijar precios, que se deciden tras medir costos en la beta).
 - El producto todavía **no está construido**: la app actual es el primer paso. Las reglas de "Cómo está hecha" valen **hoy** y cambiarán por fases (ver "Hoja de ruta").
 
 ## Módulos
@@ -40,7 +40,13 @@ Reglas de módulos (valen para todo trabajo nuevo):
 8. **Módulos nuevos:** los que se definan (Metas y Recordatorios ampliado ya se hicieron dentro de Momentos).
 9. **Nombre, marca y precios.**
 
-Preguntas abiertas: moneda y país (hoy todo es en pesos chilenos); si las 90 citas base serán iguales para todas las parejas o cada pareja arma su lista; si el repositorio seguirá público cuando haya producto; qué pasa con los datos y los módulos pagados si una pareja se separa; si algún módulo será gratis; la licencia comercial de TVmaze (ver módulo Cine).
+**Plan de venta (aprobado en noviembre de 2026; cada etapa se detalla y aprueba por separado):** etapa 0 base de negocio y legal (nombre definitivo e INAPI, inicio de actividades en el SII, dominio, contador y abogado) → fase 1 cuentas y parejas → fase 2 módulos activables → fase 3 seguridad y privacidad (con revisión de abogado) → **beta cerrada** (10 a 20 parejas, gratis, para medir costos reales) → cobro (parte de la fase 5) → fase 4 PWA (puede ir en paralelo) → lanzamiento suave → fase 7 tiendas (Google Play primero). Cambios al orden anterior: la beta cerrada va entre seguridad y cobro, y el cobro va **antes** de las tiendas (así no se paga comisión de tienda al empezar).
+- **Antes de abrir a gente de afuera (obligatorio):** reglas de Firestore por pareja (hoy solo miran dos correos); el mini servidor de avisos debe leer los celulares desde el servidor según la pareja de quien pide (hoy acepta la lista que manda el cliente); el límite diario de la IA de Chef y su regla de "solo recetas" deben estar en el servidor; límites de tamaño y de escrituras en las reglas (Blaze no tiene tope automático de gasto).
+- **Cobro sin Cloud Functions (idea a evaluar):** que el mini servidor de Cloudflare reciba el aviso de pago ("webhook") del servicio de pagos chileno (Flow, Mercado Pago o Webpay Oneclick; tarifas por pedir) y active el módulo en la base de datos. Los módulos activos de cada pareja solo los puede escribir el servidor.
+- **Contra copias y piratería:** módulos pagados controlados en el servidor; el contenido valioso de módulos pagados (banco de preguntas de la mascota, `CINE_IDEAS`) hoy está en el código y se lee gratis (moverlo a la base de datos si importa); **hacer privado el repositorio** y mover el sitio a Firebase Hosting o Cloudflare Pages (GitHub Pages con repositorio privado es de pago; el cambio de dominio exige actualizar reCAPTCHA, Firebase Authentication y el `ORIGEN` del Worker); aviso de derechos reservados y términos; registrar la marca en INAPI. Una app web no se puede esconder: lo protegible son los servidores, los módulos pagados y la marca.
+- **Ley chilena de datos (21.719):** según varias fuentes parte el 1 de diciembre de 2026, con un proyecto que propone postergarla a diciembre de 2027 (verificar estado). Los datos de la app son íntimos: pedir revisión de abogado antes de abrir.
+
+Preguntas abiertas: moneda y país (se decidió Chile y pesos; otros países quedan fuera por ahora); si las 90 citas base serán iguales para todas las parejas o cada pareja arma su lista; si el repositorio seguirá público cuando haya producto; qué pasa con los datos y los módulos pagados si una pareja se separa; si algún módulo será gratis; la licencia comercial de TVmaze (ver módulo Cine).
 
 ## Hoy: app de una pareja de 21 años
 Llevar las deudas entre los dos, guardar fotos de boletas, una lista de actividades pendientes, notas tipo post-it y el álbum "100 citas". Los dos la usan desde su celular y ven los mismos datos al instante.
