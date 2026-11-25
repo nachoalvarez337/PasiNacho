@@ -236,6 +236,10 @@ header h1{min-width:0;overflow-wrap:anywhere}
 .cu-pick span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border:1.5px solid var(--ln);border-radius:16px;font-size:13px;color:var(--tx);cursor:pointer}
 .cu-pick input:checked+span{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 2px var(--ac);font-weight:600}.cu-pick input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
 .cu-qs{margin-top:18px}
+.cu-h{margin:12px 0;text-align:left}.cu-h .cu-t{margin:2px 0 8px;font-size:17px}.cu-fe{display:block;color:var(--mu);font-size:12.5px}
+.cu-h summary{display:flex;flex-direction:column;gap:2px;cursor:pointer;list-style:none;position:relative;padding-right:22px}.cu-h summary::-webkit-details-marker{display:none}.cu-h summary::after{content:'▾';position:absolute;right:0;top:2px;color:var(--at);transition:transform .2s}.cu-h[open] summary::after{transform:rotate(180deg)}
+.cu-h summary b{font:600 17px/1.3 var(--ft);overflow-wrap:anywhere}.cu-h summary small{color:var(--mu);font-size:12.5px}
+.cu-pr{display:block;margin-top:6px;padding-top:6px;border-top:1px dashed var(--ln);color:var(--mu);font-size:13px;overflow-wrap:anywhere}.cu-vacio{margin-top:24px}
 /* ---------- Momentos (días juntos, hitos y calendario) ---------- */
 nav:has(button:nth-child(4)) button{font-size:11px}nav:has(button:nth-child(4)) button span{padding:5px 7px}
 .mo-jun{position:relative;text-align:center;border:0;color:#fff;padding:24px 16px 20px;background:linear-gradient(135deg,#a81f42,#d23a59);box-shadow:0 10px 26px #b0264759}
@@ -441,7 +445,7 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
 const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -1005,6 +1009,8 @@ const cuLimpia = t => String(t == null ? '' : t).replace(/\r\n?/g, '\n').replace
 // Respuesta de una persona a la pregunta del día (texto) o null; y sus 3 respuestas del sobre (opciones 0–3) o null
 const cuResp = (d, k) => (d && d[k] && typeof d[k].t === 'string' && cuLimpia(d[k].t)) || null;
 const cuSob = (d, k) => d && d[k] && Array.isArray(d[k].sob) && d[k].sob.length === 3 && d[k].sob.every(cuOp) ? d[k].sob : null;
+// Lo que cada persona cree que responderá la otra en el sobre (opcional: los sobres antiguos no lo tienen)
+const cuPred = (d, k) => d && d[k] && Array.isArray(d[k].pred) && d[k].pred.length === 3 && d[k].pred.every(cuOp) ? d[k].pred : null;
 const cuPregOk = d => cuResp(d, 'a') !== null && cuResp(d, 'b') !== null;
 const cuSobOk = d => !!cuSob(d, 'a') && !!cuSob(d, 'b');
 const cuMult = racha => racha >= 7 ? 2 : racha >= 3 ? 1.5 : 1;
@@ -1030,10 +1036,27 @@ function cuEtapa(puntos) {
 }
 const cuMedallas = mejor => CUID_MEDALLAS.map(n => ({n, ok:mejor >= n}));
 // Pregunta y sobre de hoy. Si el día ya tiene un documento, manda lo que quedó guardado ahí (así los dos ven lo mismo).
+// Si no, cada uno avanza solo cuando **los dos** lo respondieron en el último día anterior: si no, se repite el mismo.
+// Sin historial, toca según los días desde `inicio`. Los días con fecha futura (reloj cambiado) no cuentan.
 function cuHoy(dias, est, h) {
-  const doc = dias.find(d => d && d.dia === h) || null, n = cuDiaN(est && est.inicio, h);
-  const idx = (v, len) => Number.isInteger(v) && v >= 0 && v < len ? v : n % len;
-  return {dia:h, doc, p:idx(doc ? doc.p : null, CUID_PREG.length), s:idx(doc ? doc.s : null, CUID_SOBRES.length)};
+  const doc = dias.find(d => d && d.dia === h) || null, n = cuDiaN(est && est.inicio, h), hn = cuEsDia(h) ? cuNum(h) : 0;
+  const ant = dias.filter(d => d && cuEsDia(d.dia) && cuNum(d.dia) < hn).sort((x, y) => cuNum(y.dia) - cuNum(x.dia)); // el más reciente primero
+  const ok = (v, len) => Number.isInteger(v) && v >= 0 && v < len;
+  const toca = (campo, len, hecho) => {
+    if (doc && ok(doc[campo], len)) return doc[campo];
+    const d = ant.find(x => ok(x[campo], len));
+    return d ? (hecho(d) ? (d[campo] + 1) % len : d[campo]) : n % len;
+  };
+  return {dia:h, doc, p:toca('p', CUID_PREG.length, cuPregOk), s:toca('s', CUID_SOBRES.length, cuSobOk)};
+}
+// Días en que los dos respondieron (tipo 'preg' = pregunta del día, 'sob' = sobre), del más nuevo al más antiguo
+function cuHistorial(dias, h, tipo) {
+  const hn = cuEsDia(h) ? cuNum(h) : 0, visto = new Set(), len = tipo === 'sob' ? CUID_SOBRES.length : CUID_PREG.length, c = tipo === 'sob' ? 's' : 'p';
+  return dias.filter(d => {
+    if (!d || !cuEsDia(d.dia) || cuNum(d.dia) > hn || visto.has(d.dia)) return false;
+    if (!Number.isInteger(d[c]) || d[c] < 0 || d[c] >= len || !(tipo === 'sob' ? cuSobOk(d) : cuPregOk(d))) return false;
+    visto.add(d.dia); return true;
+  }).sort((x, y) => cuNum(y.dia) - cuNum(x.dia));
 }
 const cuTexto = (s, nombre) => String(s).replace(/\{n\}/g, nombre);
 /* ---------- fin lógica cuidados ---------- */
@@ -1645,13 +1668,19 @@ const cuMedSvg = n => '<svg viewBox="0 0 48 60" aria-hidden="true"><path class="
 const cuNombre = () => (st.cuEst && st.cuEst.nombre) || CUID_NOM;
 const cuOtro = k => k === 'a' ? 'b' : 'a';
 const cuDias = n => n === 1 ? '1 día' : n + ' días';
-// Las dos respuestas de una pregunta. En las preguntas sobre la pareja, cada opción se lee desde quien respondió.
-// txt = true: respuestas escritas (pregunta del día); si no, opciones del sobre.
-function cuFilas(q, ra, rb, txt) {
+// Las dos respuestas escritas de una pregunta. En las preguntas sobre la pareja, cada respuesta se lee desde quien respondió.
+function cuFilas(q, ra, rb) {
   const sobre = q.t.includes('{n}');
-  return [['a', ra], ['b', rb]].map(([k, r]) => '<div class="cu-r"><small>' + esc(nm(k)) + (sobre ? ' sobre ' + esc(nm(cuOtro(k))) : '') + '</small><b>' + esc(txt ? r : cuTexto(q.o[r], nm(cuOtro(k)))) + '</b></div>').join('');
+  return [['a', ra], ['b', rb]].map(([k, r]) => '<div class="cu-r"><small>' + esc(nm(k)) + (sobre ? ' sobre ' + esc(nm(cuOtro(k))) : '') + '</small><b>' + esc(r) + '</b></div>').join('');
 }
-const cuOpciones = (q, name, sel) => q.o.map((o, i) => '<label class="cu-op"><input type="radio" name="' + name + '" value="' + i + '" required' + (sel === i ? ' checked' : '') + '><span>' + esc(cuTexto(o, nm(cuOtro(st.me)))) + '</span></label>').join('');
+// Las dos respuestas de una pregunta del sobre, con lo que cada uno creía que respondería el otro (PA y PB pueden ser null en sobres antiguos)
+function cuFilasSob(q, A, B, PA, PB) {
+  const sobre = q.t.includes('{n}');
+  const fila = (k, r, p, rOtro) => '<div class="cu-r"><small>' + esc(nm(k)) + (sobre ? ' sobre ' + esc(nm(cuOtro(k))) : '') + '</small><b>' + esc(cuTexto(q.o[r], nm(cuOtro(k)))) + '</b>' +
+    (p === null ? '' : '<span class="cu-pr">Creía que ' + esc(nm(cuOtro(k))) + ' respondería: ' + esc(cuTexto(q.o[p], nm(k))) + (p === rOtro ? ' ✅ Acertó' : ' ✕ No acertó') + '</span>') + '</div>';
+  return fila('a', A, PA, B) + fila('b', B, PB, A);
+}
+const cuOpciones = (q, name, sel, quien = nm(cuOtro(st.me))) => q.o.map((o, i) => '<label class="cu-op"><input type="radio" name="' + name + '" value="' + i + '" required' + (sel === i ? ' checked' : '') + '><span>' + esc(cuTexto(o, quien)) + '</span></label>').join('');
 function vCuidados() {
   const E = st.cuEst, me = st.me;
   if (!E) return '<section class="card cu-new c"><div class="cu-trio">' + Object.keys(CUID_OBJ).map(k => cuSvg(k, 3)).join('') + '</div><h2>Su mascota los espera</h2><p class="mu">Elijan una, pónganle nombre y cuídenla juntos: crece cada día que los dos responden la pregunta.</p><button class="btn w" data-a="cuCrear">💞 Crear mascota</button></section>';
@@ -1670,7 +1699,7 @@ function vCuidados() {
   if (mia === null) x += '<form data-f="cuPreg" data-id="' + h + '"><textarea id="cutx" name="cutx" maxlength="' + CUID_TXT + '" required placeholder="Escribe tu respuesta…" aria-label="Tu respuesta">' + esc(bor) + '</textarea>' +
     '<p class="mu cu-av"><span id="cucnt">' + bor.length + '</span>/' + CUID_TXT + ' · Una vez enviada, no se puede cambiar.</p><button class="btn w">Enviar respuesta</button></form>';
   else if (suya === null) x += '<div class="cu-r"><small>Tu respuesta</small><b>' + esc(mia) + '</b></div><p class="mu cu-esp">⏳ Esperando a ' + esc(nm(ot)) + '. Cuando responda, verán las dos respuestas.</p>';
-  else x += cuFilas(q, cuResp(hd.doc, 'a'), cuResp(hd.doc, 'b'), true);
+  else x += cuFilas(q, cuResp(hd.doc, 'a'), cuResp(hd.doc, 'b'));
   x += '</section>';
   // Sobre de hoy
   const sm = cuSob(hd.doc, me), ss = cuSob(hd.doc, ot);
@@ -1679,6 +1708,21 @@ function vCuidados() {
   // Medallas
   x += '<h3>Medallas</h3><div class="cu-meds">' + cuMedallas(R.mejor).map(m => '<div class="cu-med' + (m.ok ? ' on' : '') + '">' + cuMedSvg(m.n) + '<b>' + m.n + ' días</b><small>' + (m.ok ? '¡Ganada!' : 'de racha') + '</small></div>').join('') + '</div>' +
     '<p class="mu c cu-pp">Mejor racha: ' + cuDias(R.mejor) + '</p>';
+  return x;
+}
+// Sección "Respuestas": lo que respondieron los dos, solo de los días completos (nada de lo que respondió una sola persona)
+function vRespuestas() {
+  const E = st.cuEst, me = st.me;
+  if (!E) return '<p class="mu c">Primero creen a su mascota en la sección Mascota.</p>';
+  if (me !== 'a' && me !== 'b') return '<p class="mu c">Primero elige quién eres en Configuración ⚙️</p>';
+  const tipo = st.cuHT === 'sob' ? 'sob' : 'preg', L = cuHistorial(st.cuid, hoy(), tipo), ot = cuOtro(me), N = Math.max(20, st.cuHN || 20);
+  let x = '<div class="cf"><button class="' + (tipo === 'preg' ? 'on' : '') + '" data-a="cuHT:preg">💬 Preguntas</button><button class="' + (tipo === 'sob' ? 'on' : '') + '" data-a="cuHT:sob">💌 Sobres</button></div>';
+  if (!L.length) return x + '<p class="mu c cu-vacio">' + (tipo === 'sob' ? 'Aún no hay sobres que los dos hayan respondido.' : 'Aún no hay preguntas que los dos hayan respondido.') + '</p>';
+  x += L.slice(0, N).map(d => {
+    if (tipo === 'sob') { const sb = CUID_SOBRES[d.s]; return '<details class="card cu-h" data-dia="' + esc(d.dia) + '"' + (st.cuAb.has(d.dia) ? ' open' : '') + '><summary><b>' + esc(sb.t) + '</b><small>' + esc(fdate(d.dia)) + '</small></summary>' + cuSobreCuerpo(sb, d, ot) + '</details>'; }
+    const q = CUID_PREG[d.p]; return '<section class="card cu-h"><small class="cu-fe">' + esc(fdate(d.dia)) + '</small><p class="cu-t">' + esc(cuTexto(q.t, nm(ot))) + '</p>' + cuFilas(q, cuResp(d, 'a'), cuResp(d, 'b')) + '</section>';
+  }).join('');
+  if (L.length > N) x += '<button class="btn sec w" data-a="cuMas">Ver más (' + (L.length - N) + ')</button>';
   return x;
 }
 function formMascota() {
@@ -1692,14 +1736,22 @@ function cuSobreAbrir() {
   const me = st.me, E = st.cuEst; if (!E || (me !== 'a' && me !== 'b')) return;
   const h = hoy(), hd = cuHoy(st.cuid, E, h), sb = CUID_SOBRES[hd.s];
   if (cuSob(hd.doc, me)) { toast('Ya respondiste el sobre de hoy'); return; }
-  openModal('<h2>' + esc(sb.t) + '</h2><form data-f="cuSobre" data-id="' + h + '">' + sb.q.map((q, i) => '<div class="cu-qs"><p class="cu-t">' + (i + 1) + '. ' + esc(cuTexto(q.t, nm(cuOtro(me)))) + '</p>' + cuOpciones(q, 'q' + i, -1) + '</div>').join('') +
+  const ot = cuOtro(me);
+  openModal('<h2>' + esc(sb.t) + '</h2><p class="mu">En cada pregunta eliges tu respuesta y lo que crees que responderá ' + esc(nm(ot)) + '.</p><form data-f="cuSobre" data-id="' + h + '">' +
+    sb.q.map((q, i) => '<div class="cu-qs"><p class="cu-t">' + (i + 1) + '. ' + esc(cuTexto(q.t, nm(ot))) + '</p><div class="lb">Tu respuesta</div>' + cuOpciones(q, 'q' + i, -1) +
+      '<div class="lb">Lo que crees que responderá ' + esc(nm(ot)) + (q.t.includes('{n}') ? ' a «' + esc(cuTexto(q.t, nm(me))) + '»' : '') + '</div>' + cuOpciones(q, 'r' + i, -1, nm(me)) + '</div>').join('') +
     '<p class="mu cu-av">Una vez enviado, no se puede cambiar.</p><div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Enviar sobre</button></div></form>');
+}
+// Las 3 preguntas de un sobre con las respuestas de los dos (y sus predicciones, si las hay). ot = la otra persona, vista desde quien mira.
+function cuSobreCuerpo(sb, doc, ot) {
+  const A = cuSob(doc, 'a'), B = cuSob(doc, 'b'), PA = cuPred(doc, 'a'), PB = cuPred(doc, 'b');
+  return sb.q.map((q, i) => '<div class="cu-qs"><p class="cu-t">' + (i + 1) + '. ' + esc(cuTexto(q.t, nm(ot))) + '</p>' + cuFilasSob(q, A[i], B[i], PA ? PA[i] : null, PB ? PB[i] : null) + '</div>').join('');
 }
 function cuSobreVer() {
   const me = st.me, E = st.cuEst; if (!E || (me !== 'a' && me !== 'b')) return;
   const hd = cuHoy(st.cuid, E, hoy()), sb = CUID_SOBRES[hd.s], A = cuSob(hd.doc, 'a'), B = cuSob(hd.doc, 'b');
   if (!A || !B) return;
-  openModal('<h2>' + esc(sb.t) + '</h2>' + sb.q.map((q, i) => '<div class="cu-qs"><p class="cu-t">' + (i + 1) + '. ' + esc(cuTexto(q.t, nm(cuOtro(me)))) + '</p>' + cuFilas(q, A[i], B[i]) + '</div>').join('') + '<button class="lnk" data-a="x">Cerrar</button>');
+  openModal('<h2>' + esc(sb.t) + '</h2>' + cuSobreCuerpo(sb, hd.doc, cuOtro(me)) + '<button class="lnk" data-a="x">Cerrar</button>');
 }
 
 /* ---------- Pantalla principal y módulos ---------- */
@@ -1711,7 +1763,7 @@ const MODS = [
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
   {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
   {id:'chef', nom:'Chef', ico:'🍳', t1:'Chef', tabs:['chef'], entrada:'chef', secs:[]},
-  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados'], entrada:'cuidados', secs:[]}
+  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados', 'respuestas'], entrada:'cuidados', secs:[['cuidados', '🐾', 'Mascota'], ['respuestas', '📖', 'Respuestas']]}
 ];
 const modDe = tab => MODS.find(m => !m.lock && m.tabs.includes(tab)) || null;
 const modPorId = id => MODS.find(m => m.id === id) || null;
@@ -1925,7 +1977,7 @@ function render() {
     h = '<header><h1>' + modIco(mod) + ' ' + esc(modNom(mod)) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : vCuidados();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'respuestas' ? vRespuestas() : vCuidados();
     h += '<nav><button data-a="menu" aria-label="Abrir la lista de módulos"><span>' + ICO_MOD + '<br>Módulos</span></button>' + mod.secs.map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="tab:' + k + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
   }
   // Los buscadores y la respuesta de Cuidados no deben perder el cursor cuando llegan datos nuevos
@@ -2125,9 +2177,10 @@ const subs = {
     const hd = cuHoy(st.cuid, E, h);
     if (cuSob(hd.doc, me)) { closeModal(); return toast('Ya respondiste el sobre de hoy'); }
     const sob = [0, 1, 2].map(i => { const r = fd.get('q' + i); return r === null ? -1 : +r; });
-    if (!sob.every(cuOp)) return toast('Responde las 3 preguntas');
+    const pred = [0, 1, 2].map(i => { const r = fd.get('r' + i); return r === null ? -1 : +r; });
+    if (!sob.every(cuOp) || !pred.every(cuOp)) return toast('Responde las 3 preguntas y elige lo que crees que responderá ' + nm(cuOtro(me)));
     const lista = !!cuSob(hd.doc, cuOtro(me));
-    await st.db.doc('cuidados/d_' + h).set({dia:h, p:hd.p, s:hd.s, [me]:{sob}}, {merge:true});
+    await st.db.doc('cuidados/d_' + h).set({dia:h, p:hd.p, s:hd.s, [me]:{sob, pred}}, {merge:true});
     avisar('cuSobre');
     closeModal(); toast(lista ? '¡Los dos abrieron el sobre! 💞' : 'Sobre guardado 💌');
   },
@@ -2374,6 +2427,8 @@ const acts = {
   cuCrear: () => formMascota(),
   cuSobre: () => cuSobreAbrir(),
   cuSobreVer: () => cuSobreVer(),
+  cuHT: p => { st.cuHT = p === 'sob' ? 'sob' : 'preg'; st.cuHN = 20; render(); },
+  cuMas: () => { st.cuHN = (st.cuHN || 20) + 20; render(); },
   // Chef
   chefNuevo: () => formChef(),
   chefEditar: p => formChef(p),
@@ -2521,7 +2576,7 @@ document.addEventListener('click', e => {
   if (acts[a]) acts[a](p, t);
 });
 // El desplegable de terminadas recuerda si quedó abierto (la pantalla se redibuja cuando llegan datos)
-document.addEventListener('toggle', e => { const t = e.target; if (t && t.classList) { if (t.classList.contains('mc-fin')) st.calFin = t.open; else if (t.classList.contains('fin-res')) st.resAb = t.open; } }, true);
+document.addEventListener('toggle', e => { const t = e.target; if (t && t.classList) { if (t.classList.contains('cu-h') && t.dataset.dia) { if (t.open) st.cuAb.add(t.dataset.dia); else st.cuAb.delete(t.dataset.dia); } else if (t.classList.contains('mc-fin')) st.calFin = t.open; else if (t.classList.contains('fin-res')) st.resAb = t.open; } }, true);
 // Deslizar con el dedo para cambiar de pestaña dentro de un módulo (no en ventanas, ni sobre filas que ya se mueven de lado)
 let desliz = null;
 document.addEventListener('touchstart', e => { const t = e.touches[0], el = e.target; desliz = e.touches.length === 1 && el.closest && el.closest('#app') && !el.closest('nav, .cf.cg, input, textarea, select') ? {x:t.clientX, y:t.clientY, t:Date.now()} : null; }, {passive:true});
@@ -2824,7 +2879,7 @@ function stop() {
   clearTimeout(pzTimer); pzBorrando = false;
   cerrarCita();
   perfilCorreo.ok = '';
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), tab:'inicio', rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
