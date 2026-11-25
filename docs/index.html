@@ -329,6 +329,15 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .hm-ini[data-k="b"]{--m1:#a8205a;--m2:#c43a73}
 .hm-cam{position:absolute;right:-2px;bottom:-2px;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;border:2px solid var(--cd);font:600 17px/1 var(--fb)}
 .hm-pc{flex:none;width:20px;height:20px;margin-top:30px;fill:var(--ac);opacity:.6}
+.fin-res{margin:14px 0 4px}.fin-res summary{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:16px;background:var(--as);color:var(--at);font-size:14px;font-weight:600;cursor:pointer;list-style:none}
+.fin-res summary::-webkit-details-marker{display:none}.fin-res summary::after{content:'▾';margin-left:auto;transition:transform .2s}.fin-res[open] summary::after{transform:rotate(180deg)}
+.fin-b{padding:6px 2px 4px}
+.fr-t{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:8px 0 2px;font-size:15px}.fr-t b{font:600 20px var(--ft)}
+.fr-r{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:15px}
+.fp{display:flex;flex-direction:column;gap:8px;margin:12px 0;padding:14px 16px;border:1.5px solid var(--ac);border-radius:20px;background:var(--cd);box-shadow:0 4px 14px var(--sh)}.fp b{font-weight:600;overflow-wrap:anywhere}.fp .row{margin-top:4px}
+.fp.es{border-style:dashed;border-color:var(--ln);box-shadow:none}.fp.es .lnk{padding:4px;text-align:left}
+.fe{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;background:var(--as);color:var(--at);font-size:11px;font-weight:600;vertical-align:middle}.fe.no{background:var(--wn);color:var(--rd)}
+.it.nc .am{opacity:.55;text-decoration:line-through}
 .hm-ft{margin:22px 0 0}
 .hm-aj{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1.5px solid var(--ln);border-radius:20px;background:var(--cd);box-shadow:0 4px 12px var(--sh);color:var(--tx);font:600 15px/1.2 var(--fb);text-align:left;cursor:pointer}.hm-aj>span:nth-child(2){flex:1}
 .hm-aj:active{transform:scale(.985)}.hm-aj:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
@@ -427,7 +436,7 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
 const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -441,41 +450,55 @@ const seg = (n, v, ambos) => '<div class="seg">' + (ambos ? ['a', 'b', 'ambos'] 
 
 const deudaDe = g => g.tipo === 'pago' ? (+g.monto || 0) : (g.v === 2 ? (+g.monto || 0) : (+g.monto || 0) / 2);
 
+// Estado de un pago: 'pendiente' (lo anotó quien pagó y falta que quien recibe lo confirme), 'rechazado' o 'confirmado'.
+// Los pagos antiguos no tienen el campo y valen como confirmados.
+const pagoEst = g => g.tipo !== 'pago' ? '' : g.estado === 'pendiente' || g.estado === 'rechazado' ? g.estado : 'confirmado';
+// Pagos que esperan confirmación: los que debo confirmar yo (los anotó la otra persona) y los míos que esperan
+function finPendientes(L, me) {
+  if (me !== 'a' && me !== 'b') return {porConfirmar:[], esperando:[]};
+  const P = L.filter(g => pagoEst(g) === 'pendiente');
+  return {porConfirmar:P.filter(g => g.pagador !== me), esperando:P.filter(g => g.pagador === me)};
+}
+const sumaMonto = L => L.reduce((t, g) => t + (+g.monto || 0), 0);
 function saldo() {
   let s = 0;
   for (const g of st.gastos) {
     const m = +g.monto || 0;
-    if (g.tipo === 'pago') s += g.pagador === 'a' ? m : -m;
+    if (g.tipo === 'pago') { if (pagoEst(g) === 'confirmado') s += g.pagador === 'a' ? m : -m; } // un pago por confirmar o rechazado no baja la deuda
     else s += g.pagador === 'a' ? deudaDe(g) : -deudaDe(g);
   }
   return s; // positivo: la persona 2 le debe a la persona 1
 }
 
 /* ---------- Vistas ---------- */
+// Resumen del mes (dentro de Cuentas, desplegable): lo anotado como gasto por categoría. Ver `deudaDe` (en cada gasto se guarda la deuda, no el total).
+function vResumenMes() {
+  const L = st.gastos.filter(g => g.tipo !== 'pago' && (g.fecha || '').startsWith(st.mes));
+  const tot = L.reduce((t, g) => t + deudaDe(g), 0), byC = {};
+  L.forEach(g => { byC[g.cat] = (byC[g.cat] || 0) + deudaDe(g); });
+  const rows = Object.entries(byC).sort((x, y) => y[1] - x[1]);
+  return '<div class="mes"><button data-a="mes:-1" aria-label="Mes anterior">‹</button><b>' + mesTxt(st.mes) + '</b><button data-a="mes:1" aria-label="Mes siguiente">›</button></div>' +
+    (L.length ? '<div class="fr-t"><span>Total del mes</span><b>' + fmt(tot) + '</b></div>' + rows.map(([k, v]) => '<div class="fr-r"><span>' + esc(CATS[k] || k) + '</span><b>' + fmt(v) + '</b></div><div class="bar"><i style="width:' + (tot > 0 ? Math.round(v / tot * 100) : 0) + '%"></i></div>').join('') : '<p class="mu c">No hay gastos en este mes.</p>');
+}
+// Aviso de un pago por confirmar: con botones si me toca confirmar a mí, o con la espera si lo anoté yo
+const finAviso = (g, recibo) => recibo ?
+  '<section class="fp"><b>⏳ ' + esc(nm(g.pagador)) + ' dice que te pagó ' + fmt(g.monto) + '</b><small class="mu">' + fdate(g.fecha) + ' · Mientras no lo confirmes, la deuda no baja.</small><div class="row"><button class="btn" data-a="pgOk:' + esc(g.id) + '">✅ Confirmar</button><button class="btn sec" data-a="pgNo:' + esc(g.id) + '">✕ No es correcto</button></div></section>' :
+  '<section class="fp es"><b>⏳ Esperando que ' + esc(nm(cuOtro(g.pagador))) + ' confirme tu pago de ' + fmt(g.monto) + '</b><button class="lnk" data-a="dg:' + esc(g.id) + '">Ver pago</button></section>';
 function vCuentas() {
-  const s = saldo(), z = Math.abs(s) < 0.5, deb = s > 0 ? 'b' : 'a', acr = s > 0 ? 'a' : 'b';
-  let h = '<section class="card sal"><div class="mu">' + (z ? 'Estado de cuentas' : esc(nm(deb)) + ' le debe a ' + esc(nm(acr))) + '</div><div class="big' + (z ? ' ok' : '') + '">' + (z ? 'Están a mano 🎉' : fmt(Math.abs(s))) + '</div><div class="row"><button class="btn" data-a="ng">＋ Nuevo gasto</button><button class="btn sec" data-a="np">Registrar pago</button></div></section><h3>Movimientos</h3>';
+  const s = saldo(), z = Math.abs(s) < 0.5, deb = s > 0 ? 'b' : 'a', acr = s > 0 ? 'a' : 'b', P = finPendientes(st.gastos, st.me);
+  let h = '<section class="card sal"><div class="mu">' + (z ? 'Estado de cuentas' : esc(nm(deb)) + ' le debe a ' + esc(nm(acr))) + '</div><div class="big' + (z ? ' ok' : '') + '">' + (z ? 'Están a mano 🎉' : fmt(Math.abs(s))) + '</div><div class="row"><button class="btn" data-a="ng">＋ Nuevo gasto</button><button class="btn sec" data-a="np">Registrar pago</button></div></section>';
+  h += P.porConfirmar.map(g => finAviso(g, true)).join('') + P.esperando.map(g => finAviso(g, false)).join('');
+  h += '<details class="fin-res"' + (st.resAb ? ' open' : '') + '><summary>📊 Gasto por categoría</summary><div class="fin-b">' + vResumenMes() + '</div></details><h3>Movimientos</h3>';
   const L = [...st.gastos].sort((x, y) => (y.fecha || '').localeCompare(x.fecha || '') || (y.creado || 0) - (x.creado || 0));
   h += L.map(g => {
-    const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a';
+    const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a', est = pagoEst(g);
     const sub = pago ? 'Pago de ' + nm(g.pagador) + ' a ' + nm(otro) : (CATS[g.cat] || '') + ' · Pagó ' + nm(g.pagador);
-    return '<button class="it" data-a="dg:' + g.id + '"><span class="dot ' + esc(g.pagador) + '"></span><span class="tx"><b>' + esc(g.desc) + '</b><small>' + fdate(g.fecha) + ' · ' + esc(sub) + '</small></span><span class="am">' + fmt(deudaDe(g)) + (g.nFotos ? '<small>📎 ' + g.nFotos + '</small>' : '') + '</span></button>';
+    const chip = est === 'pendiente' ? '<span class="fe">⏳ Por confirmar</span>' : est === 'rechazado' ? '<span class="fe no">✕ Rechazado</span>' : '';
+    return '<button class="it' + (est === 'rechazado' ? ' nc' : '') + '" data-a="dg:' + g.id + '"><span class="dot ' + esc(g.pagador) + '"></span><span class="tx"><b>' + esc(g.desc) + chip + '</b><small>' + fdate(g.fecha) + ' · ' + esc(sub) + '</small></span><span class="am">' + fmt(deudaDe(g)) + (g.nFotos ? '<small>📎 ' + g.nFotos + '</small>' : '') + '</span></button>';
   }).join('') || '<p class="mu c">Aún no hay gastos. ¡Anoten el primero!</p>';
   return h;
 }
 
-function vResumen() {
-  const L = st.gastos.filter(g => g.tipo !== 'pago' && (g.fecha || '').startsWith(st.mes));
-  const tot = L.reduce((s, g) => s + deudaDe(g), 0), byC = {}, byP = {a:0, b:0};
-  L.forEach(g => { const d = deudaDe(g); byC[g.cat] = (byC[g.cat] || 0) + d; if (byP[g.pagador] != null) byP[g.pagador] += d; });
-  const rows = Object.entries(byC).sort((x, y) => y[1] - x[1]);
-  let h = '<div class="mes"><button data-a="mes:-1" aria-label="Mes anterior">‹</button><b>' + mesTxt(st.mes) + '</b><button data-a="mes:1" aria-label="Mes siguiente">›</button></div>';
-  h += '<section class="card"><div class="mu">Deudas registradas en el mes</div><div class="big">' + fmt(tot) + '</div><div class="mu">' + L.length + ' gasto(s)</div></section>';
-  if (!L.length) return h + '<p class="mu c">No hay gastos en este mes.</p>';
-  h += '<section class="card"><b>Deuda por categoría</b>' + rows.map(([k, v]) => '<div style="display:flex;justify-content:space-between;margin-top:10px"><span>' + esc(CATS[k] || k) + '</span><b>' + fmt(v) + '</b></div><div class="bar"><i style="width:' + Math.round(v / tot * 100) + '%"></i></div>').join('') + '</section>';
-  h += '<section class="card"><b>Deuda según quién pagó</b>' + ['a', 'b'].map(k => '<div style="display:flex;justify-content:space-between;margin-top:10px"><span><span class="dot ' + k + '" style="display:inline-block"></span> ' + esc(nm(k)) + '</span><b>' + fmt(byP[k]) + '</b></div>').join('') + '</section>';
-  return h;
-}
 
 function tItem(t) {
   const late = !t.hecha && t.fecha && t.fecha < hoy();
@@ -1591,7 +1614,7 @@ function cuSobreVer() {
 const APP = 'Pasinacho';
 // Cada módulo: sus pestañas internas (tabs), la primera que se abre (entrada) y las secciones que muestra la barra.
 const MODS = [
-  {id:'finanzas', nom:'Finanzas', ico:'💸', t1:'Finanzas', tabs:['cuentas', 'resumen'], entrada:'cuentas', secs:[['cuentas', '💸', 'Cuentas'], ['resumen', '📊', 'Resumen']]},
+  {id:'finanzas', nom:'Finanzas', ico:'💸', t1:'Finanzas', tabs:['cuentas'], entrada:'cuentas', secs:[]},
   {id:'momentos', nom:'Momentos', ico:'💗', t1:'Momentos', tabs:['juntos', 'metas', 'calendario'], entrada:'juntos', secs:[['juntos', '💗', 'Juntos'], ['metas', '🎯', 'Metas'], ['calendario', '📅', 'Calendario']]},
   {id:'notas', nom:'Notas', ico:'📝', t1:'Notas', tabs:['notas'], entrada:'notas', secs:[]},
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
@@ -1637,6 +1660,13 @@ function inPagos(s, me, na, nb) {
   if (me === deu) return {est:'debo', t:'Le debes ' + fmt(m) + ' a ' + N[acr], s:'Toca para ver las cuentas'};
   if (me === acr) return {est:'deben', t:N[deu] + ' te debe ' + fmt(m), s:'Toca para ver las cuentas'};
   return {est:'deben', t:N[deu] + ' le debe ' + fmt(m) + ' a ' + N[acr], s:'Toca para ver las cuentas'};
+}
+// Pagos por confirmar, para el recuadro de Inicio: lo que me toca confirmar tiene prioridad sobre lo que espero
+function inPagosPend(L, me, otro) {
+  const P = finPendientes(L, me);
+  if (P.porConfirmar.length) return {al:true, t:'⏳ ' + (P.porConfirmar.length === 1 ? otro + ' dice que te pagó ' + fmt(P.porConfirmar[0].monto) : P.porConfirmar.length + ' pagos por confirmar (' + fmt(sumaMonto(P.porConfirmar)) + ')') + ' · Confírmalo'};
+  if (P.esperando.length) return {al:false, t:'⏳ Esperando que ' + otro + ' confirme ' + (P.esperando.length === 1 ? 'tu pago de ' + fmt(P.esperando[0].monto) : P.esperando.length + ' pagos (' + fmt(sumaMonto(P.esperando)) + ')')};
+  return null;
 }
 // Estado de una respuesta del día (pregunta o sobre). Nunca muestra lo respondido, solo si ya respondieron.
 const inEstado = (mia, suya, otro) => !mia ? (suya ? otro + ' ya respondió' : 'Responde') : suya ? '¡Listo! 💞' : 'Esperando a ' + otro;
@@ -1731,7 +1761,7 @@ function vInicio() {
   const h = hoy(), me = st.me, rd = st.rd, yo = me === 'a' || me === 'b', otro = yo ? nm(cuOtro(me)) : 'tu pareja';
   // 1. Pagos pendientes (Finanzas)
   let fin = HM_SK;
-  if (rd.g && rd.n) { const p = inPagos(saldo(), me, nm('a'), nm('b')); fin = '<span class="hm-v ' + p.est + '">' + esc(p.t) + '</span><span class="hm-m">' + esc(p.s) + '</span>'; }
+  if (rd.g && rd.n) { const p = inPagos(saldo(), me, nm('a'), nm('b')); const q = inPagosPend(st.gastos, me, otro); fin = '<span class="hm-v ' + p.est + '">' + esc(p.t) + '</span><span class="hm-m">' + esc(p.s) + '</span>' + (q ? '<span class="hm-m' + (q.al ? ' hm-al' : '') + '">' + esc(q.t) + '</span>' : ''); }
   // 2. Pregunta y sobre de hoy (mascota)
   let cui = HM_SK;
   if (rd.cu && rd.n) {
@@ -1805,7 +1835,7 @@ function render() {
     h = '<header><h1>' + modIco(mod) + ' ' + esc(modNom(mod)) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'resumen' ? vResumen() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'cuidados' ? vCuidados() : vNotas();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'cuidados' ? vCuidados() : vNotas();
     h += '<nav><button data-a="menu" aria-label="Abrir la lista de módulos"><span>' + ICO_MOD + '<br>Módulos</span></button>' + mod.secs.map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="tab:' + k + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
   }
   // Los buscadores y la respuesta de Cuidados no deben perder el cursor cuando llegan datos nuevos
@@ -1840,10 +1870,24 @@ function formGasto(id) {
     '<label>Fotos de la boleta' + (g && g.nFotos ? ' (ya tiene ' + g.nFotos + ')' : '') + '<input name="fotos" type="file" accept="image/*" multiple></label>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
 }
+// Quien recibe un pago lo confirma o lo rechaza (solo si está pendiente y no lo anotó él mismo)
+async function pagoResp(id, estado) {
+  const g = st.gastos.find(x => x.id === id);
+  if (!g || pagoEst(g) !== 'pendiente') { closeModal(); return toast('Ese pago ya no está por confirmar'); }
+  if ((st.me !== 'a' && st.me !== 'b') || g.pagador === st.me) return toast('Solo quien recibe el pago puede confirmarlo');
+  try {
+    const ref = st.db.doc('gastos/' + id), ahora = await ref.get(), d = ahora.exists ? ahora.data() : null; // por si quien pagó lo cambió justo antes
+    if (!d || pagoEst(d) !== 'pendiente' || (+d.monto || 0) !== (+g.monto || 0)) { closeModal(); return toast('Este pago cambió. Revisa el nuevo monto antes de confirmarlo'); }
+    await ref.update({estado});
+    avisar(estado === 'confirmado' ? 'pagoOk' : 'pagoNo', {monto:g.monto});
+    closeModal(); toast(estado === 'confirmado' ? 'Pago confirmado ✅' : 'Pago rechazado');
+  } catch (e) { fail(e); }
+}
 function formPago(id) {
   const g = id ? st.gastos.find(x => x.id === id) : null; if (id && !g) return;
-  const s = saldo(), deb = s > 0 ? 'b' : 'a', def = g ? g.monto : (Math.abs(s) >= 1 ? Math.round(Math.abs(s)) : '');
-  openModal('<h2>' + (g ? 'Editar pago' : 'Registrar pago') + '</h2><p class="mu">Anota cuando uno le devuelve plata al otro.</p><form data-f="pago" data-id="' + esc(id || '') + '">' +
+  const s = saldo(), deb = s > 0 ? 'b' : 'a', yaEnviado = deb === st.me ? sumaMonto(finPendientes(st.gastos, st.me).esperando) : 0; // lo que ya mandé y espera confirmación no se vuelve a ofrecer
+  const falta = Math.round(Math.abs(s)) - yaEnviado, def = g ? g.monto : (falta >= 1 ? falta : '');
+  openModal('<h2>' + (g ? 'Editar pago' : 'Registrar pago') + '</h2><p class="mu">Anota cuando uno le devuelve plata al otro. Si lo anota quien pagó, la otra persona debe confirmarlo.</p><form data-f="pago" data-id="' + esc(id || '') + '">' +
     '<div class="lb">¿Quién paga?</div>' + seg('pagador', g ? g.pagador : deb) +
     '<label>Monto ($)<input name="monto" type="number" inputmode="numeric" min="1" step="1" required value="' + def + '"></label>' +
     '<label>Fecha<input name="fecha" type="date" required value="' + esc(g ? g.fecha : hoy()) + '"></label>' +
@@ -1863,11 +1907,12 @@ function formTarea(id, fecha0) {
 }
 function detalle(id) {
   const g = st.gastos.find(x => x.id === id); if (!g) return;
-  const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a';
+  const pago = g.tipo === 'pago', otro = g.pagador === 'a' ? 'b' : 'a', est = pagoEst(g), recibo = pago && (st.me === 'a' || st.me === 'b') && g.pagador !== st.me;
   openModal('<h2>' + esc(g.desc) + '</h2><div class="big" style="margin:0 0 6px">' + fmt(deudaDe(g)) + '</div><p class="mu" style="margin:0 0 8px">' + fdate(g.fecha) + (pago ? '' : ' · ' + esc(CATS[g.cat] || '')) + '</p>' +
-    (pago ? '<p>' + esc(nm(g.pagador)) + ' le pagó a ' + esc(nm(otro)) + '.</p>' : '<p>Pagó ' + esc(nm(g.pagador)) + '. ' + esc(nm(otro)) + ' le debe ' + fmt(deudaDe(g)) + '.</p>') +
+    (pago ? '<p>' + esc(nm(g.pagador)) + ' le pagó a ' + esc(nm(otro)) + '.</p>' + (est === 'pendiente' ? '<p class="mu">⏳ ' + (recibo ? 'Falta que lo confirmes. Mientras tanto, la deuda no baja.' : 'Falta que ' + esc(nm(otro)) + ' lo confirme. Mientras tanto, la deuda no baja.') + '</p>' : est === 'rechazado' ? '<p class="mu">✕ ' + (recibo ? 'No confirmaste este pago.' : esc(nm(otro)) + ' no reconoció este pago. Puedes corregirlo con Editar (se vuelve a enviar) o eliminarlo.') + '</p>' : '') : '<p>Pagó ' + esc(nm(g.pagador)) + '. ' + esc(nm(otro)) + ' le debe ' + fmt(deudaDe(g)) + '.</p>') +
+    (est === 'pendiente' && recibo ? '<div class="row"><button class="btn" data-a="pgOk:' + esc(id) + '">✅ Confirmar</button><button class="btn sec" data-a="pgNo:' + esc(id) + '">✕ No es correcto</button></div>' : '') +
     (g.nFotos ? '<div id="fotos" class="mu">Cargando fotos…</div>' : '') +
-    '<div class="row"><button class="btn sec" data-a="eg:' + id + '">Editar</button><button class="btn dng" data-a="bg:' + id + '">Eliminar</button></div><button class="lnk" data-a="x">Cerrar</button>');
+    '<div class="row">' + (est === 'pendiente' && recibo ? '' : '<button class="btn sec" data-a="eg:' + id + '">Editar</button>') + '<button class="btn dng" data-a="bg:' + id + '">Eliminar</button></div><button class="lnk" data-a="x">Cerrar</button>');
   if (g.nFotos) cargarFotos(id);
 }
 async function cargarFotos(id) {
@@ -2040,9 +2085,11 @@ const subs = {
   async pago(f, id) {
     const fd = new FormData(f), monto = Math.round(+fd.get('monto'));
     if (!(monto > 0)) return toast('Escribe un monto válido');
-    const d = {tipo:'pago', desc:'Pago de deuda', cat:'', monto, fecha:fd.get('fecha'), pagador:fd.get('pagador') === 'b' ? 'b' : 'a'};
-    if (id) await st.db.doc('gastos/' + id).update(d); else { d.creado = Date.now(); await st.db.collection('gastos').doc().set(d); avisar('pago', {monto}); }
-    closeModal(); toast('Pago guardado ✅');
+    const pagador = fd.get('pagador') === 'b' ? 'b' : 'a', estado = (st.me === 'a' || st.me === 'b') && st.me === pagador ? 'pendiente' : 'confirmado'; // lo anota quien pagó: lo confirma quien recibe. Lo anota quien recibe: queda confirmado.
+    const d = {tipo:'pago', desc:'Pago de deuda', cat:'', monto, fecha:fd.get('fecha'), pagador, estado};
+    if (id) await st.db.doc('gastos/' + id).update(d); else { d.creado = Date.now(); await st.db.collection('gastos').doc().set(d); }
+    if (estado === 'pendiente') avisar('pagoPend', {monto}); else if (!id) avisar('pago', {monto}); // editar un pago ya confirmado no avisa
+    closeModal(); toast(estado === 'pendiente' ? 'Pago enviado: ' + nm(cuOtro(pagador)) + ' debe confirmarlo ⏳' : 'Pago guardado ✅');
   },
   async tarea(f, id) {
     const fd = new FormData(f), titulo = fd.get('titulo').trim();
@@ -2188,7 +2235,14 @@ const acts = {
   soy: p => { setMe(p); closeModal(); render(); perfilCorreo(); },
   ng: () => formGasto(), np: () => formPago(), nt: () => formTarea('', hoy()), ntd: p => formTarea('', p),
   dg: p => detalle(p),
-  eg: p => { const g = st.gastos.find(x => x.id === p); if (g) g.tipo === 'pago' ? formPago(p) : formGasto(p); },
+  pgOk: p => pagoResp(p, 'confirmado'),
+  pgNo: p => pagoResp(p, 'rechazado'),
+  eg: p => {
+    const g = st.gastos.find(x => x.id === p); if (!g) return;
+    if (g.tipo !== 'pago') return formGasto(p);
+    if (pagoEst(g) === 'pendiente' && (st.me === 'a' || st.me === 'b') && g.pagador !== st.me) return toast('Confirma o rechaza este pago; no se edita');
+    formPago(p);
+  },
   et: p => formTarea(p),
   vf: (p, t) => { const z = $('#zoom'); z.innerHTML = '<img src="' + esc(t.src) + '" alt="Foto ampliada">'; z.hidden = false; },
   bg: p => confirmar('¿Eliminar este movimiento y sus fotos?', async () => {
@@ -2387,7 +2441,7 @@ document.addEventListener('click', e => {
   if (acts[a]) acts[a](p, t);
 });
 // El desplegable de terminadas recuerda si quedó abierto (la pantalla se redibuja cuando llegan datos)
-document.addEventListener('toggle', e => { const t = e.target; if (t && t.classList && t.classList.contains('mc-fin')) st.calFin = t.open; }, true);
+document.addEventListener('toggle', e => { const t = e.target; if (t && t.classList) { if (t.classList.contains('mc-fin')) st.calFin = t.open; else if (t.classList.contains('fin-res')) st.resAb = t.open; } }, true);
 // Deslizar con el dedo para cambiar de pestaña dentro de un módulo (no en ventanas, ni sobre filas que ya se mueven de lado)
 let desliz = null;
 document.addEventListener('touchstart', e => { const t = e.touches[0], el = e.target; desliz = e.touches.length === 1 && el.closest && el.closest('#app') && !el.closest('nav, .cf.cg, input, textarea, select') ? {x:t.clientX, y:t.clientY, t:Date.now()} : null; }, {passive:true});
@@ -2536,6 +2590,9 @@ const avCorta = (s, n) => { const A = Array.from(String(s == null ? '' : s).repl
 const AVISO_T = {
   gasto: ['finanzas', d => 'agregó un gasto: ' + avCorta(d.desc, 60) + ' (' + fmt(d.monto) + ')'],
   pago: ['finanzas', d => 'registró un pago de ' + fmt(d.monto)],
+  pagoPend: ['finanzas', d => 'dice que te pagó ' + fmt(d.monto) + '. Entra a Finanzas para confirmarlo'],
+  pagoOk: ['finanzas', d => 'confirmó tu pago de ' + fmt(d.monto) + ' ✅'],
+  pagoNo: ['finanzas', d => 'no reconoció tu pago de ' + fmt(d.monto)],
   nota: ['notas', () => 'dejó una nota nueva'],
   hito: ['momentos', d => 'agregó un hito: ' + avCorta(d.titulo, 60)],
   meta: ['momentos', d => 'agregó una meta: ' + avCorta(d.titulo, 80)],
@@ -2683,7 +2740,7 @@ function stop() {
   st.unsubs.forEach(u => u());
   cerrarCita();
   perfilCorreo.ok = '';
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calFin:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
