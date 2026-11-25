@@ -277,7 +277,7 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .mt-c{display:flex;align-items:center;justify-content:center;width:clamp(52px,16vw,62px);height:clamp(52px,16vw,62px);border-radius:50%;background:linear-gradient(135deg,var(--m1),var(--m2));color:#fff;box-shadow:0 6px 14px var(--sh),inset 0 -3px 6px #0000001f}
 .mt-i{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 /* Inicio nuevo: encabezado, recuadros de cada módulo, botón y hoja de módulos */
-.hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 50px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
+.hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 26px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
 .hm-top .ini-t,.hm-top .ini-d{position:relative;z-index:1}
 .hm-top .ini-d{margin:2px 0 6px}
 .hm-s{display:flex;flex-direction:column;gap:12px;margin:16px 0 4px}
@@ -310,13 +310,15 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .mn-i .mt-c{flex:none;width:40px;height:40px}.mn-i.on{border-color:var(--ac);background:var(--as)}
 .mn-e{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--as);font-size:20px}
 .mn-i:active{transform:scale(.97)}
-.hm-pf{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;margin-top:8px}
-.hm-pcol{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;padding:0 8px}.hm-pcol+.hm-pcol{border-left:2px solid var(--ln)}
-.lz-h{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/5;padding:0;border:2px solid var(--ln);border-radius:14px;overflow:hidden;background:#fff;font:inherit;cursor:pointer}
-.lz-h img{display:block;width:100%;height:100%;object-fit:contain}.lz-h.vac{border-style:dashed;background:var(--as)}
-.lz-h:focus-visible{outline:3px solid var(--ac);outline-offset:3px}.lz-h:active{transform:scale(.98)}
-.lz-v{padding:8px;font-size:13px;line-height:1.35;text-align:center;color:var(--at)}.lz-v i{display:block;margin-bottom:4px;font-size:24px;font-style:normal}
-.lz-t{display:block;min-height:15px;font-size:11.5px;line-height:1.3;text-align:center;color:var(--mu)}
+.hm-pf{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;margin:14px -4px 0;border:2px solid var(--ln);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 6px 16px var(--sh)}
+.lz-m{position:relative;aspect-ratio:2/3;min-width:0}.lz-m+.lz-m{border-left:2px solid #3a1622}
+.lz-b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0;border:0;background:#fff;font:inherit;cursor:pointer}
+.lz-b img{display:block;width:100%;height:100%;object-fit:contain}.lz-b:focus-visible{outline:3px solid var(--ac);outline-offset:-3px}.lz-b:active{background:#fff5f7}
+.lz-v{padding:0 10px;margin-top:40px;font-size:13px;line-height:1.35;text-align:center;color:#8a3a52}.lz-v i{display:block;margin-bottom:4px;font-size:26px;font-style:normal}
+.lz-t{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);max-width:94%;padding:2px 9px;border-radius:10px;background:#ffffffe6;color:#6b2a3c;font-size:11px;line-height:1.3;white-space:nowrap;box-shadow:0 1px 4px #0003;pointer-events:none}
+.lz-m .hm-p{position:absolute;top:8px;z-index:2;max-width:calc(100% - 12px)}.lz-m:first-child .hm-p{left:8px}.lz-m+.lz-m .hm-p{right:8px}
+.lz-m .hm-av{width:clamp(48px,14vw,58px);height:clamp(48px,14vw,58px);font-size:22px}.lz-m .hm-cam{width:20px;height:20px;font-size:14px}
+.lz-m .hm-p b{padding:1px 8px;border-radius:10px;background:#ffffffe6;color:#3a1622;font-size:12.5px;box-shadow:0 1px 4px #0003}
 .hm-p{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;max-width:100%;padding:0;border:0;background:none;color:var(--tx);font:inherit;cursor:pointer}
 .hm-p b{font:600 15px/1.2 var(--ft);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-p:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:16px}.hm-p:active .hm-avw{transform:scale(.94)}
@@ -334,8 +336,8 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .fp.es{border-style:dashed;border-color:var(--ln);box-shadow:none}.fp.es .lnk{padding:4px;text-align:left}
 .fe{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;background:var(--as);color:var(--at);font-size:11px;font-weight:600;vertical-align:middle}.fe.no{background:var(--wn);color:var(--rd)}
 .it.nc .am{opacity:.55;text-decoration:line-through}
-.pz-lienzo{margin:6px 0 10px;border:2px solid var(--ln);border-radius:14px;overflow:hidden;background:#fff;line-height:0}
-.pz-lienzo canvas{display:block;width:100%;height:auto;aspect-ratio:4/5;touch-action:none;cursor:crosshair}
+.pz-lienzo{max-width:calc(58vh * 2 / 3);margin:6px auto 10px;border:2px solid var(--ln);border-radius:14px;overflow:hidden;background:#fff;line-height:0}
+.pz-lienzo canvas{display:block;width:100%;height:auto;aspect-ratio:2/3;touch-action:none;cursor:crosshair}
 .pz-pal{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:8px 0}
 .pz-col{display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:3px solid var(--cd);border-radius:50%;box-shadow:0 0 0 1.5px var(--ln);font-size:16px;cursor:pointer}.pz-col.on{box-shadow:0 0 0 3px var(--ac)}
 .pz-gro{display:flex;gap:8px;margin:8px 0}
@@ -534,17 +536,19 @@ function pzMantener() {
   if (prox < Infinity) pzTimer = setTimeout(pzTick, Math.min(prox, 2000000000) + 500);
 }
 function pzTick() { if (st.user && pzVis() !== render.pz) render(); pzMantener(); }
-// La celda de dibujo de Inicio (bajo la foto de cada persona)
-function pzCelda(k) {
-  if (!st.rd.pz) return '<span class="lz-h vac" aria-hidden="true"><span class="lz-v">…</span></span><span class="lz-t"></span>';
+// Una mitad del pizarrón de Inicio: el dibujo (o el aviso de que no hay) y, encima, la foto y el nombre de la persona
+function pzMitad(k) {
+  const perfil = '<button class="hm-p" data-a="pf:' + k + '" aria-label="' + (k === st.me ? 'Cambiar mi foto de perfil' : 'Ver la foto de ' + esc(nm(k))) + '"><span class="hm-avw">' + hmAv(k) +
+    (k === st.me ? '<span class="hm-cam" aria-hidden="true">＋</span>' : '') + '</span><b>' + esc(nm(k)) + '</b></button>';
+  if (!st.rd.pz) return '<div class="lz-m"><span class="lz-b" aria-hidden="true"></span>' + perfil + '</div>';
   const t = Date.now(), d = pzDe(k, t), mio = k === st.me;
-  return '<button class="lz-h' + (d ? '' : ' vac') + '" data-a="lz:' + k + '" aria-label="' + (mio ? 'Mi dibujo' : 'Dibujo de ' + esc(nm(k))) + '">' +
+  return '<div class="lz-m"><button class="lz-b" data-a="lz:' + k + '" aria-label="' + (mio ? 'Mi dibujo' : 'Dibujo de ' + esc(nm(k))) + '">' +
     (d ? '<img src="' + esc(d.data) + '" alt="Dibujo de ' + esc(nm(k)) + '">' : '<span class="lz-v">' + (mio ? '<i aria-hidden="true">✏️</i>Toca para dibujar' : 'Aún sin dibujo') + '</span>') + '</button>' +
-    '<span class="lz-t">' + (d ? 'Se borra en ' + pzTexto(pzResta(d, t)) : '') + '</span>';
+    perfil + (d ? '<span class="lz-t">Se borra en ' + pzTexto(pzResta(d, t)) + '</span>' : '') + '</div>';
 }
 /* ---------- Pizarra: dibujo ---------- */
 const PZ_COLORES = [['Negro', '#2b2a28'], ['Vino', '#6d0f28'], ['Carmesí', '#c81e4a'], ['Rosado', '#ff4d86'], ['Naranja', '#ff8a5b'], ['Amarillo', '#f2b705'], ['Verde', '#2f9e5b'], ['Azul', '#2f7fd8']];
-const PZ_GROSORES = [4, 9, 16]; // en puntos del lienzo (480 × 600)
+const PZ_GROSORES = [4, 9, 16]; // en puntos del lienzo (400 × 600)
 let pzDib = null;
 function pzTrazo(x, t) {
   x.strokeStyle = t.c; x.fillStyle = t.c; x.lineWidth = t.w; x.lineCap = 'round'; x.lineJoin = 'round';
@@ -567,7 +571,7 @@ function formDibujo() {
   if (st.me !== 'a' && st.me !== 'b') return toast('Elige quién eres en Configuración ⚙️');
   const hay = !!pzDe(st.me, Date.now());
   openModal('<h2>' + (hay ? 'Dibujar de nuevo' : 'Mi dibujo') + '</h2><p class="mu pz-aviso">' + (hay ? 'Reemplaza tu dibujo actual. ' : '') + 'Se borra solo a las 48 horas.</p>' +
-    '<div class="pz-lienzo"><canvas id="pzcv" width="480" height="600" aria-label="Lienzo para dibujar con el dedo"></canvas></div>' +
+    '<div class="pz-lienzo"><canvas id="pzcv" width="400" height="600" aria-label="Lienzo para dibujar con el dedo"></canvas></div>' +
     '<div class="pz-pal">' + PZ_COLORES.map(([n, c], i) => '<button type="button" class="pz-col" data-a="pzC:' + i + '" style="background:' + c + '" aria-label="' + n + '"></button>').join('') + '<button type="button" class="pz-col" data-a="pzC:8" style="background:#fff" aria-label="Borrador">🧽</button></div>' +
     '<div class="pz-gro">' + PZ_GROSORES.map((w, i) => '<button type="button" class="pz-g" data-a="pzG:' + i + '" aria-label="Grosor ' + (i + 1) + '"><i style="width:' + (6 + i * 6) + 'px;height:' + (6 + i * 6) + 'px"></i></button>').join('') + '</div>' +
     '<div class="row"><button type="button" class="btn sec" data-a="pzU">↩️ Deshacer</button><button type="button" class="btn sec" data-a="pzL">🗑️ Limpiar</button></div>' +
@@ -1791,8 +1795,7 @@ const hmAv = k => {
 function hmPerfiles() {
   if (!st.names) return '';
   const ord = st.me === 'a' || st.me === 'b' ? [st.me, cuOtro(st.me)] : ['a', 'b'];
-  return '<div class="hm-pf">' + ord.map(k => '<div class="hm-pcol"><button class="hm-p" data-a="pf:' + k + '" aria-label="' + (k === st.me ? 'Cambiar mi foto de perfil' : 'Ver la foto de ' + esc(nm(k))) + '"><span class="hm-avw">' + hmAv(k) +
-    (k === st.me ? '<span class="hm-cam" aria-hidden="true">＋</span>' : '') + '</span><b>' + esc(nm(k)) + '</b></button>' + pzCelda(k) + '</div>').join('') + '</div>';
+  return '<div class="hm-pf">' + ord.map(pzMitad).join('') + '</div>';
 }
 // Foto de perfil: se corta en cuadrado y se achica hasta que quepa en PF_MAX caracteres
 async function fotoPerfil(file) {
