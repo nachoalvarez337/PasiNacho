@@ -55,13 +55,6 @@ input:not([type=radio]),select{width:100%;font:inherit;font-size:16px;padding:11
 .fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:12px 0}
 .ph{position:relative}.ph img{width:100%;height:110px;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block}
 .ph button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:26px;height:26px;background:#000a;color:#fff;cursor:pointer}
-.notas{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:12px 0}
-.nota{border:0;border-radius:4px 4px 14px 4px;padding:14px 12px 10px;min-height:130px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;font:inherit;color:#2b2a28;cursor:pointer;box-shadow:0 3px 8px #0003;transform:rotate(-1.2deg)}
-.nota:nth-child(even){transform:rotate(1deg)}
-.nota p{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font-size:15px}.nota small{font-size:12px;opacity:.8}
-.sw{display:flex;gap:10px;flex-wrap:wrap}.sw label{margin:0}.sw input{position:absolute;opacity:0;width:1px;height:1px}
-.sw span{display:block;width:38px;height:38px;border-radius:50%;border:3px solid transparent;box-shadow:0 0 0 1px var(--ln);cursor:pointer}
-.sw input:checked+span{border-color:var(--tx)}.sw input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
 textarea{width:100%;font:inherit;font-size:16px;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);resize:vertical;min-height:110px}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
 nav button{flex:1;background:none;border:0;padding:8px 2px;font:inherit;font-size:12px;font-weight:500;color:var(--mu);cursor:pointer}nav button span{display:inline-block;padding:5px 16px;border-radius:18px;line-height:1.3}nav button.on{color:var(--at);font-weight:600}nav button.on span{background:var(--as)}
@@ -202,13 +195,11 @@ nav{border-radius:22px 22px 0 0;box-shadow:0 -6px 20px var(--sh)}
 body[data-mod]{--at:var(--atf,var(--atm,var(--ac)))}
 body[data-mod="finanzas"]{--ac:var(--m-fin);--hd:linear-gradient(135deg,#6d0f28,#c81e4a);--hx:repeating-linear-gradient(135deg,#ffffff14 0 2px,#0000 2px 13px)}
 body[data-mod="momentos"]{--ac:var(--m-rec);--atm:#b02647;--hd:linear-gradient(135deg,#d23a59,#ff8a9e);--hx:var(--hp)}
-body[data-mod="pizarra"]{--ac:var(--m-not);--atm:#a82a62;--hd:linear-gradient(135deg,#c93a78,#ff8fbd);--hx:repeating-linear-gradient(#0000 0 21px,#ffffff38 21px 22px)}
 body[data-mod="citas"]{--ac:var(--m-cit);--atm:#b3122a;--hd:linear-gradient(135deg,#b3122a,#ff5a5f);--hx:var(--hp)}
 body[data-mod="cine"]{--ac:var(--m-cin);--hd:linear-gradient(180deg,#8f1a3c,#4a0d22);--hx:repeating-linear-gradient(90deg,#0000 0 9px,#00000042 9px 17px,#0000 17px 25px,#ffffff17 25px 29px)}
 body[data-mod="chef"]{--ac:var(--m-che);--atm:#b02a22;--hd:linear-gradient(135deg,#c22a23,#e8553f);--hx:linear-gradient(90deg,#ffffff2b 50%,#0000 50%) 0 0/26px 26px,linear-gradient(#ffffff2b 50%,#0000 50%) 0 0/26px 26px}
 .card.sal{background:var(--hd);border:0;color:#fff;box-shadow:0 10px 26px #9c183859}.sal .mu{color:#ffffffe6}.sal .ok{color:#fff}
 .sal .btn{background:#fff;color:#9c1838;box-shadow:none}.sal .btn.sec{background:#ffffff33;color:#fff}
-.nota,.pz-c{position:relative}.nota::before,.pz-c::before{content:'';position:absolute;top:-8px;left:50%;width:56px;height:17px;margin-left:-28px;background:#ff8fb3cc;box-shadow:0 1px 2px #0003;transform:rotate(-3deg)}
 .cgrid.cn .ct{background:#2a0e1a;color:#ffe9ef;box-shadow:0 6px 16px #0000004d,inset 0 0 0 1px #ffffff1f}.cgrid.cn .ct-f{color:#e3a9ba}.cgrid.cn .ct-ph.kraft{background:linear-gradient(160deg,#a81d47,#4a0d22)}
 .chl .it .em{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:var(--as);font-size:24px}
 /* ---------- Cuidados (la mascota de la pareja) ---------- */
@@ -286,7 +277,7 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .mt-c{display:flex;align-items:center;justify-content:center;width:clamp(52px,16vw,62px);height:clamp(52px,16vw,62px);border-radius:50%;background:linear-gradient(135deg,var(--m1),var(--m2));color:#fff;box-shadow:0 6px 14px var(--sh),inset 0 -3px 6px #0000001f}
 .mt-i{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 /* Inicio nuevo: encabezado, recuadros de cada módulo, botón y hoja de módulos */
-.hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 22px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
+.hm-top{position:relative;overflow:hidden;text-align:center;margin-top:calc(16px + env(safe-area-inset-top,0px));padding:86px 16px 50px;background:var(--cd);border-radius:32px;box-shadow:0 14px 36px var(--sh)}
 .hm-top .ini-t,.hm-top .ini-d{position:relative;z-index:1}
 .hm-top .ini-d{margin:2px 0 6px}
 .hm-s{display:flex;flex-direction:column;gap:12px;margin:16px 0 4px}
@@ -319,8 +310,14 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .mn-i .mt-c{flex:none;width:40px;height:40px}.mn-i.on{border-color:var(--ac);background:var(--as)}
 .mn-e{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--as);font-size:20px}
 .mn-i:active{transform:scale(.97)}
-.hm-pf{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;gap:12px;margin-top:8px}
-.hm-p{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;max-width:42%;padding:0;border:0;background:none;color:var(--tx);font:inherit;cursor:pointer}
+.hm-pf{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;margin-top:8px}
+.hm-pcol{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;padding:0 8px}.hm-pcol+.hm-pcol{border-left:2px solid var(--ln)}
+.lz-h{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/5;padding:0;border:2px solid var(--ln);border-radius:14px;overflow:hidden;background:#fff;font:inherit;cursor:pointer}
+.lz-h img{display:block;width:100%;height:100%;object-fit:contain}.lz-h.vac{border-style:dashed;background:var(--as)}
+.lz-h:focus-visible{outline:3px solid var(--ac);outline-offset:3px}.lz-h:active{transform:scale(.98)}
+.lz-v{padding:8px;font-size:13px;line-height:1.35;text-align:center;color:var(--at)}.lz-v i{display:block;margin-bottom:4px;font-size:24px;font-style:normal}
+.lz-t{display:block;min-height:15px;font-size:11.5px;line-height:1.3;text-align:center;color:var(--mu)}
+.hm-p{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;max-width:100%;padding:0;border:0;background:none;color:var(--tx);font:inherit;cursor:pointer}
 .hm-p b{font:600 15px/1.2 var(--ft);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-p:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:16px}.hm-p:active .hm-avw{transform:scale(.94)}
 .hm-avw{position:relative;display:block;transition:transform .14s ease}
@@ -328,7 +325,6 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .hm-ini{--m1:#c81e4a;--m2:#d42a5b;background:linear-gradient(135deg,var(--m1),var(--m2));color:#fff;font:400 32px/1 Pacifico,"Brush Script MT","Segoe Script",cursive}
 .hm-ini[data-k="b"]{--m1:#a8205a;--m2:#c43a73}
 .hm-cam{position:absolute;right:-2px;bottom:-2px;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;border:2px solid var(--cd);font:600 17px/1 var(--fb)}
-.hm-pc{flex:none;width:20px;height:20px;margin-top:30px;fill:var(--ac);opacity:.6}
 .fin-res{margin:14px 0 4px}.fin-res summary{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:16px;background:var(--as);color:var(--at);font-size:14px;font-weight:600;cursor:pointer;list-style:none}
 .fin-res summary::-webkit-details-marker{display:none}.fin-res summary::after{content:'▾';margin-left:auto;transition:transform .2s}.fin-res[open] summary::after{transform:rotate(180deg)}
 .fin-b{padding:6px 2px 4px}
@@ -338,22 +334,13 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .fp.es{border-style:dashed;border-color:var(--ln);box-shadow:none}.fp.es .lnk{padding:4px;text-align:left}
 .fe{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:10px;background:var(--as);color:var(--at);font-size:11px;font-weight:600;vertical-align:middle}.fe.no{background:var(--wn);color:var(--rd)}
 .it.nc .am{opacity:.55;text-decoration:line-through}
-.pz-bar .row .btn{padding:11px 6px;font-size:14px;white-space:nowrap}.pz-aviso{margin:10px 0 0;font-size:13px}
-.notas .pz-c{display:flex;flex-direction:column;gap:8px;padding:12px 10px 8px;border:0;border-radius:4px 4px 12px 4px;background:#fffdf8;color:#2b2a28;text-align:left;font:inherit;cursor:pointer;box-shadow:0 3px 8px #0003;transform:rotate(1.2deg)}
-.notas .pz-c:nth-child(even){transform:rotate(-1deg)}.pz-c small{font-size:12px;opacity:.8}
-.pz-im{display:block;aspect-ratio:1;border-radius:3px;overflow:hidden;background:#f1e4e8}.pz-im img{width:100%;height:100%;object-fit:cover;display:block}
-.pz-no{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:34px}
-.pz-pie{font-size:14px;line-height:1.3;overflow-wrap:anywhere}
 .pz-lienzo{margin:6px 0 10px;border:2px solid var(--ln);border-radius:14px;overflow:hidden;background:#fff;line-height:0}
-.pz-lienzo canvas{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none;cursor:crosshair}
+.pz-lienzo canvas{display:block;width:100%;height:auto;aspect-ratio:4/5;touch-action:none;cursor:crosshair}
 .pz-pal{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:8px 0}
 .pz-col{display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:3px solid var(--cd);border-radius:50%;box-shadow:0 0 0 1.5px var(--ln);font-size:16px;cursor:pointer}.pz-col.on{box-shadow:0 0 0 3px var(--ac)}
 .pz-gro{display:flex;gap:8px;margin:8px 0}
 .pz-g{flex:1;display:flex;align-items:center;justify-content:center;height:40px;padding:0;border:1.5px solid var(--ln);border-radius:12px;background:var(--cd);cursor:pointer}.pz-g i{display:block;border-radius:50%;background:var(--tx)}.pz-g.on{border-color:var(--ac);background:var(--as)}
-.pz-big{min-height:120px;margin:4px 0 8px;text-align:center}.pz-big img{max-width:100%;max-height:60vh;border-radius:10px;cursor:zoom-in}
-.hm-pzb{display:flex;align-items:center;gap:14px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}.hm-pzb:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:12px}
-.hm-pz{display:flex;gap:8px;margin-top:6px}
-.hm-th{flex:none;width:54px;height:54px;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px #0003}.hm-th img{width:100%;height:100%;object-fit:cover;display:block}.hm-th.n{padding:5px;font-size:10px;line-height:1.2;color:#2b2a28}
+.pz-big{margin:4px 0 8px;text-align:center}.pz-big img{max-width:100%;max-height:60vh;border-radius:10px;border:2px solid var(--ln);background:#fff}.pz-aviso{margin:4px 0 10px;font-size:13px}
 .hm-at .btn{padding:10px 4px;font-size:13px;white-space:nowrap}
 .hm-ft{margin:22px 0 0}
 .hm-aj{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1.5px solid var(--ln);border-radius:20px;background:var(--cd);box-shadow:0 4px 12px var(--sh);color:var(--tx);font:600 15px/1.2 var(--fb);text-align:left;cursor:pointer}.hm-aj>span:nth-child(2){flex:1}
@@ -365,17 +352,16 @@ body.inicio{background:radial-gradient(130% 55% at 50% 0,#ffd3e2 0,#0000 70%) #f
 .aj-c{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px}.aj-c b{font-weight:500;overflow-wrap:anywhere;text-align:right}.aj-c em{color:var(--mu);font-style:normal}.aj-c small{color:var(--mu)}
 .aj-d{margin:4px 0 0;font-weight:600;font-size:14px}.aj-n{margin:6px 0 0;font-size:12px;line-height:1.5}
 [data-g="cuidados"]{--m1:#8e1650;--m2:#e0528f}
-[data-g="finanzas"]{--m1:#6d0f28;--m2:#c81e4a}[data-g="momentos"]{--m1:#d23a59;--m2:#ff8a9e}[data-g="pizarra"]{--m1:#c93a78;--m2:#ff9bc4}[data-g="citas"]{--m1:#b3122a;--m2:#ff5a5f}[data-g="cine"]{--m1:#4a0d22;--m2:#a81d47}[data-g="chef"]{--m1:#c22a23;--m2:#ff7a59}
+[data-g="finanzas"]{--m1:#6d0f28;--m2:#c81e4a}[data-g="momentos"]{--m1:#d23a59;--m2:#ff8a9e}[data-g="citas"]{--m1:#b3122a;--m2:#ff5a5f}[data-g="cine"]{--m1:#4a0d22;--m2:#a81d47}[data-g="chef"]{--m1:#c22a23;--m2:#ff7a59}
 .fl{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .fl i{position:absolute;bottom:-34px;width:20px;height:20px;background:var(--as);-webkit-mask:var(--hm) center/contain no-repeat;mask:var(--hm) center/contain no-repeat;animation:flota 13s linear infinite}
 .fl i:nth-child(1){left:7%;animation-delay:-2s}.fl i:nth-child(2){left:24%;width:13px;height:13px;animation-duration:17s;animation-delay:-9s}.fl i:nth-child(3){left:46%;width:26px;height:26px;animation-duration:15s;animation-delay:-5s}
 .fl i:nth-child(4){left:63%;width:15px;height:15px;animation-delay:-11s}.fl i:nth-child(5){left:80%;animation-duration:18s;animation-delay:-14s}.fl i:nth-child(6){left:92%;width:12px;height:12px;animation-duration:16s;animation-delay:-7s}
 @keyframes flota{from{transform:translateY(0) rotate(-12deg);opacity:0}8%{opacity:1}85%{opacity:1}to{transform:translateY(-118vh) rotate(16deg);opacity:0}}
 /* ---------- Animaciones ---------- */
-.btn,.me,.it,.cf button,nav button span,.mes button,.chk,.nota,.ib,.h-back{transition:transform .14s ease,background-color .2s,box-shadow .2s}
+.btn,.me,.it,.cf button,nav button span,.mes button,.chk,.ib,.h-back{transition:transform .14s ease,background-color .2s,box-shadow .2s}
 .btn:active,.me:active,.cf button:active,.mes button:active,.ib:active,.h-back:active{transform:scale(.95)}
 .it:active{transform:scale(.985)}.chk:active{transform:scale(.85)}nav button:active span{transform:scale(.92)}
-.nota:active,.nota:nth-child(even):active{transform:rotate(0) scale(.96)}
 @keyframes ent{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes baja{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
 @keyframes brota{from{opacity:0;transform:scale(.8)}60%{transform:scale(1.04)}to{opacity:1;transform:none}}
@@ -453,7 +439,7 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
 const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, pizarra:[], hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -522,44 +508,43 @@ function tItem(t) {
   return '<div class="it t' + (t.hecha ? ' done' : '') + '"><button class="chk' + (st.pop && st.pop.id === t.id && Date.now() - st.pop.t < 1500 ? ' pop' : '') + '" data-a="tg:' + t.id + '" aria-label="' + (t.hecha ? 'Marcar como pendiente' : 'Marcar como terminada') + '">' + svgH('') + '</button><button class="tx" data-a="et:' + t.id + '"><b>' + esc(t.titulo) + '</b><small><span class="pr ' + esc(t.prioridad) + '">' + esc(PRI[t.prioridad] || '') + '</span> · ' + esc(nm(t.quien)) + (t.fecha ? ' · <span class="' + (late ? 'late' : '') + '">' + (late ? 'Vencida: ' : '') + fdate(t.fecha) + '</span>' : '') + (moRep(t.rep) ? ' · <span class="rep">🔁 ' + MO_REP[moRep(t.rep)] + '</span>' : '') + '</small></button></div>';
 }
 
-const NCOL = {amarillo:'#fff3a3', rosado:'#ffc9de', celeste:'#bfe6ff', verde:'#c9f0c0', naranja:'#ffd3a1', lila:'#e0cfff'};
-const ncol = c => NCOL[c] || NCOL.amarillo;
 const fdateTs = t => { if (!t) return ''; const d = new Date(t); return fdate(d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate())); };
-/* ---------- Pizarra: lógica (sin pantalla) ---------- */
-// Muro de tarjetas: las notas de siempre (colección `notas`) más dibujos y fotos (`pizarra`, con la imagen grande aparte en `fotosPizarra`).
-const PZ_MAX = 60; // dibujos + fotos (las notas no cuentan): cuida el espacio del plan gratis
-const PZ_PIE = 100;
-const pzImg = d => ({id:d.id, tipo:d.tipo === 'dibujo' ? 'dibujo' : 'foto', mini:typeof d.mini === 'string' && d.mini.length < 60000 && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(d.mini) ? d.mini : '', pie:String(d.pie || '').replace(/\s+/g, ' ').trim().slice(0, PZ_PIE), autor:d.autor === 'b' ? 'b' : 'a', creado:+d.creado || 0});
-// Notas, dibujos y fotos mezclados, de la más nueva a la más antigua (las notas antiguas sin fecha quedan al final)
-const pzMuro = (notas, img) => notas.map(n => ({k:'nota', id:n.id, creado:+n.creado || 0, n})).concat(img.map(d => { const i = pzImg(d); return {k:i.tipo, id:i.id, creado:i.creado, i}; })).sort((x, y) => y.creado - x.creado);
-const pzTope = L => L.length >= PZ_MAX;
-const pzNota = n => '<button class="nota" style="background:' + ncol(n.color) + '" data-a="vn:' + esc(n.id) + '"><p>' + esc(n.texto) + '</p><small><b>De ' + esc(nm(n.autor)) + '</b> · ' + fdateTs(n.creado) + '</small></button>';
-const pzCard = i => '<button class="pz-c" data-a="pz:' + esc(i.id) + '"><span class="pz-im">' + (i.mini ? '<img src="' + esc(i.mini) + '" alt="' + (i.tipo === 'dibujo' ? 'Dibujo' : 'Foto') + ' de ' + esc(nm(i.autor)) + '">' : '<span class="pz-no" aria-hidden="true">' + (i.tipo === 'dibujo' ? '✏️' : '📷') + '</span>') + '</span>' +
-  (i.pie ? '<span class="pz-pie">' + esc(i.pie) + '</span>' : '') + '<small><b>De ' + esc(nm(i.autor)) + '</b> · ' + fdateTs(i.creado) + '</small></button>';
-function vPizarra() {
-  if (!st.rd.pz) return '<p class="mu c">Cargando…</p>';
-  const L = pzMuro(st.notas, st.pizarra);
-  return '<section class="card pz-bar"><div class="row"><button class="btn" data-a="nn">📝 Nota</button><button class="btn sec" data-a="pzD">✏️ Dibujo</button><button class="btn sec" data-a="pzF">📷 Foto</button></div>' +
-    (pzTope(st.pizarra) ? '<p class="mu pz-aviso">Llegaron al máximo de ' + PZ_MAX + ' dibujos y fotos. Elimina alguno para agregar más.</p>' : '') + '</section>' +
-    (L.length ? '<div class="notas">' + L.map(x => x.k === 'nota' ? pzNota(x.n) : pzCard(x.i)).join('') + '</div>' : '<p class="mu c">La pizarra está vacía. ¡Dejen la primera tarjeta!</p>');
+/* ---------- Pizarra: un dibujo por persona, se borra a las 48 horas ---------- */
+// Cada persona tiene un solo dibujo (`dibujos/a` y `dibujos/b`: {data, creado, autor}). Se ve en Inicio, bajo su foto, y se borra solo a las 48 horas.
+const PZ_VIDA = 48 * 3600000;
+const pzNorm = d => ({data:d && typeof d.data === 'string' && d.data.length < 300000 && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(d.data) ? d.data : '', creado:d ? +d.creado || 0 : 0});
+// Milisegundos que le quedan al dibujo (0 o menos: ya se borró). Nunca más de 48 horas, aunque el reloj del otro celular vaya adelantado.
+const pzResta = (d, ahora) => d && d.data && d.creado ? Math.min(PZ_VIDA, d.creado + PZ_VIDA - ahora) : 0;
+const pzDe = (k, ahora) => { const d = st.dib[k]; return d && pzResta(d, ahora) > 0 ? d : null; };
+function pzTexto(ms) {
+  if (ms < 3600000) return 'menos de 1 hora';
+  const h = Math.ceil(ms / 3600000); // redondea hacia arriba: uno recién hecho dice "2 días", no "1 día 23 h"
+  const d = Math.floor(h / 24), r = h % 24;
+  return d ? d + (d === 1 ? ' día' : ' días') + (r ? ' ' + r + ' h' : '') : h + (h === 1 ? ' hora' : ' horas');
 }
-// Guarda una tarjeta con imagen: primero la imagen grande (con el mismo id) y después la tarjeta
-async function pzGuardar(tipo, data, mini, pie) {
-  const ref = st.db.collection('pizarra').doc(), ahora = Date.now(), img = st.db.doc('fotosPizarra/' + ref.id);
-  await img.set({pizarraId:ref.id, data, creado:ahora});
-  try { await ref.set({tipo, mini:mini || '', pie:String(pie || '').replace(/\s+/g, ' ').trim().slice(0, PZ_PIE), autor:st.me === 'b' ? 'b' : 'a', creado:ahora}); }
-  catch (e) { try { await img.delete(); } catch (x) { console.warn('pizarra', x); } throw e; }
+const pzVis = () => { const t = Date.now(); return (pzDe('a', t) ? 'a' : '') + (pzDe('b', t) ? 'b' : ''); }; // qué dibujos se ven ahora
+let pzTimer = 0, pzBorrando = false;
+// Borra tu dibujo vencido de la base de datos (cada persona borra solo el suyo) y agenda el siguiente vencimiento
+function pzMantener() {
+  clearTimeout(pzTimer); if (!st.db || !st.user || !st.rd.pz) return;
+  const t = Date.now(); let prox = Infinity;
+  for (const k of ['a', 'b']) { const r = pzResta(st.dib[k], t); if (r > 0) prox = Math.min(prox, r); }
+  const k = st.me, mio = k === 'a' || k === 'b' ? st.dib[k] : null;
+  if (mio && pzResta(mio, t) <= 0 && !pzBorrando) { pzBorrando = true; st.db.doc('dibujos/' + k).delete().catch(e => console.warn('dibujo', e)).then(() => { pzBorrando = false; }); }
+  if (prox < Infinity) pzTimer = setTimeout(pzTick, Math.min(prox, 2000000000) + 500);
 }
-function pzLleno() { if (!st.rd.pz) { toast('Cargando la pizarra… intenta de nuevo en un momento'); return true; } if (pzTope(st.pizarra)) { toast('La pizarra llegó al máximo de ' + PZ_MAX + ' dibujos y fotos. Elimina alguno.'); return true; } return false; }
-function formFoto() {
-  if (pzLleno()) return;
-  openModal('<h2>Nueva foto</h2><form data-f="pzFoto"><label class="btn w pf-up">📷 Elegir foto<input name="foto" type="file" accept="image/*"></label><p class="mu c" id="pzf">Aún no elegiste ninguna foto.</p>' +
-    '<label>Pie (opcional)<input name="pie" maxlength="' + PZ_PIE + '" placeholder="Ej: Domingo en la playa"></label>' +
-    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
+function pzTick() { if (st.user && pzVis() !== render.pz) render(); pzMantener(); }
+// La celda de dibujo de Inicio (bajo la foto de cada persona)
+function pzCelda(k) {
+  if (!st.rd.pz) return '<span class="lz-h vac" aria-hidden="true"><span class="lz-v">…</span></span><span class="lz-t"></span>';
+  const t = Date.now(), d = pzDe(k, t), mio = k === st.me;
+  return '<button class="lz-h' + (d ? '' : ' vac') + '" data-a="lz:' + k + '" aria-label="' + (mio ? 'Mi dibujo' : 'Dibujo de ' + esc(nm(k))) + '">' +
+    (d ? '<img src="' + esc(d.data) + '" alt="Dibujo de ' + esc(nm(k)) + '">' : '<span class="lz-v">' + (mio ? '<i aria-hidden="true">✏️</i>Toca para dibujar' : 'Aún sin dibujo') + '</span>') + '</button>' +
+    '<span class="lz-t">' + (d ? 'Se borra en ' + pzTexto(pzResta(d, t)) : '') + '</span>';
 }
 /* ---------- Pizarra: dibujo ---------- */
 const PZ_COLORES = [['Negro', '#2b2a28'], ['Vino', '#6d0f28'], ['Carmesí', '#c81e4a'], ['Rosado', '#ff4d86'], ['Naranja', '#ff8a5b'], ['Amarillo', '#f2b705'], ['Verde', '#2f9e5b'], ['Azul', '#2f7fd8']];
-const PZ_GROSORES = [4, 9, 16]; // en puntos del lienzo (600 × 600)
+const PZ_GROSORES = [4, 9, 16]; // en puntos del lienzo (480 × 600)
 let pzDib = null;
 function pzTrazo(x, t) {
   x.strokeStyle = t.c; x.fillStyle = t.c; x.lineWidth = t.w; x.lineCap = 'round'; x.lineJoin = 'round';
@@ -579,12 +564,13 @@ function pzMarca() {
   document.querySelectorAll('.pz-g').forEach((b, i) => b.classList.toggle('on', i === d.gi));
 }
 function formDibujo() {
-  if (pzLleno()) return;
-  openModal('<h2>Nuevo dibujo</h2><div class="pz-lienzo"><canvas id="pzcv" width="600" height="600" aria-label="Lienzo para dibujar con el dedo"></canvas></div>' +
+  if (st.me !== 'a' && st.me !== 'b') return toast('Elige quién eres en Configuración ⚙️');
+  const hay = !!pzDe(st.me, Date.now());
+  openModal('<h2>' + (hay ? 'Dibujar de nuevo' : 'Mi dibujo') + '</h2><p class="mu pz-aviso">' + (hay ? 'Reemplaza tu dibujo actual. ' : '') + 'Se borra solo a las 48 horas.</p>' +
+    '<div class="pz-lienzo"><canvas id="pzcv" width="480" height="600" aria-label="Lienzo para dibujar con el dedo"></canvas></div>' +
     '<div class="pz-pal">' + PZ_COLORES.map(([n, c], i) => '<button type="button" class="pz-col" data-a="pzC:' + i + '" style="background:' + c + '" aria-label="' + n + '"></button>').join('') + '<button type="button" class="pz-col" data-a="pzC:8" style="background:#fff" aria-label="Borrador">🧽</button></div>' +
     '<div class="pz-gro">' + PZ_GROSORES.map((w, i) => '<button type="button" class="pz-g" data-a="pzG:' + i + '" aria-label="Grosor ' + (i + 1) + '"><i style="width:' + (6 + i * 6) + 'px;height:' + (6 + i * 6) + 'px"></i></button>').join('') + '</div>' +
     '<div class="row"><button type="button" class="btn sec" data-a="pzU">↩️ Deshacer</button><button type="button" class="btn sec" data-a="pzL">🗑️ Limpiar</button></div>' +
-    '<label>Pie (opcional)<input id="pzpie" maxlength="' + PZ_PIE + '" placeholder="Ej: Nuestro perrito"></label>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button type="button" class="btn" data-a="pzS">Guardar</button></div>');
   const cv = $('#pzcv'); pzDib = {cv, trazos:[], ci:0, gi:1, t:null};
   const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; };
@@ -607,37 +593,23 @@ function formDibujo() {
 async function pzGuardarDibujo() {
   const d = pzDib; if (!d || !d.cv.isConnected) return;
   if (!d.trazos.length) return toast('Dibuja algo primero');
-  if (pzLleno()) return;
-  const pie = $('#pzpie') ? $('#pzpie').value : '', b = $('#sheet [data-a="pzS"]'); if (b) b.disabled = true;
+  const k = st.me; if (k !== 'a' && k !== 'b') return toast('Elige quién eres en Configuración ⚙️');
+  const b = $('#sheet [data-a="pzS"]'); if (b) b.disabled = true;
   try {
-    const data = achicar(d.cv, 700, 0.8, 170000, 230000); if (!data) { toast('El dibujo es demasiado pesado. Prueba con menos trazos.'); return; }
-    const mini = (await miniatura(data)) || '';
-    await pzGuardar('dibujo', data, mini, pie);
+    const data = achicar(d.cv, 600, 0.8, 150000, 200000); if (!data) { toast('El dibujo es demasiado pesado. Prueba con menos trazos.'); return; }
+    await st.db.doc('dibujos/' + k).set({data, creado:Date.now(), autor:k}); // reemplaza el anterior y vuelve a contar 48 horas
     avisar('dibujo'); if ($('#pzcv') === d.cv) closeModal(); toast('Dibujo guardado 🎨');
   } catch (e) { fail(e); }
   finally { if (b) b.disabled = false; }
 }
-// Imagen grande de una tarjeta: se pide solo al abrirla
-function pzVer(id) {
-  const g = st.pizarra.find(x => x.id === id); if (!g) return;
-  const i = pzImg(g), mio = i.autor === st.me;
-  openModal('<div class="pz-big" id="pzbig" data-id="' + esc(id) + '"><p class="mu">Cargando…</p></div>' + (i.pie ? '<p class="pz-pie">' + esc(i.pie) + '</p>' : '') + '<p class="mu" style="margin:6px 0 10px">De ' + esc(nm(i.autor)) + ' · ' + fdateTs(i.creado) + '</p>' +
-    (mio ? '<button class="btn dng w" data-a="pzDel:' + esc(id) + '">🗑️ Eliminar</button>' : '') + '<button class="lnk" data-a="x">Cerrar</button>');
-  st.db.doc('fotosPizarra/' + id).get().then(r => {
-    const el = $('#pzbig'); if (!el || el.dataset.id !== id) return;
-    const u = r.exists ? r.data().data : '';
-    el.innerHTML = typeof u === 'string' && /^data:image\//.test(u) ? '<img src="' + esc(u) + '" alt="' + (i.tipo === 'dibujo' ? 'Dibujo' : 'Foto') + ' de ' + esc(nm(i.autor)) + '" data-a="vf">' : '<p class="mu">No se pudo cargar la imagen.</p>';
-  }).catch(e => { console.error(e); const el = $('#pzbig'); if (el && el.dataset.id === id) el.innerHTML = '<p class="mu">No se pudo cargar la imagen.</p>'; });
-}
-function formNota(id) {
-  const n = id ? st.notas.find(x => x.id === id) : null; if (id && !n) return;
-  const c = n ? n.color : 'amarillo';
-  openModal('<h2>' + (n ? 'Editar nota' : 'Nueva nota') + '</h2><form data-f="nota" data-id="' + esc(id || '') + '">' +
-    '<label>Escribe tu nota<textarea name="texto" required maxlength="300" placeholder="Ej: ¡No olvides llevar paraguas!">' + esc(n ? n.texto : '') + '</textarea></label>' +
-    '<div class="lb">Color</div><div class="sw">' + Object.keys(NCOL).map(k => '<label><input type="radio" name="color" value="' + k + '" aria-label="' + k + '"' + (k === c ? ' checked' : '') + '><span style="background:' + NCOL[k] + '"></span></label>').join('') + '</div>' +
-    '<p class="mu" style="margin:12px 0 0">De: <b>' + esc(nm(n ? n.autor : st.me)) + '</b></p>' +
-    '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>' +
-    (n ? '<button type="button" class="btn dng w" data-a="bn:' + esc(id) + '" style="margin-top:10px">Eliminar nota</button>' : ''));
+// Ver un dibujo grande (el tuyo ofrece dibujar de nuevo)
+function pzVer(k) {
+  if (k !== 'a' && k !== 'b') return;
+  if (!st.rd.pz) return toast('Cargando… intenta de nuevo en un momento');
+  const t = Date.now(), d = pzDe(k, t), mio = k === st.me;
+  if (!d) { if (mio) formDibujo(); else toast(nm(k) + ' aún no tiene un dibujo'); return; }
+  openModal('<h2>Dibujo de ' + esc(nm(k)) + '</h2><div class="pz-big"><img src="' + esc(d.data) + '" alt="Dibujo de ' + esc(nm(k)) + '"></div>' +
+    '<p class="mu c">Se borra en ' + pzTexto(pzResta(d, t)) + '</p>' + (mio ? '<button class="btn w" data-a="pzD">✏️ Dibujar de nuevo</button><p class="mu c pz-aviso">Reemplaza este dibujo y vuelve a contar 48 horas.</p>' : '') + '<button class="lnk" data-a="x">Cerrar</button>');
 }
 
 /* ---------- 100 citas: lógica (sin pantalla) ---------- */
@@ -1732,7 +1704,6 @@ const APP = 'Pasinacho';
 const MODS = [
   {id:'finanzas', nom:'Finanzas', ico:'💸', t1:'Finanzas', tabs:['cuentas'], entrada:'cuentas', secs:[]},
   {id:'momentos', nom:'Momentos', ico:'💗', t1:'Momentos', tabs:['juntos', 'metas', 'calendario'], entrada:'juntos', secs:[['juntos', '💗', 'Juntos'], ['metas', '🎯', 'Metas'], ['calendario', '📅', 'Calendario']]},
-  {id:'pizarra', nom:'Pizarra', ico:'📌', t1:'Pizarra', tabs:['pizarra'], entrada:'pizarra', secs:[], oculto:true}, // no sale en la hoja "Módulos": se abre desde el recuadro de Inicio
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
   {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
   {id:'chef', nom:'Chef', ico:'🍳', t1:'Chef', tabs:['chef'], entrada:'chef', secs:[]},
@@ -1748,7 +1719,6 @@ const modIc = m => modCu(m) ? IC_CU[modCu(m).objeto] : IC[m.id];
 const IC = {
   finanzas:'<circle cx="30" cy="12" r="7.5"/><text x="30" y="16" text-anchor="middle" font-size="11" font-family="Righteous,sans-serif" fill="currentColor" stroke="none">$</text><path d="M14 38C14 29 23 25 33 25c12 0 20 6 20 14 0 6-4 10-9 12v5h-7v-4H28v4h-7v-6c-5-2-7-6-7-12z"/><path d="M53 36h5v5h-5M40 26l2-8 7 9M27 31h9M10 36c-3-1-3-5 0-6"/><circle cx="44" cy="35" r="1.3" fill="currentColor" stroke="none"/>',
   momentos:'<rect x="9" y="13" width="46" height="42" rx="8"/><path d="M9 26h46M22 7v11M42 7v11"/><g transform="translate(21.5 28.5) scale(.88)" stroke-width="3.4"><path d="' + HP + '"/></g>',
-  pizarra:'<path d="M20 15V8h24l9 9v31h-6"/><path d="M11 15h23l9 9v32H11zM34 15v9h9M18 34h18M18 41h18M18 48h12"/>',
   citas:'<g transform="translate(3 24) scale(1.55) rotate(-12 12 12)" stroke-width="1.8"><path d="' + HP + '"/></g><g transform="translate(26 8) scale(1.45) rotate(12 12 12)" stroke-width="1.9"><path d="' + HP + '"/></g>',
   cine:'<path d="M8 28h48v28H8zM8 28l4-12h44l-4 12M20 16l-4 12M32 16l-4 12M44 16l-4 12M27 37v13l12-6.5z"/>',
   chef:'<path d="M18 38a9 9 0 0 1 2-17 11 11 0 0 1 12-6 11 11 0 0 1 12 6 9 9 0 0 1 2 17zM21 38v16h22V38M21 46h22"/>',
@@ -1821,8 +1791,8 @@ const hmAv = k => {
 function hmPerfiles() {
   if (!st.names) return '';
   const ord = st.me === 'a' || st.me === 'b' ? [st.me, cuOtro(st.me)] : ['a', 'b'];
-  return '<div class="hm-pf">' + ord.map((k, i) => (i ? svgH('hm-pc') : '') + '<button class="hm-p" data-a="pf:' + k + '" aria-label="' + (k === st.me ? 'Cambiar mi foto de perfil' : 'Ver la foto de ' + esc(nm(k))) + '"><span class="hm-avw">' + hmAv(k) +
-    (k === st.me ? '<span class="hm-cam" aria-hidden="true">＋</span>' : '') + '</span><b>' + esc(nm(k)) + '</b></button>').join('') + '</div>';
+  return '<div class="hm-pf">' + ord.map(k => '<div class="hm-pcol"><button class="hm-p" data-a="pf:' + k + '" aria-label="' + (k === st.me ? 'Cambiar mi foto de perfil' : 'Ver la foto de ' + esc(nm(k))) + '"><span class="hm-avw">' + hmAv(k) +
+    (k === st.me ? '<span class="hm-cam" aria-hidden="true">＋</span>' : '') + '</span><b>' + esc(nm(k)) + '</b></button>' + pzCelda(k) + '</div>').join('') + '</div>';
 }
 // Foto de perfil: se corta en cuadrado y se achica hasta que quepa en PF_MAX caracteres
 async function fotoPerfil(file) {
@@ -1903,21 +1873,12 @@ function vInicio() {
     const bot = c.sug && !c.completas ? '<div class="row"><button class="btn" data-a="vc:' + c.sug.n + '">Ver cita</button><button class="btn sec" data-a="azar">🎲 Otra idea</button></div>' : '<div class="row"><button class="btn" data-a="mod:citas">Ir a 100 citas</button></div>';
     cit = '<section class="hm-c hm-col" data-g="citas"><span class="hm-row">' + hmIc(IC.citas) + '<span class="hm-b"><span class="hm-k">Cita de hoy</span>' + cuerpo + '</span></span>' + sug + bot + '</section>';
   }
-  // 5. Pizarra (notas, dibujos y fotos)
-  let piz = '<section class="hm-c hm-col" data-g="pizarra"><span class="hm-row">' + hmIc(IC.pizarra) + '<span class="hm-b"><span class="hm-k">Pizarra</span>' + HM_SK + '</span></span></section>';
-  if (rd.o && rd.pz) {
-    const W = pzMuro(st.notas, st.pizarra).slice(0, 3);
-    const th = x => x.k === 'nota' ? '<span class="hm-th n" style="background:' + ncol(x.n.color) + '">' + esc(Array.from(String(x.n.texto || '')).slice(0, 28).join('')) + '</span>' : '<span class="hm-th">' + (x.i.mini ? '<img src="' + esc(x.i.mini) + '" alt="">' : '<span class="pz-no" aria-hidden="true">' + (x.i.tipo === 'dibujo' ? '✏️' : '📷') + '</span>') + '</span>';
-    piz = '<section class="hm-c hm-col" data-g="pizarra"><button class="hm-pzb" data-a="mod:pizarra">' + hmIc(IC.pizarra) + '<span class="hm-b"><span class="hm-k">Pizarra</span>' +
-      (W.length ? '<span class="hm-pz">' + W.map(th).join('') + '</span>' : '<span class="hm-v">La pizarra está vacía</span><span class="hm-m">Dejen la primera tarjeta</span>') + '</span><span class="hm-go" aria-hidden="true">›</span></button>' +
-      '<div class="row hm-at"><button class="btn" data-a="nn">📝 Nota</button><button class="btn sec" data-a="pzD">✏️ Dibujo</button><button class="btn sec" data-a="pzF">📷 Foto</button></div></section>';
-  }
   const mc = modPorId('cuidados');
   return '<div class="ini"><div class="hm-top"><div class="fl" aria-hidden="true">' + '<i></i>'.repeat(6) + '</div>' + GARL.replace('class="gar"', 'class="gar l"') + GARL.replace('class="gar"', 'class="gar r"') +
     CZ.replace('class="cz"', 'class="cz l"') + CZ.replace('class="cz"', 'class="cz r"') +
     '<h1 class="ini-t">“' + esc(APP) + '”</h1><div class="ini-d" aria-hidden="true">' + svgH('') + '</div>' + hmPerfiles() + '</div>' +
     '<div class="hm-s">' + hmCard('finanzas', 'mod:finanzas', IC.finanzas, 'Pagos pendientes', fin) + hmCard('cuidados', 'mod:cuidados', modIc(mc), 'Pregunta y sobre de hoy', cui) +
-    hmCard('momentos', 'ir:calendario', IC.momentos, 'Actividades pendientes', act) + cit + piz + '</div>' +
+    hmCard('momentos', 'ir:calendario', IC.momentos, 'Actividades pendientes', act) + cit + '</div>' +
     '<section class="hm-ft">' + (st.names ? '<button class="hm-aj" data-a="aj"><span class="hm-e" aria-hidden="true">⚙️</span><span>Configuración</span><span class="hm-go" aria-hidden="true">›</span></button>' : '') + '<p class="hm-cr">' + esc(APP_DERECHOS) + '<br>Prohibida su copia o distribución.</p></section></div>' +
     '<button class="mn-fab" data-a="menu" aria-label="Abrir la lista de módulos">' + ICO_MOD + 'Módulos</button>';
 }
@@ -1948,19 +1909,20 @@ function entrada(pant) {
 }
 function render() {
   render.dia = hoy(); // para redibujar al volver a la app si cambió el día
+  render.pz = pzVis(); // y si venció algún dibujo de la pizarra
   const mod = modDe(st.tab);
   document.body.classList.toggle('inicio', !!st.user && !mod);
   if (st.user && mod) document.body.dataset.mod = mod.id; else delete document.body.dataset.mod;
   entrada(st.user ? st.tab : 'login');
   if (!st.user) { $('#app').innerHTML = vLogin(); return; }
-  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.o && st.rd.c && st.rd.ci && st.rd.ch && st.rd.cu && st.rd.h && st.rd.j && st.rd.m;
+  const ok = st.rd.n && st.rd.g && st.rd.t && st.rd.c && st.rd.ci && st.rd.ch && st.rd.cu && st.rd.h && st.rd.j && st.rd.m;
   let h;
   if (!mod) h = vInicio(); // la pantalla principal no espera a los datos
   else {
     h = '<header><h1>' + modIco(mod) + ' ' + esc(modNom(mod)) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'cuidados' ? vCuidados() : vPizarra();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : vCuidados();
     h += '<nav><button data-a="menu" aria-label="Abrir la lista de módulos"><span>' + ICO_MOD + '<br>Módulos</span></button>' + mod.secs.map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="tab:' + k + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
   }
   // Los buscadores y la respuesta de Cuidados no deben perder el cursor cuando llegan datos nuevos
@@ -2166,21 +2128,6 @@ const subs = {
     avisar('cuSobre');
     closeModal(); toast(lista ? '¡Los dos abrieron el sobre! 💞' : 'Sobre guardado 💌');
   },
-  async pzFoto(f) {
-    if (pzLleno()) return;
-    const fl = f.elements.foto && f.elements.foto.files[0]; if (!fl) return toast('Elige una foto primero');
-    const u = await comprimir(fl); if (!u) return toast('No se pudo usar esa foto. Prueba con otra.');
-    await pzGuardar('foto', u, (await miniatura(u)) || '', f.elements.pie.value);
-    avisar('foto'); if ($('#sheet form[data-f="pzFoto"]')) closeModal(); toast('Foto guardada 📷');
-  },
-  async nota(f, id) {
-    const fd = new FormData(f), texto = fd.get('texto').trim();
-    if (!texto) return toast('Escribe tu nota');
-    const color = NCOL[fd.get('color')] ? fd.get('color') : 'amarillo';
-    if (id) await st.db.doc('notas/' + id).update({texto, color});
-    else { await st.db.collection('notas').doc().set({texto, color, autor:st.me === 'b' ? 'b' : 'a', creado:Date.now()}); avisar('nota'); }
-    closeModal(); toast('Nota guardada ✅');
-  },
   async login(f) {
     const fd = new FormData(f);
     try { await signInWithEmailAndPassword(auth, fd.get('email').trim(), fd.get('pass')); }
@@ -2333,22 +2280,11 @@ const acts = {
   cal: () => abrirCalc(),
   cc: () => { $('#calc').hidden = true; },
   ck: p => calcKey(p),
-  nn: () => formNota(),
-  vn: p => {
-    const n = st.notas.find(x => x.id === p); if (!n) return;
-    if (n.autor === st.me) formNota(p);
-    else openModal('<div class="nota" style="background:' + ncol(n.color) + ';cursor:default;transform:none"><p>' + esc(n.texto) + '</p><small><b>De ' + esc(nm(n.autor)) + '</b> · ' + fdateTs(n.creado) + '</small></div><button class="lnk" data-a="x">Cerrar</button>');
-  },
-  pzD: () => formDibujo(), pzF: () => formFoto(), pz: p => pzVer(p), pzS: () => pzGuardarDibujo(),
+  pzD: () => formDibujo(), lz: p => pzVer(p), pzS: () => pzGuardarDibujo(),
   pzC: p => { if (pzDib && +p >= 0 && +p <= 8) { pzDib.ci = +p; pzMarca(); } },
   pzG: p => { if (pzDib && +p >= 0 && +p < PZ_GROSORES.length) { pzDib.gi = +p; pzMarca(); } },
   pzU: () => { if (pzDib) { pzDib.trazos.pop(); pzDib.t = null; st.lock = pzDib.trazos.length > 0; pzRepinta(); } },
   pzL: () => { if (pzDib) { pzDib.trazos = []; pzDib.t = null; st.lock = false; pzRepinta(); } },
-  pzDel: p => {
-    const g = st.pizarra.find(x => x.id === p); if (!g || pzImg(g).autor !== st.me) return;
-    confirmar('¿Eliminar esta tarjeta?', async () => { await st.db.doc('pizarra/' + p).delete(); try { await st.db.doc('fotosPizarra/' + p).delete(); } catch (e) { console.warn('pizarra', e); } toast('Tarjeta eliminada'); });
-  },
-  bn: p => confirmar('¿Eliminar esta nota?', async () => { await st.db.doc('notas/' + p).delete(); toast('Nota eliminada'); }),
   out: async () => {
     closeModal();
     // Al cerrar sesión este celular deja de recibir avisos (sin trabar la salida si no hay conexión)
@@ -2656,7 +2592,6 @@ const esFoto = t => t && t.matches && t.matches('input[data-slot]');
 document.addEventListener('change', e => {
   const t = e.target; if (!t) return;
   if (t.id === 'pfin') pfElegida(t);
-  else if (t.name === 'foto' && t.form && t.form.dataset.f === 'pzFoto') { const p = $('#pzf'); if (p) p.textContent = t.files && t.files[0] ? '✅ ' + t.files[0].name : 'Aún no elegiste ninguna foto.'; }
 });
 document.addEventListener('change', e => { const t = e.target; if (t.name === 'tipo' && t.form && t.form.dataset.f === 'cine') { const b = $('#tvbox'); if (b) b.hidden = t.value !== 'serie'; } });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'tvq') { e.preventDefault(); tvLanzar(e.target.value, true); } });
@@ -2665,7 +2600,7 @@ document.addEventListener('input', e => { if (esFoto(e.target)) tomarFoto(e.targ
 // Al volver de la galería: revisar si quedó una foto elegida sin procesar
 function revisarFotos() { if (st.cv && st.cv.edit) document.querySelectorAll('#cita input[data-slot]').forEach(i => { if (i.files && i.files[0]) tomarFoto(i); }); }
 window.addEventListener('focus', () => setTimeout(revisarFotos, 300));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { setTimeout(revisarFotos, 300); if (st.user && render.dia && render.dia !== hoy()) render(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { setTimeout(revisarFotos, 300); if (st.user && render.dia && render.dia !== hoy()) render(); if (st.user && st.rd.pz) pzTick(); } });
 
 /* ---------- Calculadora (solo para estimar: nada de esto se guarda) ---------- */
 const kInit = () => ({a:null, op:null, cur:'0', fresh:true, entered:false, expr:''});
@@ -2738,9 +2673,7 @@ const AVISO_T = {
   pagoPend: ['finanzas', d => 'dice que te pagó ' + fmt(d.monto) + '. Entra a Finanzas para confirmarlo'],
   pagoOk: ['finanzas', d => 'confirmó tu pago de ' + fmt(d.monto) + ' ✅'],
   pagoNo: ['finanzas', d => 'no reconoció tu pago de ' + fmt(d.monto)],
-  nota: ['pizarra', () => 'dejó una nota nueva'],
   dibujo: ['pizarra', () => 'dejó un dibujo en la pizarra'],
-  foto: ['pizarra', () => 'agregó una foto a la pizarra'],
   hito: ['momentos', d => 'agregó un hito: ' + avCorta(d.titulo, 60)],
   meta: ['momentos', d => 'agregó una meta: ' + avCorta(d.titulo, 80)],
   metaLista: ['momentos', d => 'marcó una meta como cumplida: ' + avCorta(d.titulo, 80) + ' 🏆'],
@@ -2752,7 +2685,7 @@ const AVISO_T = {
   cuPreg: ['cuidados', () => 'respondió la pregunta de hoy'],
   cuSobre: ['cuidados', () => 'respondió el sobre de hoy']
 };
-// Texto del aviso (función pura). Nunca lleva el texto de una nota ni una respuesta de la mascota.
+// Texto del aviso (función pura). Nunca lleva una respuesta de la mascota.
 function avisoTexto(tipo, d, nombre) {
   const t = Object.prototype.hasOwnProperty.call(AVISO_T, tipo) ? AVISO_T[tipo] : null; if (!t) return null;
   const n = avCorta(nombre, 20);
@@ -2872,8 +2805,7 @@ function start(fs) {
     st.db.doc('config/nombres').onSnapshot(s => { st.names = s.exists ? s.data() : null; st.rd.n = true; render(); }, bad),
     st.db.collection('gastos').onSnapshot(s => { st.gastos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.g = true; render(); }, bad),
     st.db.collection('tareas').onSnapshot(s => { st.tareas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.t = true; render(); }, bad),
-    st.db.collection('pizarra').onSnapshot(s => { st.pizarra = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.pz = true; render(); }, bad),
-    st.db.collection('notas').onSnapshot(s => { st.notas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.o = true; render(); }, bad),
+    st.db.collection('dibujos').onSnapshot(s => { const D = {}; for (const d of s.docs) if (d.id === 'a' || d.id === 'b') D[d.id] = pzNorm(d.data()); st.dib = D; st.rd.pz = true; render(); pzMantener(); }, bad),
     st.db.collection('citas').onSnapshot(s => { st.citas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.c = true; render(); syncCita(); }, bad),
     st.db.collection('cine').onSnapshot(s => { st.cine = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ci = true; render(); }, bad),
     st.db.collection('recetas').onSnapshot(s => { st.recetas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ch = true; render(); }, bad),
@@ -2886,9 +2818,10 @@ function start(fs) {
 }
 function stop() {
   st.unsubs.forEach(u => u());
+  clearTimeout(pzTimer); pzBorrando = false;
   cerrarCita();
   perfilCorreo.ok = '';
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], notas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, pizarra:[], hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, o:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', tab:'inicio', rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
