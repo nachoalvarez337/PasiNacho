@@ -231,11 +231,16 @@ header h1{min-width:0;overflow-wrap:anywhere}
 .cu-med:not(.on){border-style:dashed;box-shadow:none}.cu-med:not(.on) b{color:var(--mu)}
 .cu-med .c,.cu-med .r{fill:var(--ln)}.cu-med text{fill:var(--mu);font-family:var(--fb)}
 .cu-med.on .c{fill:var(--ac)}.cu-med.on .r{fill:#ff8fb3}.cu-med.on text{fill:#fff}
-.cu-new h2{margin:6px 0}.cu-trio{display:flex;justify-content:center;gap:4px}.cu-trio .cu-svg{width:31%}
-.cu-pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cu-pick label{margin:0}.cu-pick input{position:absolute;opacity:0;width:1px;height:1px}
+.cu-new h2{margin:6px 0}.cu-trio{display:flex;justify-content:center;gap:4px}.cu-trio .cu-svg{width:23.5%}
+.cu-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cu-pick label{margin:0}.cu-pick input{position:absolute;opacity:0;width:1px;height:1px}
 .cu-pick span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border:1.5px solid var(--ln);border-radius:16px;font-size:13px;color:var(--tx);cursor:pointer}
 .cu-pick input:checked+span{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 2px var(--ac);font-weight:600}.cu-pick input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
 .cu-qs{margin-top:18px}
+.ro-top .cu-fig{width:min(58vw,220px)}.ro-acc{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:12px}.ro-acc b{font:600 16px/1.3 var(--ft)}.ro-acc .btn{min-width:150px}
+.ro-cats button{font-size:14px}.ro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:6px 0 12px}
+.ro-t{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 10px;border:1.5px solid var(--ln);border-radius:16px;background:var(--cd);color:var(--tx);font:inherit;font-size:12.5px;line-height:1.25;text-align:center;cursor:pointer;transition:transform .14s ease,border-color .2s,background-color .2s}
+.ro-t:active{transform:scale(.96)}.ro-t.on{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 2px var(--ac)}.ro-t:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.ro-t .cu-svg{width:100%}.ro-t b{font-weight:600;overflow-wrap:anywhere}.ro-t small{color:var(--at);font-size:12px;font-weight:600}
 .cu-h{margin:12px 0;text-align:left}.cu-h .cu-t{margin:2px 0 8px;font-size:17px}.cu-fe{display:block;color:var(--mu);font-size:12.5px}
 .cu-h summary{display:flex;flex-direction:column;gap:2px;cursor:pointer;list-style:none;position:relative;padding-right:22px}.cu-h summary::-webkit-details-marker{display:none}.cu-h summary::after{content:'▾';position:absolute;right:0;top:2px;color:var(--at);transition:transform .2s}.cu-h[open] summary::after{transform:rotate(180deg)}
 .cu-h summary b{font:600 17px/1.3 var(--ft);overflow-wrap:anywhere}.cu-h summary small{color:var(--mu);font-size:12.5px}
@@ -445,7 +450,7 @@ const CHEF_SEGURIDAD = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH',
 const AVISOS_VAPID = 'BB8KQYT7siMxrrbWGmqUMZtXCYmJgGs_vRAp7KYd2PtdDXEZPBnutFR6uhS_V8au--dJFrtmWYoD5qHb-LnhWB0';
 const AVISOS_URL = 'https://avivos-pasinacho.alvarezignacio337.workers.dev/';
 const AVISOS_MAX = 6; // celulares por persona
-const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
+const st = {db:null, user:null, authReady:false, unsubs:[], names:null, me:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calMes:hoy().slice(0, 7), calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), cuRopa:null, cuVista:'', cuRopaCat:'gorro', tab:'inicio', mes:hoy().slice(0, 7), rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, err:'', shown:false, lock:false, okFn:null, cf:'todas', cq:'', cv:null, cnf:'pend', cnq:'', cig:'', chq:''};
 try { const m = localStorage.getItem('cd_me'); if (m === 'a' || m === 'b') st.me = m; } catch (e) {}
 const setMe = k => { st.me = k; try { localStorage.setItem('cd_me', k); } catch (e) {} };
 const nm = k => k === 'ambos' ? 'Los dos' : ((st.names && st.names[k]) || '—');
@@ -860,11 +865,23 @@ function detalleIA(e) {
 
 /* ---------- Cuidados: lógica (sin pantalla) ---------- */
 // La mascota de la pareja: una pregunta y un sobre por día. Racha, puntos, etapa y medallas NO se guardan: se calculan con los días guardados.
-const CUID_OBJ = {planta:['🌱', 'Plantita'], gato:['🐱', 'Gatito'], perro:['🐶', 'Perrito']};
+const CUID_OBJ = {perro:['🐶', 'Perrito'], gato:['🐱', 'Gatito'], panda:['🐼', 'Panda'], cerdo:['🐷', 'Cerdito']};
 const CUID_NOM = 'Mascota'; // nombre del módulo mientras la mascota no tenga nombre
 const CUID_PTS_P = 10, CUID_PTS_S = 15; // puntos por la pregunta y por el sobre (cuando los dos respondieron)
 const CUID_ETAPAS = [0, 60, 200, 500, 1000]; // puntos con que empieza cada etapa
 const CUID_MEDALLAS = [7, 30, 100]; // días de racha
+const CUID_MON_P = 10, CUID_MON_S = 15, CUID_MON_ACIERTO = 5; // monedas: pregunta y sobre completos (por la racha) y cada predicción acertada (sin racha)
+// Ropa: [id, ranura, nombre, precio en monedas]. Los dibujos están en CUID_ROPA_SVG (más abajo).
+const CUID_RANURAS = [['gorro', '🎩', 'Gorros'], ['cara', '🕶️', 'Cara'], ['cuello', '🧣', 'Cuello'], ['torso', '👕', 'Torso'], ['piernas', '👖', 'Piernas'], ['zapatos', '👟', 'Zapatos'], ['espalda', '🦋', 'Espalda']];
+const CUID_ROPA_DATOS = [
+  ['g_lana', 'gorro', 'Gorro de lana', 50], ['g_gorra', 'gorro', 'Gorra', 60], ['g_mono', 'gorro', 'Moño', 70], ['g_flores', 'gorro', 'Corona de flores', 90], ['g_copa', 'gorro', 'Sombrero de copa', 150], ['g_corona', 'gorro', 'Corona real', 300],
+  ['c_redondos', 'cara', 'Lentes redondos', 60], ['c_sol', 'cara', 'Lentes de sol', 80], ['c_corazon', 'cara', 'Lentes de corazón', 100],
+  ['k_panuelo', 'cuello', 'Pañuelo', 40], ['k_corbatin', 'cuello', 'Corbatín', 50], ['k_bufanda', 'cuello', 'Bufanda', 80], ['k_collar', 'cuello', 'Collar de corazón', 100], ['k_perlas', 'cuello', 'Collar de perlas', 140],
+  ['t_rayas', 'torso', 'Polera de rayas', 70], ['t_corazon', 'torso', 'Polera con corazón', 90], ['t_chaleco', 'torso', 'Chaleco', 110], ['t_sudadera', 'torso', 'Sudadera', 150],
+  ['p_shorts', 'piernas', 'Shorts', 60], ['p_jeans', 'piernas', 'Jeans', 100], ['p_falda', 'piernas', 'Falda', 100], ['p_tutu', 'piernas', 'Tutú', 160],
+  ['z_zapatillas', 'zapatos', 'Zapatillas', 80], ['z_pantuflas', 'zapatos', 'Pantuflas', 70], ['z_botas', 'zapatos', 'Botas', 110], ['z_charol', 'zapatos', 'Zapatos de charol', 130],
+  ['e_mochila', 'espalda', 'Mochila', 90], ['e_capa', 'espalda', 'Capa', 200], ['e_alas', 'espalda', 'Alas de ángel', 260]
+];
 const CUID_TXT = 250; // máximo de caracteres de la respuesta a la pregunta del día
 // Preguntas del día: abiertas (se responden escribiendo). {n} se cambia por el nombre de la otra persona.
 // El orden de la lista es el orden en que salen (ya vienen mezcladas). Para cambiar o agregar preguntas se edita aquí.
@@ -1014,20 +1031,27 @@ const cuPred = (d, k) => d && d[k] && Array.isArray(d[k].pred) && d[k].pred.leng
 const cuPregOk = d => cuResp(d, 'a') !== null && cuResp(d, 'b') !== null;
 const cuSobOk = d => !!cuSob(d, 'a') && !!cuSob(d, 'b');
 const cuMult = racha => racha >= 7 ? 2 : racha >= 3 ? 1.5 : 1;
+// Multiplicador de monedas por racha (más racha, más monedas): ×1, ×1,5 desde 3 días, ×2 desde 7 y ×3 desde 30
+const cuMultMon = racha => racha >= 30 ? 3 : racha >= 7 ? 2 : racha >= 3 ? 1.5 : 1;
 // Estado de la mascota (documento cuidados/estado), tolerando datos incompletos
-const cuEstado = d => d ? {objeto:CUID_OBJ[d.objeto] ? d.objeto : 'planta', nombre:String(d.nombre || '').replace(/\s+/g, ' ').trim().slice(0, 16), inicio:cuEsDia(d.inicio) ? d.inicio : ''} : null;
+const cuEstado = d => d ? {objeto:CUID_OBJ[d.objeto] ? d.objeto : '', // '' = aún sin elegir (por ejemplo, quien tenía la planta, que ya no existe)
+     nombre:String(d.nombre || '').replace(/\s+/g, ' ').trim().slice(0, 16), inicio:cuEsDia(d.inicio) ? d.inicio : ''} : null;
 // Racha actual, mejor racha y puntos, a partir de los días guardados. Los días con fecha futura (reloj cambiado) no cuentan.
 function cuResumen(dias, h) {
   const hn = cuNum(h), L = dias.filter(d => d && cuEsDia(d.dia) && cuNum(d.dia) <= hn).sort((x, y) => cuNum(x.dia) - cuNum(y.dia));
-  let run = 0, prev = null, mejor = 0, puntos = 0, visto = '';
+  let run = 0, prev = null, mejor = 0, puntos = 0, monedas = 0, aciertos = 0, visto = '';
   for (const d of L) {
     if (d.dia === visto) continue; visto = d.dia;
     const n = cuNum(d.dia), p = cuPregOk(d);
-    if (p) { run = prev !== null && n === prev + 1 ? run + 1 : 1; prev = n; mejor = Math.max(mejor, run); puntos += Math.round(CUID_PTS_P * cuMult(run)); }
-    if (cuSobOk(d)) puntos += Math.round(CUID_PTS_S * (p ? cuMult(run) : 1));
+    if (p) { run = prev !== null && n === prev + 1 ? run + 1 : 1; prev = n; mejor = Math.max(mejor, run); puntos += Math.round(CUID_PTS_P * cuMult(run)); monedas += Math.round(CUID_MON_P * cuMultMon(run)); }
+    if (cuSobOk(d)) {
+      puntos += Math.round(CUID_PTS_S * (p ? cuMult(run) : 1)); monedas += Math.round(CUID_MON_S * (p ? cuMultMon(run) : 1));
+      for (const k of ['a', 'b']) { const pr = cuPred(d, k), o = cuSob(d, k === 'a' ? 'b' : 'a'); if (pr && o) pr.forEach((v, i) => { if (v === o[i]) aciertos++; }); }
+    }
   }
-  const viva = prev !== null && prev >= hn - 1, racha = viva ? run : 0, hoyOk = prev === hn;
-  return {racha, mejor, puntos, hoyOk, mult:cuMult(hoyOk ? racha : racha + 1)};
+  monedas += aciertos * CUID_MON_ACIERTO;
+  const viva = prev !== null && prev >= hn - 1, racha = viva ? run : 0, hoyOk = prev === hn, sig = hoyOk ? racha : racha + 1;
+  return {racha, mejor, puntos, monedas, aciertos, hoyOk, mult:cuMult(sig), multMon:cuMultMon(sig)};
 }
 function cuEtapa(puntos) {
   let i = 0; while (i < CUID_ETAPAS.length - 1 && puntos >= CUID_ETAPAS[i + 1]) i++;
@@ -1059,6 +1083,18 @@ function cuHistorial(dias, h, tipo) {
   }).sort((x, y) => cuNum(y.dia) - cuNum(x.dia));
 }
 const cuTexto = (s, nombre) => String(s).replace(/\{n\}/g, nombre);
+const CUID_ROPA = CUID_ROPA_DATOS.map(([id, ranura, nombre, precio]) => ({id, ranura, nombre, precio}));
+const cuPrenda = id => CUID_ROPA.find(x => x.id === id) || null;
+// Ropa de la mascota (documento cuidados/ropa = {compra: {id: precio pagado}, puesto: {ranura: id}}), tolerando datos incompletos.
+// Solo valen las prendas que existen; "puesto" solo si está comprada y es de esa ranura. gastado = suma de lo pagado.
+function cuRopa(d) {
+  const compra = {}; let gastado = 0;
+  if (d && d.compra && typeof d.compra === 'object') for (const id of Object.keys(d.compra)) { const x = cuPrenda(id); if (!x) continue; const v = d.compra[id], pr = Number.isFinite(v) && v >= 0 ? Math.round(v) : x.precio; compra[id] = pr; gastado += pr; }
+  const puesto = {};
+  if (d && d.puesto && typeof d.puesto === 'object') for (const r of CUID_RANURAS) { const id = d.puesto[r[0]], x = typeof id === 'string' ? cuPrenda(id) : null; if (x && x.ranura === r[0] && compra[id] !== undefined) puesto[r[0]] = id; }
+  return {compra, puesto, gastado};
+}
+const cuSaldo = (R, ropa) => R.monedas - ropa.gastado;
 /* ---------- fin lógica cuidados ---------- */
 
 /* ---------- Momentos: lógica (sin pantalla) ---------- */
@@ -1631,38 +1667,108 @@ const cuOjos = e => e === 1 ? '<path d="M46 53q4.5 4 9 0M65 53q4.5 4 9 0" fill="
   '<circle cx="50.5" cy="52" r="3.3" fill="#3a1622"/><circle cx="69.5" cy="52" r="3.3" fill="#3a1622"/><circle cx="51.6" cy="50.8" r="1.1" fill="#fff"/><circle cx="70.6" cy="50.8" r="1.1" fill="#fff"/>';
 const CU_PATAS = '<ellipse cx="50" cy="105" rx="7.5" ry="4.5" fill="#fff" ' + CU_T + '/><ellipse cx="70" cy="105" rx="7.5" ry="4.5" fill="#fff" ' + CU_T + '/>';
 const CU_MEJ = '<circle cx="44" cy="60" r="4.5" fill="#ff8fb3" opacity=".55"/><circle cx="76" cy="60" r="4.5" fill="#ff8fb3" opacity=".55"/>';
-function cuPlanta(e) {
-  const hoja = (y, lado, k) => '<path transform="translate(60 ' + y + ') scale(' + lado * k + ' ' + k + ')" d="M0 0C-10-2-15-10-13-19-4-18 3-10 0 0z" fill="#7cc195" stroke="#3f8a5e" stroke-width="' + (1.7 / k).toFixed(2) + '" stroke-linejoin="round"/>';
-  const H = [[[73, -1, .45], [73, 1, .45]], [[72, -1, .85], [67, 1, .75]], [[72, -1, .9], [67, 1, .85], [58, -1, .75], [54, 1, .7]],
-    [[72, -1, .95], [67, 1, .9], [58, -1, .85], [53, 1, .8], [45, -1, .6]], [[72, -1, 1], [67, 1, .95], [58, -1, .9], [53, 1, .85], [45, -1, .65], [41, 1, .6]]][e - 1];
-  let h = '<path d="M60 78V' + [69, 58, 46, 37, 30][e - 1] + '" fill="none" stroke="#3f8a5e" stroke-width="3.4" stroke-linecap="round"/>' + H.map(a => hoja(...a)).join('');
-  if (e === 4) h += cuH(60, 33, .5, '#ff8fb3');
-  if (e === 5) h += '<path d="M60 50Q46 47 40 37M60 44Q74 41 80 33" fill="none" stroke="#3f8a5e" stroke-width="2.6" stroke-linecap="round"/>' + cuH(60, 24, .85, '#c81e4a') + cuH(38, 30, .62, '#ff4d86', -12) + cuH(82, 26, .62, '#ff8fb3', 12);
-  return h + '<path d="M41 80h38l-5 26H46z" fill="#ee6b8f" ' + CU_T + '/><rect x="36" y="74" width="48" height="9" rx="3.5" fill="#c81e4a" ' + CU_T + '/>' + cuH(60, 95, .5, '#fff') + cuBrillo(e);
-}
 function cuGato(e) {
   const cola = 'd="M80 98c16 2 22-10 14-22" fill="none" stroke-linecap="round"';
-  return cuEsc(e, (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="9.4"/><path ' + cola + ' stroke="#fff" stroke-width="5"/>' : '') +
+  return (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="9.4"/><path ' + cola + ' stroke="#fff" stroke-width="5"/>' : '') +
     '<ellipse cx="60" cy="88" rx="23" ry="19" fill="#fff" ' + CU_T + '/>' +
     '<path d="M41 40L38 15l19 13zM79 40l3-25-19 13z" fill="#fff" ' + CU_T + '/><path d="M43.5 30l-1.6-8.5 7 5zM76.5 30l1.6-8.5-7 5z" fill="#ff8fb3"/>' +
     '<circle cx="60" cy="52" r="24" fill="#fff" ' + CU_T + '/>' + CU_MEJ + cuOjos(e) +
     '<path d="M60 61.5l-2.6-2.6a1.8 1.8 0 0 1 2.6-2.4 1.8 1.8 0 0 1 2.6 2.4z" fill="#ff4d86"/>' +
     '<path d="M60 62q-3.5 4-7 1.5M60 62q3.5 4 7 1.5" fill="none" stroke="#7d1433" stroke-width="1.6" stroke-linecap="round"/>' +
     '<path d="M38 55l-9-2M38 59l-9 2M82 55l9-2M82 59l9 2" stroke="#7d1433" stroke-width="1.3" stroke-linecap="round"/>' + CU_PATAS +
-    (e >= 4 ? '<path d="M60 76l-11-6v12zM60 76l11-6v12z" fill="#c81e4a" ' + CU_T + '/><circle cx="60" cy="76" r="3.4" fill="#ff4d86" stroke="#7d1433" stroke-width="1.6"/>' : ''));
+    (e >= 4 ? '<path d="M60 76l-11-6v12zM60 76l11-6v12z" fill="#c81e4a" ' + CU_T + '/><circle cx="60" cy="76" r="3.4" fill="#ff4d86" stroke="#7d1433" stroke-width="1.6"/>' : '');
 }
 function cuPerro(e) {
   const cola = 'd="M81 97c12-2 16-12 13-23" fill="none" stroke-linecap="round"';
-  return cuEsc(e, (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="9.4"/><path ' + cola + ' stroke="#ffd3e2" stroke-width="5"/>' : '') +
+  return (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="9.4"/><path ' + cola + ' stroke="#ffd3e2" stroke-width="5"/>' : '') +
     '<ellipse cx="60" cy="88" rx="23" ry="19" fill="#fff" ' + CU_T + '/>' +
     '<circle cx="60" cy="52" r="24" fill="#fff" ' + CU_T + '/><ellipse cx="70" cy="51" rx="8.5" ry="9.5" fill="#ffd3e2"/>' +
     '<path d="M41 33c-13 1-18 22-11 36 9-3 13-14 13-27z" fill="#ff9bbd" ' + CU_T + '/><path d="M79 33c13 1 18 22 11 36-9-3-13-14-13-27z" fill="#ff9bbd" ' + CU_T + '/>' +
     CU_MEJ + cuOjos(e) + '<ellipse cx="60" cy="62.5" rx="9.5" ry="7" fill="#fff" stroke="#7d1433" stroke-width="1.6"/><ellipse cx="60" cy="59" rx="4" ry="2.8" fill="#3a1622"/>' +
     '<path d="M60 62v2.5M60 64.5q-2.8 2.6-5.6 1M60 64.5q2.8 2.6 5.6 1" fill="none" stroke="#7d1433" stroke-width="1.4" stroke-linecap="round"/>' +
     (e >= 2 ? '<path d="M57.6 66.6q2.4 6.4 4.8 0z" fill="#ff4d86" stroke="#7d1433" stroke-width="1.2" stroke-linejoin="round"/>' : '') + CU_PATAS +
-    (e >= 4 ? '<path d="M44 74.5q16 8 32 0" fill="none" stroke="#7d1433" stroke-width="7.4" stroke-linecap="round"/><path d="M44 74.5q16 8 32 0" fill="none" stroke="#c81e4a" stroke-width="4" stroke-linecap="round"/>' + cuH(60, 85, .42, '#ff4d86') : ''));
+    (e >= 4 ? '<path d="M44 74.5q16 8 32 0" fill="none" stroke="#7d1433" stroke-width="7.4" stroke-linecap="round"/><path d="M44 74.5q16 8 32 0" fill="none" stroke="#c81e4a" stroke-width="4" stroke-linecap="round"/>' + cuH(60, 85, .42, '#ff4d86') : '');
 }
-const cuSvg = (o, e) => '<svg class="cu-svg" viewBox="0 0 120 120" role="img" aria-label="' + CUID_OBJ[o][1] + ', etapa ' + e + ' de ' + CUID_ETAPAS.length + '"><ellipse cx="60" cy="109" rx="30" ry="5" fill="#7d1433" opacity=".13"/>' + (o === 'gato' ? cuGato(e) : o === 'perro' ? cuPerro(e) : cuPlanta(e)) + '</svg>';
+function cuPanda(e) {
+  const N = '#3a1622';
+  return (e >= 3 ? '<circle cx="82" cy="96" r="5" fill="#fff" ' + CU_T + '/>' : '') +
+    '<ellipse cx="60" cy="88" rx="23" ry="19" fill="#fff" ' + CU_T + '/>' +
+    '<ellipse cx="40.5" cy="86" rx="6.5" ry="12" transform="rotate(12 40.5 86)" fill="' + N + '" ' + CU_T + '/><ellipse cx="79.5" cy="86" rx="6.5" ry="12" transform="rotate(-12 79.5 86)" fill="' + N + '" ' + CU_T + '/>' +
+    '<circle cx="41" cy="33" r="8.5" fill="' + N + '" ' + CU_T + '/><circle cx="79" cy="33" r="8.5" fill="' + N + '" ' + CU_T + '/>' +
+    '<circle cx="60" cy="52" r="24" fill="#fff" ' + CU_T + '/>' +
+    '<ellipse cx="50" cy="52" rx="6.6" ry="8.6" transform="rotate(18 50 52)" fill="' + N + '"/><ellipse cx="70" cy="52" rx="6.6" ry="8.6" transform="rotate(-18 70 52)" fill="' + N + '"/>' +
+    (e === 1 ? '<path d="M46.5 52q3.5 3.2 7 0M66.5 52q3.5 3.2 7 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>' :
+      '<circle cx="50.5" cy="52" r="3" fill="#fff"/><circle cx="69.5" cy="52" r="3" fill="#fff"/><circle cx="51" cy="52.4" r="1.5" fill="' + N + '"/><circle cx="70" cy="52.4" r="1.5" fill="' + N + '"/>') +
+    CU_MEJ + '<ellipse cx="60" cy="60" rx="3.8" ry="2.7" fill="' + N + '"/>' +
+    '<path d="M60 62.6v2M60 64.6q-2.6 2.2-5 .4M60 64.6q2.6 2.2 5 .4" fill="none" stroke="#7d1433" stroke-width="1.4" stroke-linecap="round"/>' +
+    '<ellipse cx="50" cy="105" rx="7.5" ry="4.5" fill="' + N + '" ' + CU_T + '/><ellipse cx="70" cy="105" rx="7.5" ry="4.5" fill="' + N + '" ' + CU_T + '/>' +
+    (e >= 4 ? cuH(60, 88, .5, '#ff4d86') : '');
+}
+function cuCerdo(e) {
+  const R1 = '#ffc2d4', R2 = '#ff9bbd', cola = 'd="M82 96c9-1 12 6 6 8s-7-4-2-4" fill="none" stroke-linecap="round"';
+  return (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="5.4"/><path ' + cola + ' stroke="' + R2 + '" stroke-width="2.4"/>' : '') +
+    '<ellipse cx="60" cy="88" rx="23" ry="19" fill="' + R1 + '" ' + CU_T + '/>' +
+    '<path d="M40 37L35 19Q47 20 54 29Z" fill="' + R2 + '" ' + CU_T + '/><path d="M80 37L85 19Q73 20 66 29Z" fill="' + R2 + '" ' + CU_T + '/>' +
+    '<circle cx="60" cy="52" r="24" fill="' + R1 + '" ' + CU_T + '/>' + CU_MEJ + cuOjos(e) +
+    '<ellipse cx="60" cy="62" rx="10" ry="7" fill="' + R2 + '" ' + CU_T + '/><ellipse cx="56.2" cy="62" rx="1.8" ry="2.6" fill="#7d1433"/><ellipse cx="63.8" cy="62" rx="1.8" ry="2.6" fill="#7d1433"/>' +
+    '<ellipse cx="50" cy="105" rx="7.5" ry="4.5" fill="' + R2 + '" ' + CU_T + '/><ellipse cx="70" cy="105" rx="7.5" ry="4.5" fill="' + R2 + '" ' + CU_T + '/>' +
+    (e >= 4 ? cuH(60, 90, .5, '#fff') : '');
+}
+/* ---------- Ropa: dibujos (mismo espacio 120 × 120 y mismos puntos de apoyo para las 4 mascotas) ---------- */
+// Apoyos: cabeza círculo (60,52) r24 · cuerpo elipse (60,88) rx23 ry19 · patas (50,105) y (70,105) · cuello hacia y 74.
+const CU_RO = 'stroke="#7d1433" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+const cuHs = (x, y, k, c) => '<path transform="translate(' + x + ' ' + y + ') scale(' + k + ') translate(-12 -12)" d="' + HP + '" fill="' + c + '" stroke="#7d1433" stroke-width="' + (1.6 / k).toFixed(2) + '" stroke-linejoin="round"/>';
+const cuPies = f => [50, 70].map(f).join('');
+const cuTorso = (c, fill, extra) => '<g clip-path="url(#' + c + ')"><rect x="34" y="76" width="52" height="21" fill="' + fill + '"/>' + (extra || '') + '</g><path d="M42 77Q60 84 78 77" fill="none" stroke="#7d1433" stroke-width="1.5" stroke-linecap="round"/><path d="M38 96.6Q60 100 82 96.6" fill="none" stroke="#7d1433" stroke-width="1.5" stroke-linecap="round"/>';
+const cuPierna = (c, fill, borde) => '<g clip-path="url(#' + c + ')"><rect x="34" y="94.5" width="52" height="14" fill="' + fill + '"/><rect x="34" y="94.5" width="52" height="3.2" fill="' + borde + '"/></g><path d="M60 97.5V107" stroke="#7d1433" stroke-width="1.4" stroke-linecap="round"/>';
+const CU_PERLAS = Array.from({length:9}, (_, i) => { const t = i / 8, x = 43 + 34 * t, y = 73.5 + 33 * t * (1 - t); return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.4" fill="#fff" stroke="#7d1433" stroke-width="1"/>'; }).join('');
+const CU_ROPA_SVG = {
+  // gorros
+  g_lana: () => '<path d="M36 37C33 10 87 10 84 37Q60 31 36 37Z" fill="#c81e4a" ' + CU_RO + '/><rect x="34" y="33" width="52" height="9" rx="4.5" fill="#ff8fb3" ' + CU_RO + '/><circle cx="60" cy="14.5" r="5.5" fill="#fff" ' + CU_RO + '/>',
+  g_gorra: () => '<path d="M38 38C37 14 83 14 82 38Z" fill="#2f7fd8" ' + CU_RO + '/><circle cx="60" cy="18" r="2.4" fill="#1f5fae" ' + CU_RO + '/><path d="M40 38Q60 49 80 38Q60 34 40 38Z" fill="#1f5fae" ' + CU_RO + '/>',
+  g_mono: () => '<path d="M74 31L59 22V40Z" fill="#ff4d86" ' + CU_RO + '/><path d="M74 31L89 22V40Z" fill="#ff4d86" ' + CU_RO + '/><circle cx="74" cy="31" r="4.2" fill="#c81e4a" ' + CU_RO + '/>',
+  g_flores: () => '<path d="M37 41Q60 17 83 41" fill="none" stroke="#3f8a5e" stroke-width="3" stroke-linecap="round"/>' + [[41.6, 36.7, '#ff4d86'], [50.8, 30.9, '#fff'], [60, 29, '#ff8a5b'], [69.2, 30.9, '#fff'], [78.4, 36.7, '#ff4d86']].map(([x, y, c]) => '<circle cx="' + x + '" cy="' + y + '" r="4.4" fill="' + c + '" stroke="#7d1433" stroke-width="1.2"/><circle cx="' + x + '" cy="' + y + '" r="1.7" fill="#f2b705"/>').join(''),
+  g_copa: () => '<ellipse cx="60" cy="32" rx="21" ry="4.6" fill="#3a1622" ' + CU_RO + '/><path d="M47 32V9Q60 5 73 9V32Z" fill="#3a1622" ' + CU_RO + '/><rect x="47" y="23" width="26" height="6" fill="#c81e4a"/>',
+  g_corona: () => '<path d="M43 35L42 17L52 26L60 13L68 26L78 17L77 35Z" fill="#f2b705" ' + CU_RO + '/><circle cx="60" cy="29" r="2.4" fill="#c81e4a"/><circle cx="50" cy="31" r="1.7" fill="#ff4d86"/><circle cx="70" cy="31" r="1.7" fill="#ff4d86"/>',
+  // cara
+  c_redondos: () => '<g fill="#ffffff2e" stroke="#3a1622" stroke-width="2"><circle cx="50.5" cy="52" r="8.6"/><circle cx="69.5" cy="52" r="8.6"/></g><path d="M59 51.5h2M42 50L37.5 47.5M78 50L82.5 47.5" fill="none" stroke="#3a1622" stroke-width="2" stroke-linecap="round"/>',
+  c_sol: () => '<rect x="40.5" y="45.5" width="19" height="13" rx="5.5" fill="#2b2a28" ' + CU_RO + '/><rect x="60.5" y="45.5" width="19" height="13" rx="5.5" fill="#2b2a28" ' + CU_RO + '/><path d="M59 49h2M40.5 49L36.5 47M79.5 49L83.5 47" fill="none" stroke="#2b2a28" stroke-width="1.8" stroke-linecap="round"/><path d="M44 49.5h4M64 49.5h4" stroke="#ffffffaa" stroke-width="1.6" stroke-linecap="round"/>',
+  c_corazon: () => cuHs(50.5, 52, .95, '#ff4d86') + cuHs(69.5, 52, .95, '#ff4d86') + '<path d="M42 49L37.5 47M78 49L82.5 47" fill="none" stroke="#7d1433" stroke-width="1.8" stroke-linecap="round"/><path d="M46 49.5h3M66 49.5h3" stroke="#ffffffcc" stroke-width="1.6" stroke-linecap="round"/>',
+  // cuello
+  k_panuelo: () => '<path d="M42 72Q60 82 78 72L60 94Z" fill="#c81e4a" ' + CU_RO + '/><circle cx="54" cy="79" r="1.3" fill="#fff"/><circle cx="66" cy="79" r="1.3" fill="#fff"/><circle cx="60" cy="86" r="1.3" fill="#fff"/>',
+  k_corbatin: () => '<path d="M60 77L47 70V84Z" fill="#6d0f28" ' + CU_RO + '/><path d="M60 77L73 70V84Z" fill="#6d0f28" ' + CU_RO + '/><rect x="56.5" y="73" width="7" height="8" rx="2" fill="#c81e4a" ' + CU_RO + '/>',
+  k_bufanda: () => '<path d="M41 75Q60 87 79 75" fill="none" stroke="#7d1433" stroke-width="11" stroke-linecap="round"/><path d="M41 75Q60 87 79 75" fill="none" stroke="#ff4d86" stroke-width="8.4" stroke-linecap="round"/><path d="M43 76Q60 86 77 76" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 5"/><path d="M68 82L80 80L82 98L70 100Z" fill="#ff4d86" ' + CU_RO + '/><path d="M69 90L81 88.5" stroke="#fff" stroke-width="1.8"/>',
+  k_collar: () => '<path d="M44 74Q60 88 76 74" fill="none" stroke="#f2b705" stroke-width="2" stroke-linecap="round"/>' + cuHs(60, 86, .5, '#ff4d86'),
+  k_perlas: () => CU_PERLAS,
+  // torso
+  t_rayas: c => cuTorso(c, '#fff', Array.from({length:5}, (_, i) => '<rect x="34" y="' + (78 + i * 4.8) + '" width="52" height="2.6" fill="#c81e4a"/>').join('')),
+  t_corazon: c => cuTorso(c, '#ffc2d4', '') + cuHs(60, 87.5, .8, '#c81e4a'),
+  t_chaleco: c => cuTorso(c, '#6d0f28', '<path d="M52 77L60 91L68 77Z" fill="#fff"/>') + '<circle cx="60" cy="94" r="1.5" fill="#f2b705"/>',
+  t_sudadera: c => cuTorso(c, '#ff7a8a', '') + '<path d="M47 89h26l-3 8H50Z" fill="#ff6275" ' + CU_RO + '/><path d="M43 77Q60 87 77 77" fill="none" stroke="#ff5469" stroke-width="5" stroke-linecap="round"/><path d="M56 82v8M64 82v8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>',
+  // piernas
+  p_shorts: c => cuPierna(c, '#2f7fd8', '#1f5fae'),
+  p_jeans: c => cuPierna(c, '#4a6fc0', '#35509a') + '<path d="M44 99h8M68 99h8" stroke="#ffffffaa" stroke-width="1" stroke-dasharray="2 2"/><rect x="41.5" y="99" width="17" height="7.5" rx="3.5" fill="#4a6fc0" ' + CU_RO + '/><rect x="61.5" y="99" width="17" height="7.5" rx="3.5" fill="#4a6fc0" ' + CU_RO + '/>',
+  p_falda: () => '<path d="M39 94L81 94L90 108H30Z" fill="#ff4d86" ' + CU_RO + '/><path d="M50 95L47 107M60 95V107M70 95L73 107" stroke="#c81e4a" stroke-width="1.2" fill="none"/><rect x="39" y="92.5" width="42" height="3.6" rx="1.5" fill="#c81e4a" ' + CU_RO + '/>',
+  p_tutu: () => Array.from({length:9}, (_, i) => '<circle cx="' + (32 + i * 7) + '" cy="105" r="3.8" fill="#ffc2d4" ' + CU_RO + '/>').join('') + '<ellipse cx="60" cy="100" rx="31" ry="7.5" fill="#ffc2d4" ' + CU_RO + '/><rect x="42" y="93" width="36" height="4" rx="2" fill="#ff4d86" ' + CU_RO + '/>',
+  // zapatos
+  z_zapatillas: () => cuPies(x => '<ellipse cx="' + x + '" cy="105" rx="9" ry="5.3" fill="#ff4d86" ' + CU_RO + '/><path d="M' + (x - 8.4) + ' 107.6Q' + x + ' 110.6 ' + (x + 8.4) + ' 107.6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M' + (x - 3) + ' 102h6M' + (x - 3) + ' 104.5h6" stroke="#fff" stroke-width="1.1"/>'),
+  z_pantuflas: () => cuPies(x => '<ellipse cx="' + x + '" cy="105.5" rx="9.4" ry="5.6" fill="#ffd3e2" ' + CU_RO + '/><circle cx="' + (x - 3.5) + '" cy="101.8" r="2" fill="#fff" ' + CU_RO + '/><circle cx="' + (x + 3.5) + '" cy="101.8" r="2" fill="#fff" ' + CU_RO + '/>'),
+  z_botas: () => cuPies(x => '<path d="M' + (x - 7.5) + ' 95.5H' + (x + 7.5) + 'V106Q' + (x + 7.5) + ' 110.8 ' + x + ' 110.8Q' + (x - 7.5) + ' 110.8 ' + (x - 7.5) + ' 106Z" fill="#6d0f28" ' + CU_RO + '/><rect x="' + (x - 7.5) + '" y="95.5" width="15" height="4" fill="#ff8fb3" ' + CU_RO + '/>'),
+  z_charol: () => cuPies(x => '<ellipse cx="' + x + '" cy="105.5" rx="9" ry="5.2" fill="#2b2a28" ' + CU_RO + '/><path d="M' + (x - 4) + ' 103.5Q' + x + ' 101 ' + (x + 4) + ' 103.5" stroke="#ffffffaa" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M' + (x - 8) + ' 105.5h16" stroke="#c81e4a" stroke-width="1.8"/>'),
+  // espalda (se dibuja detrás)
+  e_mochila: () => '<rect x="31" y="68" width="58" height="34" rx="11" fill="#2f9e5b" ' + CU_RO + '/><rect x="42" y="90" width="36" height="12" rx="4" fill="#27824b" ' + CU_RO + '/>',
+  e_capa: () => '<path d="M42 72L78 72L93 108H27Z" fill="#c81e4a" ' + CU_RO + '/><path d="M32 104Q60 112 88 104" fill="none" stroke="#a8153d" stroke-width="2"/>',
+  e_alas: () => '<path d="M44 84C20 62 8 82 20 94C14 98 24 106 40 98Z" fill="#fff" ' + CU_RO + '/><path d="M76 84C100 62 112 82 100 94C106 98 96 106 80 98Z" fill="#fff" ' + CU_RO + '/><path d="M26 86Q32 90 38 90M22 94Q30 96 38 95M94 86Q88 90 82 90M98 94Q90 96 82 95" stroke="#ffb3c9" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+};
+const CU_ANIMAL = {perro:cuPerro, gato:cuGato, panda:cuPanda, cerdo:cuCerdo};
+let cuClipN = 0;
+// Mascota (o, etapa e) con la ropa puesta (puesto = {ranura: idPrenda}). Orden de capas: espalda, mascota, piernas, torso, zapatos, cuello, cara y gorro.
+function cuSvg(o, e, puesto) {
+  if (!CUID_OBJ[o]) return '';
+  const c = 'cuc' + (++cuClipN), pz = puesto || {}, P = r => pz[r] && CU_ROPA_SVG[pz[r]] ? CU_ROPA_SVG[pz[r]](c) : '';
+  return '<svg class="cu-svg" viewBox="0 0 120 120" role="img" aria-label="' + CUID_OBJ[o][1] + ', etapa ' + e + ' de ' + CUID_ETAPAS.length + '"><defs><clipPath id="' + c + '"><ellipse cx="60" cy="88" rx="23.2" ry="19.2"/></clipPath></defs><ellipse cx="60" cy="109" rx="30" ry="5" fill="#7d1433" opacity=".13"/>' +
+    cuEsc(e, P('espalda') + CU_ANIMAL[o](e) + ['piernas', 'torso', 'zapatos', 'cuello', 'cara', 'gorro'].map(P).join('')) + '</svg>';
+}
 const CU_SOBRE = '<svg class="cu-env" viewBox="0 0 64 48" aria-hidden="true"><rect x="3" y="4" width="58" height="40" rx="6"/><path d="M4.5 8L32 28 59.5 8"/>' + cuH(32, 29, .62, 'currentColor') + '</svg>';
 const cuMedSvg = n => '<svg viewBox="0 0 48 60" aria-hidden="true"><path class="r" d="M13 30L7 57l17-9 17 9-6-27z"/><circle class="c" cx="24" cy="22" r="19"/><text x="24" y="27.5" text-anchor="middle" font-size="' + (n > 99 ? 13 : 16) + '" font-weight="700">' + n + '</text></svg>';
 const cuNombre = () => (st.cuEst && st.cuEst.nombre) || CUID_NOM;
@@ -1685,13 +1791,14 @@ function vCuidados() {
   const E = st.cuEst, me = st.me;
   if (!E) return '<section class="card cu-new c"><div class="cu-trio">' + Object.keys(CUID_OBJ).map(k => cuSvg(k, 3)).join('') + '</div><h2>Su mascota los espera</h2><p class="mu">Elijan una, pónganle nombre y cuídenla juntos: crece cada día que los dos responden la pregunta.</p><button class="btn w" data-a="cuCrear">💞 Crear mascota</button></section>';
   if (me !== 'a' && me !== 'b') return '<p class="mu c">Primero elige quién eres en Configuración ⚙️</p>';
-  const ot = cuOtro(me), h = hoy(), R = cuResumen(st.cuid, h), et = cuEtapa(R.puntos), hd = cuHoy(st.cuid, E, h), q = CUID_PREG[hd.p], sb = CUID_SOBRES[hd.s];
+  if (!E.objeto) return cuSinMascota(E);
+  const ot = cuOtro(me), h = hoy(), R = cuResumen(st.cuid, h), et = cuEtapa(R.puntos), hd = cuHoy(st.cuid, E, h), q = CUID_PREG[hd.p], sb = CUID_SOBRES[hd.s], ropa = cuRopa(st.cuRopa);
   if (st.cuEt && et.n > st.cuEt) st.cuUp = Date.now();
   st.cuEt = et.n;
-  let x = '<section class="card cu-pet"><button class="cu-ed" data-a="cuCrear" aria-label="Cambiar mascota o nombre">✏️</button><div class="cu-fig' + (st.cuUp && Date.now() - st.cuUp < 1500 ? ' sube' : '') + '">' + cuSvg(E.objeto, et.n) + '</div>' +
+  let x = '<section class="card cu-pet"><button class="cu-ed" data-a="cuCrear" aria-label="Cambiar mascota o nombre">✏️</button><div class="cu-fig' + (st.cuUp && Date.now() - st.cuUp < 1500 ? ' sube' : '') + '">' + cuSvg(E.objeto, et.n, ropa.puesto) + '</div>' +
     '<h2>' + esc(cuNombre()) + '</h2><div class="mu">Etapa ' + et.n + ' de ' + et.total + '</div><div class="bar"><i style="width:' + et.pct + '%"></i></div>' +
     '<div class="mu cu-pp">' + R.puntos + ' puntos · ' + (et.falta ? 'faltan ' + et.falta + ' para crecer' : '¡llegó a su etapa máxima!') + '</div>' +
-    '<div class="cu-chips"><span>🔥 ' + (R.racha ? cuDias(R.racha) + (R.racha === 1 ? ' seguido' : ' seguidos') : 'Sin racha aún') + '</span><span>✨ Crece ×' + String(R.mult).replace('.', ',') + '</span></div></section>';
+    '<div class="cu-chips"><span>🔥 ' + (R.racha ? cuDias(R.racha) + (R.racha === 1 ? ' seguido' : ' seguidos') : 'Sin racha aún') + '</span><span>✨ Crece ×' + String(R.mult).replace('.', ',') + '</span><span>🪙 ' + cuSaldo(R, ropa) + ' monedas · ×' + String(R.multMon).replace('.', ',') + '</span></div></section>';
   // Pregunta de hoy
   const mia = cuResp(hd.doc, me), suya = cuResp(hd.doc, ot);
   x += '<h3>Pregunta de hoy</h3><section class="card cu-q"><p class="cu-t">' + esc(cuTexto(q.t, nm(ot))) + '</p>';
@@ -1710,6 +1817,30 @@ function vCuidados() {
     '<p class="mu c cu-pp">Mejor racha: ' + cuDias(R.mejor) + '</p>';
   return x;
 }
+// Sección "Ropa": tienda y armario. Tocar una prenda la prueba sobre la mascota (no se guarda); desde ahí se compra o se pone.
+function vRopa() {
+  const E = st.cuEst, me = st.me;
+  if (!E) return '<p class="mu c">Primero creen a su mascota en la sección Mascota.</p>';
+  if (me !== 'a' && me !== 'b') return '<p class="mu c">Primero elige quién eres en Configuración ⚙️</p>';
+  if (!E.objeto) return cuSinMascota(E);
+  const R = cuResumen(st.cuid, hoy()), ropa = cuRopa(st.cuRopa), saldo = cuSaldo(R, ropa), et = cuEtapa(R.puntos);
+  const cat = CUID_RANURAS.some(r => r[0] === st.cuRopaCat) ? st.cuRopaCat : 'gorro', vista = cuPrenda(st.cuVista), puesto = Object.assign({}, ropa.puesto);
+  if (vista) puesto[vista.ranura] = vista.id;
+  let x = '<section class="card cu-pet ro-top"><div class="cu-fig">' + cuSvg(E.objeto, et.n, puesto) + '</div><h2>' + esc(cuNombre()) + '</h2><div class="cu-chips"><span>🪙 ' + saldo + ' monedas</span><span>🔥 Monedas ×' + String(R.multMon).replace('.', ',') + '</span></div>';
+  if (vista) {
+    const mia = ropa.compra[vista.id] !== undefined, pta = ropa.puesto[vista.ranura] === vista.id;
+    x += '<div class="ro-acc"><b>' + esc(vista.nombre) + '</b>' + (mia ? '<button class="btn' + (pta ? ' sec' : '') + '" data-a="' + (pta ? 'roQuita' : 'roPon') + ':' + vista.id + '">' + (pta ? 'Quitársela' : 'Ponérsela') + '</button>' :
+      '<button class="btn" data-a="roCompra:' + vista.id + '"' + (saldo < vista.precio ? ' disabled' : '') + '>' + (saldo < vista.precio ? 'Faltan ' + (vista.precio - saldo) + ' 🪙' : 'Comprar 🪙 ' + vista.precio) + '</button>') + '</div>';
+  } else x += '<p class="mu cu-pp">Toca una prenda para probársela.</p>';
+  x += '</section><div class="cf cg ro-cats">' + CUID_RANURAS.map(([k, i, n]) => '<button class="' + (k === cat ? 'on' : '') + '" data-a="roCat:' + k + '">' + i + ' ' + n + '</button>').join('') + '</div><div class="ro-grid">' +
+    CUID_ROPA.filter(p => p.ranura === cat).map(p => {
+      const mia = ropa.compra[p.id] !== undefined, pta = ropa.puesto[p.ranura] === p.id;
+      return '<button class="ro-t' + (vista && vista.id === p.id ? ' on' : '') + '" data-a="roVer:' + p.id + '" aria-label="' + esc(p.nombre) + '">' + cuSvg(E.objeto, 3, {[p.ranura]:p.id}) + '<b>' + esc(p.nombre) + '</b><small>' + (pta ? '✅ Puesta' : mia ? '✓ Tuya' : '🪙 ' + p.precio) + '</small></button>';
+    }).join('') + '</div>';
+  return x;
+}
+// Mascota sin elegir (la plantita ya no existe): conserva nombre, racha y puntos
+const cuSinMascota = E => '<section class="card cu-new c"><div class="cu-trio">' + Object.keys(CUID_OBJ).map(k => cuSvg(k, 3)).join('') + '</div><h2>Elige a ' + (E.nombre ? esc(E.nombre) : 'su nueva mascota') + '</h2><p class="mu">La plantita ya no está. Ahora pueden elegir perro, gato, panda o cerdo. El nombre, la racha y los puntos se conservan.</p><button class="btn w" data-a="cuCrear">💞 Elegir mascota</button></section>';
 // Sección "Respuestas": lo que respondieron los dos, solo de los días completos (nada de lo que respondió una sola persona)
 function vRespuestas() {
   const E = st.cuEst, me = st.me;
@@ -1726,9 +1857,9 @@ function vRespuestas() {
   return x;
 }
 function formMascota() {
-  const E = st.cuEst, o = E ? E.objeto : 'planta';
-  openModal('<h2>' + (E ? 'Cambiar mascota' : 'Crear mascota') + '</h2>' + (E ? '<p class="mu">Puedes cambiar el dibujo o el nombre. El avance no se pierde.</p>' : '') + '<form data-f="cuMascota"><div class="lb">¿Cuál eligen?</div><div class="cu-pick">' +
-    Object.entries(CUID_OBJ).map(([k, v]) => '<label><input type="radio" name="objeto" value="' + k + '"' + (k === o ? ' checked' : '') + '><span>' + cuSvg(k, 3) + esc(v[1]) + '</span></label>').join('') + '</div>' +
+  const E = st.cuEst, o = E ? E.objeto : 'perro';
+  openModal('<h2>' + (E ? (o ? 'Cambiar mascota' : 'Elegir mascota') : 'Crear mascota') + '</h2>' + (E ? '<p class="mu">Puedes cambiar el dibujo o el nombre. El avance y la ropa no se pierden.</p>' : '') + '<form data-f="cuMascota"><div class="lb">¿Cuál eligen?</div><div class="cu-pick">' +
+    Object.entries(CUID_OBJ).map(([k, v]) => '<label><input type="radio" name="objeto" value="' + k + '" required' + (k === o ? ' checked' : '') + '><span>' + cuSvg(k, 3) + esc(v[1]) + '</span></label>').join('') + '</div>' +
     '<label>Nombre<input name="nombre" maxlength="16" placeholder="' + CUID_NOM + '" autocomplete="off" value="' + esc(E ? E.nombre : '') + '"></label><p class="mu cu-pp">Será también el nombre de este módulo. Si lo dejas vacío, se llamará “' + CUID_NOM + '”.</p>' +
     '<div class="row"><button type="button" class="btn sec" data-a="x">Cancelar</button><button class="btn">Guardar</button></div></form>');
 }
@@ -1763,15 +1894,15 @@ const MODS = [
   {id:'citas', nom:'100 citas', ico:'💌', t1:'100 citas', tabs:['citas'], entrada:'citas', secs:[]},
   {id:'cine', nom:'Cine', ico:'🎬', t1:'Cine', tabs:['cine'], entrada:'cine', secs:[]},
   {id:'chef', nom:'Chef', ico:'🍳', t1:'Chef', tabs:['chef'], entrada:'chef', secs:[]},
-  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados', 'respuestas'], entrada:'cuidados', secs:[['cuidados', '🐾', 'Mascota'], ['respuestas', '📖', 'Respuestas']]}
+  {id:'cuidados', nom:CUID_NOM, ico:'🐾', t1:CUID_NOM, tabs:['cuidados', 'ropa', 'respuestas'], entrada:'cuidados', secs:[['cuidados', '🐾', 'Mascota'], ['ropa', '👕', 'Ropa'], ['respuestas', '📖', 'Respuestas']]}
 ];
 const modDe = tab => MODS.find(m => !m.lock && m.tabs.includes(tab)) || null;
 const modPorId = id => MODS.find(m => m.id === id) || null;
 // El módulo Cuidados se llama como la mascota (y usa su ícono); los demás tienen nombre fijo.
 const modCu = m => m.id === 'cuidados' && st.cuEst ? st.cuEst : null;
 const modNom = m => (modCu(m) && modCu(m).nombre) || m.nom;
-const modIco = m => modCu(m) ? CUID_OBJ[modCu(m).objeto][0] : m.ico;
-const modIc = m => modCu(m) ? IC_CU[modCu(m).objeto] : IC[m.id];
+const modIco = m => modCu(m) && CUID_OBJ[modCu(m).objeto] ? CUID_OBJ[modCu(m).objeto][0] : m.ico;
+const modIc = m => modCu(m) && IC_CU[modCu(m).objeto] ? IC_CU[modCu(m).objeto] : IC[m.id];
 const IC = {
   finanzas:'<circle cx="30" cy="12" r="7.5"/><text x="30" y="16" text-anchor="middle" font-size="11" font-family="Righteous,sans-serif" fill="currentColor" stroke="none">$</text><path d="M14 38C14 29 23 25 33 25c12 0 20 6 20 14 0 6-4 10-9 12v5h-7v-4H28v4h-7v-6c-5-2-7-6-7-12z"/><path d="M53 36h5v5h-5M40 26l2-8 7 9M27 31h9M10 36c-3-1-3-5 0-6"/><circle cx="44" cy="35" r="1.3" fill="currentColor" stroke="none"/>',
   momentos:'<rect x="9" y="13" width="46" height="42" rx="8"/><path d="M9 26h46M22 7v11M42 7v11"/><g transform="translate(21.5 28.5) scale(.88)" stroke-width="3.4"><path d="' + HP + '"/></g>',
@@ -1782,7 +1913,8 @@ const IC = {
   mas:'<text x="32" y="55" text-anchor="middle" font-size="64" font-family="Righteous,sans-serif" fill="currentColor" stroke="none">?</text>'
 };
 const IC_CU = {
-  planta:'<path d="M19 38h26l-4 19H23zM15 30h34v8H15zM32 30V15M32 22c-9 1-13-4-13-11 8-1 13 3 13 11zM32 17c1-7 6-10 12-9 0 7-5 10-12 9z"/>',
+  panda:'<circle cx="32" cy="36" r="19"/><circle cx="17" cy="19" r="6"/><circle cx="47" cy="19" r="6"/><ellipse cx="25" cy="34" rx="4" ry="5"/><ellipse cx="39" cy="34" rx="4" ry="5"/><path d="M29 43h6l-3 4z"/>',
+  cerdo:'<circle cx="32" cy="36" r="19"/><path d="M17 25l-3-13 12 6zM47 25l3-13-12 6z"/><ellipse cx="32" cy="43" rx="8" ry="6"/><path d="M29 42v2M35 42v2M24 33v2M40 33v2"/>',
   gato:'<path d="M13 12l13 9h12l13-9v25a19 17 0 0 1-38 0zM25 35v3M39 35v3M28 45q4 4 8 0M8 40l8 1M56 40l-8 1"/>',
   perro:'<path d="M22 16h20a10 10 0 0 1 10 10v12a20 17 0 0 1-40 0V26a10 10 0 0 1 10-10zM13 22c-7 3-8 14-3 21M51 22c7 3 8 14 3 21M25 33v3M39 33v3M28 43h8l-4 5z"/>'
 };
@@ -1813,7 +1945,7 @@ function inPagosPend(L, me, otro) {
 // Estado de una respuesta del día (pregunta o sobre). Nunca muestra lo respondido, solo si ya respondieron.
 const inEstado = (mia, suya, otro) => !mia ? (suya ? otro + ' ya respondió' : 'Responde') : suya ? '¡Listo! 💞' : 'Esperando a ' + otro;
 function inMascota(est, dias, h, me, otroNom) {
-  if (!est) return {crear:true};
+  if (!est || !est.objeto) return {crear:true}; // sin mascota, o con la planta que ya no existe
   if (me !== 'a' && me !== 'b') return {sinYo:true};
   const ot = cuOtro(me), hd = cuHoy(dias, est, h), q = CUID_PREG[hd.p], sb = CUID_SOBRES[hd.s];
   const mp = cuResp(hd.doc, me) !== null, op = cuResp(hd.doc, ot) !== null, ms = !!cuSob(hd.doc, me), os = !!cuSob(hd.doc, ot);
@@ -1977,7 +2109,7 @@ function render() {
     h = '<header><h1>' + modIco(mod) + ' ' + esc(modNom(mod)) + '</h1>' + (st.names ? '<button class="me" data-a="aj">' + esc(st.me ? nm(st.me) : 'Ajustes') + ' ⚙️</button>' : '') + '</header>';
     if (st.err) h += '<p class="warn">' + esc(st.err) + '</p>';
     else if (!ok) h += '<p class="mu c">Cargando…</p>';
-    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'respuestas' ? vRespuestas() : vCuidados();
+    else h += st.tab === 'cuentas' ? vCuentas() : st.tab === 'metas' ? vMetas() : st.tab === 'juntos' ? vJuntos() : st.tab === 'calendario' ? vCalendario() : st.tab === 'citas' ? vCitas() : st.tab === 'cine' ? vCine() : st.tab === 'chef' ? vChef() : st.tab === 'ropa' ? vRopa() : st.tab === 'respuestas' ? vRespuestas() : vCuidados();
     h += '<nav><button data-a="menu" aria-label="Abrir la lista de módulos"><span>' + ICO_MOD + '<br>Módulos</span></button>' + mod.secs.map(([k, i, t]) => '<button class="' + (k === st.tab ? 'on' : '') + '" data-a="tab:' + k + '"><span>' + i + '<br>' + t + '</span></button>').join('') + '</nav>';
   }
   // Los buscadores y la respuesta de Cuidados no deben perder el cursor cuando llegan datos nuevos
@@ -2427,6 +2559,16 @@ const acts = {
   cuCrear: () => formMascota(),
   cuSobre: () => cuSobreAbrir(),
   cuSobreVer: () => cuSobreVer(),
+  roCat: p => { if (CUID_RANURAS.some(r => r[0] === p)) { st.cuRopaCat = p; st.cuVista = ''; render(); } },
+  roVer: p => { if (cuPrenda(p)) { st.cuVista = st.cuVista === p ? '' : p; render(); } },
+  roCompra: async p => {
+    const x = cuPrenda(p), ropa = cuRopa(st.cuRopa); if (!x || !st.cuEst || !st.cuEst.objeto) return;
+    if (ropa.compra[p] !== undefined) return toast('Ya la tienen');
+    const saldo = cuSaldo(cuResumen(st.cuid, hoy()), ropa); if (saldo < x.precio) return toast('Les faltan ' + (x.precio - saldo) + ' monedas');
+    try { await st.db.doc('cuidados/ropa').set({compra:{[p]:x.precio}, puesto:{[x.ranura]:p}, editado:Date.now()}, {merge:true}); toast('¡Compraron ' + x.nombre + '! 🎉'); } catch (e) { fail(e); }
+  },
+  roPon: async p => { const x = cuPrenda(p); if (!x || cuRopa(st.cuRopa).compra[p] === undefined) return; try { await st.db.doc('cuidados/ropa').set({puesto:{[x.ranura]:p}, editado:Date.now()}, {merge:true}); } catch (e) { fail(e); } },
+  roQuita: async p => { const x = cuPrenda(p); if (!x) return; try { await st.db.doc('cuidados/ropa').set({puesto:{[x.ranura]:''}, editado:Date.now()}, {merge:true}); } catch (e) { fail(e); } },
   cuHT: p => { st.cuHT = p === 'sob' ? 'sob' : 'preg'; st.cuHN = 20; render(); },
   cuMas: () => { st.cuHN = (st.cuHN || 20) + 20; render(); },
   // Chef
@@ -2867,7 +3009,7 @@ function start(fs) {
     st.db.collection('citas').onSnapshot(s => { st.citas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.c = true; render(); syncCita(); }, bad),
     st.db.collection('cine').onSnapshot(s => { st.cine = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ci = true; render(); }, bad),
     st.db.collection('recetas').onSnapshot(s => { st.recetas = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.ch = true; render(); }, bad),
-    st.db.collection('cuidados').onSnapshot(s => { const e = s.docs.find(d => d.id === 'estado'); st.cuEst = cuEstado(e ? e.data() : null); st.cuid = s.docs.filter(d => d.id.startsWith('d_')).map(d => d.data()); st.rd.cu = true; render(); }, bad),
+    st.db.collection('cuidados').onSnapshot(s => { const e = s.docs.find(d => d.id === 'estado'); st.cuEst = cuEstado(e ? e.data() : null); const ro = s.docs.find(d => d.id === 'ropa'); st.cuRopa = ro ? ro.data() : null; st.cuid = s.docs.filter(d => d.id.startsWith('d_')).map(d => d.data()); st.rd.cu = true; render(); }, bad),
     st.db.collection('hitos').onSnapshot(s => { st.hitos = s.docs.map(d => Object.assign({}, d.data(), {id:d.id})); st.rd.h = true; render(); }, bad),
     st.db.doc('momentos/juntos').onSnapshot(s => { const d = s.exists ? s.data() : null; st.juntos = d && moEsDia(d.desde) ? d.desde : ''; st.rd.j = true; render(); }, bad),
     st.db.collection('perfiles').onSnapshot(s => { const P = {}; for (const d of s.docs) if (d.id === 'a' || d.id === 'b') P[d.id] = perfNorm(d.data()); st.perf = P; st.rd.p = true; render(); perfilCorreo(); }, bad),
@@ -2879,7 +3021,7 @@ function stop() {
   clearTimeout(pzTimer); pzBorrando = false;
   cerrarCita();
   perfilCorreo.ok = '';
-  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), tab:'inicio', rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
+  Object.assign(st, {unsubs:[], names:null, gastos:[], tareas:[], citas:[], cine:[], recetas:[], cuid:[], cuEst:null, cuSel:null, cuEt:0, cuUp:0, perf:{}, dib:{}, hitos:[], juntos:'', metas:[], calFin:false, resAb:false, diaPop:'', cuHT:'preg', cuHN:20, cuAb:new Set(), cuRopa:null, cuVista:'', cuRopaCat:'gorro', tab:'inicio', rd:{n:false, g:false, t:false, c:false, ci:false, ch:false, cu:false, h:false, j:false, m:false, p:false, pz:false}, shown:false, err:'', db:null});
 }
 (function init() {
   render();
