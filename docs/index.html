@@ -893,7 +893,7 @@ const CUID_ROPA_DATOS = [
   // Especiales. Quinto dato = grupo. Típico de Chile: ocupa su ranura normal (o las manos); Disfraces: reemplazan toda la ropa; Efectos: animados.
   ['g_chupalla', 'gorro', 'Chupalla', 120, 'tipico'], ['t_poncho', 'torso', 'Poncho', 180, 'tipico'], ['t_roja', 'torso', 'Camiseta de la Roja', 100, 'tipico'],
   ['m_completo', 'mano', 'Completo', 90, 'tipico'], ['m_empanada', 'mano', 'Empanada', 70, 'tipico'], ['m_bandera', 'mano', 'Bandera de Chile', 110, 'tipico'],
-  ['d_astro', 'disfraz', 'Astronauta', 400, 'disfraz'], ['d_mago', 'disfraz', 'Mago', 400, 'disfraz'], ['d_dino', 'disfraz', 'Dinosaurio', 380, 'disfraz'],
+  ['d_astro', 'disfraz', 'Astronauta', 400, 'disfraz'], ['d_dino', 'disfraz', 'Dinosaurio', 380, 'disfraz'],
   ['d_pirata', 'disfraz', 'Pirata', 350, 'disfraz'], ['d_super', 'disfraz', 'Superhéroe', 350, 'disfraz'], ['d_chef', 'disfraz', 'Chef', 300, 'disfraz'],
   ['f_aura', 'efecto', 'Aura rosada', 250, 'efecto'], ['f_corazones', 'efecto', 'Corazones flotando', 200, 'efecto'], ['f_estrellas', 'efecto', 'Estrellas giratorias', 250, 'efecto'],
   ['f_confeti', 'efecto', 'Confeti', 300, 'efecto'], ['f_arcoiris', 'efecto', 'Arcoíris', 350, 'efecto']
@@ -1747,7 +1747,7 @@ function cuPanda(e) {
   };
 }
 function cuCerdo(e) {
-  const R1 = '#ffc2d4', R2 = '#ff9bbd', kk = [.8, .9, 1, 1.12, 1.2][e - 1], pez = e >= 5 ? '#f2b705' : e >= 4 ? '#e87aa0' : R2, cola = 'd="M82 96c9-1 12 6 6 8s-7-4-2-4" fill="none" stroke-linecap="round"';
+  const R1 = '#ffc2d4', R2 = '#ff9bbd', kk = [.8, .9, 1, 1.12, 1.2][e - 1], pez = e >= 4 ? '#e87aa0' : R2, cola = 'd="M82 96c9-1 12 6 6 8s-7-4-2-4" fill="none" stroke-linecap="round"';
   const rx = [8.6, 9.4, 10, 10.6, 11][e - 1], ry = [6, 6.5, 7, 7.4, 7.8][e - 1];
   return {
     cuerpo: (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="5.4"/><path ' + cola + ' stroke="' + R2 + '" stroke-width="2.4"/>' : '') +
@@ -1826,14 +1826,6 @@ const CU_DISFRAZ = {
     cuello: () => '<path d="M41 75Q60 86 79 75" fill="none" stroke="#7d1433" stroke-width="7.4" stroke-linecap="round"/><path d="M41 75Q60 86 79 75" fill="none" stroke="#ff8a5b" stroke-width="4.6" stroke-linecap="round"/>',
     gorro: () => '<circle cx="60" cy="52" r="28.5" fill="#bfe6ff" fill-opacity=".28" stroke="#7d1433" stroke-width="1.6"/><circle cx="60" cy="52" r="26.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-opacity=".8"/><path d="M42 36Q48 28 58 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-opacity=".9"/><rect x="36" y="70" width="48" height="7" rx="3.5" fill="#cfd8e3" ' + CU_RO + '/>'
   },
-  d_mago: {
-    espalda: () => '<path d="M40 72L80 72L94 108H26Z" fill="#4a2278" ' + CU_RO + '/>',
-    torso: c => cuTorso(c, '#6a3aa8', cuEstrella(48, 84, .6, '#ffd54a') + cuEstrella(70, 90, .5, '#ffd54a') + cuEstrella(62, 80, .35, '#fff')),
-    piernas: c => cuPierna(c, '#6a3aa8', '#4a2278'), zapatos: () => cuPies(x => '<ellipse cx="' + x + '" cy="105.5" rx="9" ry="5.2" fill="#2b2a28" ' + CU_RO + '/>'),
-    cuello: () => '<path d="M42 74Q60 84 78 74" fill="none" stroke="#ffd54a" stroke-width="2.4" stroke-linecap="round"/>',
-    cara: () => '<path d="M44 66Q46 86 60 97Q74 86 76 66Q60 72 44 66Z" fill="#fff" ' + CU_RO + '/>',
-    gorro: () => '<path d="M36 38Q60 31 84 38L63 -4Q60 -8 57 -4Z" fill="#6a3aa8" ' + CU_RO + '/><ellipse cx="60" cy="38" rx="28" ry="6" fill="#4a2278" ' + CU_RO + '/>' + cuEstrella(58, 18, .8, '#ffd54a') + cuEstrella(66, 28, .55, '#fff')
-  },
   d_dino: {
     espalda: () => '<path d="M80 92Q112 88 108 110Q94 104 80 106Z" fill="#3f9e5b" ' + CU_RO + '/><path d="M96 97l2-7 3 7M102 103l3-6 2 7" fill="#f2b705" ' + CU_RO + '/>',
     torso: c => cuTorso(c, '#4cb06a', '<ellipse cx="60" cy="90" rx="13" ry="9" fill="#c8f0a8"/><path d="M40 84l4-3M76 84l4-3M38 90l4-1M78 90l4-1" stroke="#3f9e5b" stroke-width="1.6" stroke-linecap="round"/>'),
@@ -1876,8 +1868,7 @@ const CU_ANIMAL = {perro:cuPerro, gato:cuGato, panda:cuPanda, cerdo:cuCerdo};
 // Entorno que crece con la etapa (detrás de la mascota, sin escalar): pasto, flores, mariposa y, en la etapa 5, aura dorada y estrellas
 function cuEntorno(e, id) {
   let h = '';
-  if (e >= 5) h += '<defs><radialGradient id="' + id + 'a"><stop offset="0" stop-color="#ffe27a" stop-opacity=".95"/><stop offset=".55" stop-color="#ffd54a" stop-opacity=".42"/><stop offset="1" stop-color="#ffd54a" stop-opacity="0"/></radialGradient></defs><circle class="cu-aura" cx="60" cy="66" r="62" fill="url(#' + id + 'a)"/>' +
-    '<g class="cu-tw">' + cuEstrella(14, 22, 1.5, '#ffd54a', true) + cuEstrella(108, 40, 1.2, '#ffd54a', true) + '</g><g class="cu-tw t2">' + cuEstrella(100, 14, 1, '#fff', true) + cuEstrella(12, 62, 1, '#fff', true) + '</g>';
+  if (e >= 5) h += '<g class="cu-tw">' + cuEstrella(14, 22, 1.5, '#ffd54a', true) + cuEstrella(108, 40, 1.2, '#ffd54a', true) + '</g><g class="cu-tw t2">' + cuEstrella(100, 14, 1, '#fff', true) + cuEstrella(12, 62, 1, '#fff', true) + '</g>';
   if (e >= 2) h += '<path d="M22 110l2.4-8 2.4 8M26 110l3.2-10 3.2 10M88 110l3-9 3 9M93 110l2.4-7 2.4 7" fill="#7cc195" stroke="#3f8a5e" stroke-width="1" stroke-linejoin="round"/>';
   if (e >= 3) h += '<path d="M14 110V98M104 110V99" stroke="#3f8a5e" stroke-width="1.6"/><circle cx="14" cy="96" r="3.6" fill="#ff4d86" stroke="#7d1433" stroke-width="1"/><circle cx="14" cy="96" r="1.3" fill="#f2b705"/><circle cx="104" cy="97" r="3.6" fill="#fff" stroke="#7d1433" stroke-width="1"/><circle cx="104" cy="97" r="1.3" fill="#f2b705"/>';
   if (e >= 4) h += '<g class="cu-mar"><ellipse cx="94" cy="46" rx="5" ry="3.6" transform="rotate(-25 94 46)" fill="#ff8a5b" stroke="#7d1433" stroke-width="1"/><ellipse cx="102" cy="46" rx="5" ry="3.6" transform="rotate(25 102 46)" fill="#ff8a5b" stroke="#7d1433" stroke-width="1"/><path d="M98 43v7" stroke="#7d1433" stroke-width="1.3" stroke-linecap="round"/></g>';
