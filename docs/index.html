@@ -1091,7 +1091,17 @@ function cuHoy(dias, est, h) {
     const d = ant.find(x => ok(x[campo], len));
     return d ? (hecho(d) ? (d[campo] + 1) % len : d[campo]) : n % len;
   };
-  return {dia:h, doc, p:toca('p', CUID_PREG.length, cuPregOk), s:toca('s', CUID_SOBRES.length, cuSobOk)};
+  const p = toca('p', CUID_PREG.length, cuPregOk), sIdx = toca('s', CUID_SOBRES.length, cuSobOk);
+  // Si la pregunta o el sobre se repite porque aún falta una persona, lo que la otra ya respondió en días anteriores sigue valiendo hoy
+  // (si no, quien respondió ayer tendría que responder de nuevo). `doc` junta lo de hoy con esas respuestas pendientes; `raw` es solo el documento de hoy.
+  const pend = (idx, campo, leer) => { const o = {a:null, b:null}; for (const d of ant) { if (d[campo] !== idx) break; for (const k of ['a', 'b']) if (o[k] === null) { const v = leer(d, k); if (v) o[k] = v; } } return o; };
+  const pq = pend(p, 'p', (d, k) => cuResp(d, k)), ps = pend(sIdx, 's', (d, k) => cuSob(d, k) ? {sob:cuSob(d, k), pred:cuPred(d, k)} : null);
+  const ef = {dia:h, p, s:sIdx, a:Object.assign({}, doc && doc.a), b:Object.assign({}, doc && doc.b)};
+  for (const k of ['a', 'b']) {
+    if (cuResp(doc, k) === null && pq[k]) ef[k].t = pq[k];
+    if (!cuSob(doc, k) && ps[k]) { ef[k].sob = ps[k].sob; if (ps[k].pred) ef[k].pred = ps[k].pred; }
+  }
+  return {dia:h, doc:ef, raw:doc, p, s:sIdx};
 }
 // Días en que los dos respondieron (tipo 'preg' = pregunta del día, 'sob' = sobre), del más nuevo al más antiguo
 function cuHistorial(dias, h, tipo) {
@@ -2438,7 +2448,8 @@ const subs = {
     if (cuResp(hd.doc, me) !== null) return toast('Ya respondiste la pregunta de hoy');
     if (!t) return toast('Escribe tu respuesta');
     const lista = cuResp(hd.doc, cuOtro(me)) !== null;
-    await st.db.doc('cuidados/d_' + h).set({dia:h, p:hd.p, s:hd.s, [me]:{t}}, {merge:true});
+    const o = cuOtro(me), arrastra = cuResp(hd.raw, o) === null && cuResp(hd.doc, o) !== null ? {[o]:{t:cuResp(hd.doc, o)}} : {}; // la respuesta pendiente de la otra persona pasa al documento de hoy
+    await st.db.doc('cuidados/d_' + h).set(Object.assign({dia:h, p:hd.p, s:hd.s, [me]:{t}}, arrastra), {merge:true});
     avisar('cuPreg');
     st.cuSel = null; toast(lista ? '¡Los dos respondieron! 💞' : 'Respuesta guardada 💌');
   },
@@ -2452,7 +2463,8 @@ const subs = {
     const pred = [0, 1, 2].map(i => { const r = fd.get('r' + i); return r === null ? -1 : +r; });
     if (!sob.every(cuOp) || !pred.every(cuOp)) return toast('Responde las 3 preguntas y elige lo que crees que responderá ' + nm(cuOtro(me)));
     const lista = !!cuSob(hd.doc, cuOtro(me));
-    await st.db.doc('cuidados/d_' + h).set({dia:h, p:hd.p, s:hd.s, [me]:{sob, pred}}, {merge:true});
+    const o = cuOtro(me), arrastra = !cuSob(hd.raw, o) && cuSob(hd.doc, o) ? {[o]:Object.assign({sob:cuSob(hd.doc, o)}, cuPred(hd.doc, o) ? {pred:cuPred(hd.doc, o)} : {})} : {}; // el sobre pendiente de la otra persona pasa al documento de hoy
+    await st.db.doc('cuidados/d_' + h).set(Object.assign({dia:h, p:hd.p, s:hd.s, [me]:{sob, pred}}, arrastra), {merge:true});
     avisar('cuSobre');
     closeModal(); toast(lista ? '¡Los dos abrieron el sobre! 💞' : 'Sobre guardado 💌');
   },
