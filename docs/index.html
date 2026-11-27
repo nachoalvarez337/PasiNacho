@@ -1710,7 +1710,7 @@ function cuGato(e) {
   };
 }
 function cuPerro(e) {
-  const kk = [.72, .88, 1, 1.12, 1.2][e - 1], cola = 'd="M81 97c12-2 16-12 13-23" fill="none" stroke-linecap="round"', col = e >= 5 ? '#f2b705' : '#c81e4a';
+  const kk = [.72, .88, 1, 1.12, 1.2][e - 1], cola = 'd="M81 97c12-2 16-12 13-23" fill="none" stroke-linecap="round"', col = '#c81e4a';
   const oreja = (x, d) => '<g transform="translate(' + x + ' 33) scale(' + kk + ') translate(-' + x + ' -33)"><path d="' + d + '" fill="#ff9bbd" ' + CU_T + '/></g>';
   return {
     cuerpo: (e >= 3 ? '<path ' + cola + ' stroke="#7d1433" stroke-width="9.4"/><path ' + cola + ' stroke="#ffd3e2" stroke-width="5"/>' : '') +
@@ -1722,7 +1722,7 @@ function cuPerro(e) {
       '<path d="M60 62v2.5M60 64.5q-2.8 2.6-5.6 1M60 64.5q2.8 2.6 5.6 1" fill="none" stroke="#7d1433" stroke-width="1.4" stroke-linecap="round"/>' +
       (e >= 2 ? '<path d="M57.6 66.6q2.4 6.4 4.8 0z" fill="#ff4d86" stroke="#7d1433" stroke-width="1.2" stroke-linejoin="round"/>' : ''),
     extra: e >= 4 ? '<path d="M44 74.5q16 8 32 0" fill="none" stroke="#7d1433" stroke-width="7.4" stroke-linecap="round"/><path d="M44 74.5q16 8 32 0" fill="none" stroke="' + col + '" stroke-width="4" stroke-linecap="round"/>' +
-      (e >= 5 ? cuEstrella(60, 86, 1.05, '#ffd54a', true) : cuH(60, 85, .42, '#ff4d86')) : ''
+      (e >= 5 ? cuEstrella(60, 86, 1.05, '#ff4d86', true) : cuH(60, 85, .42, '#ff4d86')) : ''
   };
 }
 function cuPanda(e) {
